@@ -135,6 +135,8 @@
     text-align: left; font-weight: 500; color: var(--text); white-space: nowrap;
   }
   table.cmp td { color: var(--muted); font-size: 14px; }
+  table.cmp td a { color: var(--accent); text-decoration: none; }
+  table.cmp td a:hover { text-decoration: underline; text-underline-offset: 2px; }
   /* highlight the Pro columns */
   table.cmp .pro { background: color-mix(in srgb, var(--accent) 9%, transparent); }
   table.cmp thead .pro { color: var(--accent); font-weight: 700; }
@@ -279,7 +281,9 @@
           </tr>
           <tr>
             <td class="feat">Distribution</td>
-            <td>Mac App Store</td><td class="pro">Setapp</td><td class="pro">Direct download</td>
+            <td><a href="https://apps.apple.com/app/idTODO" rel="noopener">Mac App Store</a></td>
+            <td class="pro"><a href="https://setapp.com/apps" rel="noopener">Setapp</a></td>
+            <td class="pro"><a href="https://YOUR-STORE.lemonsqueezy.com/buy/PRODUCT" rel="noopener">Direct download</a></td>
           </tr>
           <tr>
             <td class="feat">Price</td>
