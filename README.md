@@ -67,19 +67,21 @@ App Store (Lite) ➔ Web (Pro). Полная стратегия — в [../docs/
 
 ## Деплой на GitHub Pages
 
-Pages умеет раздавать из ветки + папки. Варианты:
+Сайт живёт в отдельном **публичном** репо `metaflowlabdev/landing` (аккаунт
+`metaflowlabdev`, НЕ kolocim), Pages раздаёт из `main`/корня. Источник правды —
+эта папка `landing/` в основном (kolocim) репо; деплой = скопировать файлы в клон
+и запушить под вторым аккаунтом:
 
-1. **Отдельная ветка `gh-pages`** (рекомендуется, чтобы не мешать основному репо):
-   ```bash
-   git subtree push --prefix landing origin gh-pages
-   ```
-   Затем Settings → Pages → Source: `gh-pages` / `/ (root)`.
+```bash
+gh auth switch -u metaflowlabdev
+TMP=$(mktemp -d); gh repo clone metaflowlabdev/landing "$TMP/site"
+cp index.html appfreeze.html theme.js README.md "$TMP/site/"; cp img/appfreeze-icon.png "$TMP/site/img/"
+cd "$TMP/site" && git add -A && git commit -m "update" && git push origin main
+gh auth switch -u kolocim
+```
 
-2. **Папка `/landing` в основной ветке** не поддерживается напрямую (Pages умеет
-   только `/` или `/docs`). Если хочется из main — переименуй папку в `docs/` или
-   используй вариант 1.
-
-После публикации страница будет на `https://<user>.github.io/<repo>/`.
+Живой адрес: **https://metaflowlabdev.github.io/landing/**
+(старый хост `metaflowlabdev/appfreeze` выведен из эксплуатации).
 
 ## Настройка «вечного» редиректа (Dub.co)
 

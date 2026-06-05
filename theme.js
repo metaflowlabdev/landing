@@ -71,7 +71,7 @@
   nav.className = "site-nav";
   nav.innerHTML =
     '<div class="inner">' +
-    '<a class="brand" href="studio.html" aria-label="Metaflow Lab — home">' +
+    '<a class="brand" href="index.html" aria-label="Metaflow Lab — home">' +
     mark + "<span>Metaflow Lab</span></a>" +
     '<div class="right"></div>' +
     "</div>";

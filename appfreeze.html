@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppFreeze — Freeze background apps, save battery on Mac</title>
+<meta name="description" content="AppFreeze is a tiny macOS menu-bar utility that suspends background apps to save up to 30% battery. Free on the Mac App Store; Pro adds automatic freezing.">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<style>
+  :root {
+    --bg: #000000; --card: #1d1d1f; --line: #2a2a2c;
+    --text: #f5f5f7; --muted: #a1a1a6; --accent: #2997ff; --accent2: #34c759;
+    --glass-border: color-mix(in srgb, #fff 14%, transparent);
+    --radius: 16px;
+  }
+  /* Light values live in one place, applied both when the system asks for light
+     (and no manual choice) and when the toggle forces light. */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+      --glass-border: var(--line);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+    --glass-border: var(--line);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 0 20px 48px;
+    position: relative; overflow-x: hidden;
+  }
+  /* Subtle neutral wash so the frosted-glass blur keeps a hint of depth */
+  body::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(60rem 60rem at 50% -10%, color-mix(in srgb, var(--text) 6%, transparent), transparent 60%);
+  }
+  .wrap { width: 100%; max-width: 760px; }
+  header { text-align: center; margin-bottom: 40px; }
+  .logo { width: 84px; height: 84px; border-radius: 19px;
+          box-shadow: 0 8px 24px rgba(0,0,0,.28); }
+  h1 { font-size: 28px; margin: 12px 0 8px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); max-width: 540px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    position: relative;
+    /* Liquid Glass: translucent fill + backdrop blur */
+    background: color-mix(in srgb, var(--card) 55%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    backdrop-filter: blur(22px) saturate(1.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px; padding: 26px 22px;
+    box-shadow:
+      0 8px 30px rgba(0,0,0,.28),
+      inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent);
+    display: flex; flex-direction: column;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(160deg, color-mix(in srgb, #fff 18%, transparent), transparent 42%);
+  }
+  .card h2 { font-size: 19px; margin: 0 0 6px; }
+  .tag { font-size: 12px; font-weight: 600; text-transform: uppercase;
+         letter-spacing: 0.06em; color: var(--muted); margin-bottom: 14px; }
+  .card p { color: var(--muted); margin: 0 0 20px; flex: 1; }
+  .price { font-size: 30px; font-weight: 700; margin: 0 0 4px; }
+  .price small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .btn {
+    display: block; text-align: center; text-decoration: none;
+    font-weight: 600; padding: 13px 16px; border-radius: 11px;
+    color: #fff; transition: opacity .15s;
+  }
+  .btn:hover { opacity: .9; }
+  .btn--setapp { background: var(--accent); }
+  .btn--license { background: var(--accent2); }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--muted); }
+
+  /* Pro features */
+  .features { margin-top: 64px; }
+  .features > h2 { text-align: center; font-size: 22px; margin: 0 0 6px; }
+  .features > .sub { text-align: center; color: var(--muted); margin: 0 0 40px; }
+  .feature {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    align-items: center; margin-bottom: 56px;
+  }
+  .feature:nth-child(even) .shot { order: 2; }
+  .feature h3 { font-size: 18px; margin: 0 0 8px; }
+  .feature p { color: var(--muted); margin: 0; }
+  /* Retina screenshot frame: set a display width, supply a 2× image */
+  .shot {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+  .shot img { display: block; width: 100%; height: auto; }
+  /* Placeholder shown until a real screenshot is dropped in */
+  .shot--empty {
+    aspect-ratio: 16 / 11; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 13px; text-align: center; padding: 16px;
+    border-style: dashed;
+  }
+  @media (max-width: 600px) {
+    .feature { grid-template-columns: 1fr; gap: 16px; }
+    .feature:nth-child(even) .shot { order: 0; }
+  }
+
+  /* Version comparison */
+  .compare { margin-top: 64px; }
+  .compare > h2 { text-align: center; font-size: 22px; margin: 0 0 6px; }
+  .compare > .sub { text-align: center; color: var(--muted); margin: 0 0 28px; }
+  .compare-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.cmp {
+    width: 100%; border-collapse: collapse; min-width: 460px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  table.cmp th, table.cmp td {
+    padding: 13px 16px; text-align: center; border-bottom: 1px solid var(--line);
+  }
+  table.cmp tr:last-child td { border-bottom: 0; }
+  table.cmp thead th { font-size: 14px; vertical-align: bottom; }
+  table.cmp thead th small {
+    display: block; font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin-top: 3px;
+  }
+  table.cmp th.feat, table.cmp td.feat {
+    text-align: left; font-weight: 500; color: var(--text); white-space: nowrap;
+  }
+  table.cmp td { color: var(--muted); font-size: 14px; }
+  /* highlight the Pro columns */
+  table.cmp .pro { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  table.cmp thead .pro { color: var(--accent); font-weight: 700; }
+  .yes { color: var(--accent2); font-weight: 700; }
+  .no  { color: var(--muted); opacity: .5; }
+  .cmp-note { text-align: center; color: var(--muted); font-size: 12px; margin: 14px 0 0; }
+  /* On phones, let all four columns fit instead of overflowing in a side-scroll */
+  @media (max-width: 600px) {
+    table.cmp { min-width: 0; }
+    table.cmp th, table.cmp td { padding: 9px 6px; }
+    table.cmp thead th { font-size: 12px; }
+    table.cmp thead th small { font-size: 9px; }
+    table.cmp td { font-size: 12px; }
+    table.cmp th.feat, table.cmp td.feat { white-space: normal; }
+  }
+
+  /* App Store button (hero) */
+  .hero-cta { margin-top: 24px; }
+  .btn-as {
+    display: inline-flex; align-items: center; gap: 11px;
+    background: #000; color: #fff; text-decoration: none;
+    padding: 11px 20px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+  }
+  .btn-as:hover { opacity: .9; }
+  .btn-as svg { width: 22px; height: 22px; fill: #fff; flex: none; }
+  .btn-as .as-label { text-align: left; line-height: 1.1; }
+  .btn-as .as-label small { display: block; font-size: 11px; opacity: .75; }
+  .btn-as .as-label b { font-size: 17px; font-weight: 600; }
+  .hero-note { color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+
+  /* Section heading above the Pro cards */
+  .section-head { text-align: center; margin: 56px 0 18px; }
+  .section-head h2 { font-size: 22px; margin: 0 0 4px; }
+  .section-head p { color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="logo" src="img/appfreeze-icon.png" alt="AppFreeze icon" width="84" height="84">
+    <h1>AppFreeze</h1>
+    <p class="lead">
+      A tiny menu-bar utility that suspends background apps to save up to
+      <strong>30% battery</strong>. Start free on the Mac App Store, or unlock
+      automatic freezing with Pro.
+    </p>
+    <div class="hero-cta">
+      <!-- TODO: replace href with the real Mac App Store product URL once Lite is published -->
+      <a class="btn-as" href="https://apps.apple.com/app/idTODO" rel="noopener">
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C72.7 141.2 8 184.8 8 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.6zM261.7 90.4c27.5-32.6 25-62.3 24.2-73-24.3 1.4-52.4 16.5-68.4 35.1-17.6 19.9-27.9 44.5-25.7 71.9 26.3 2 50.2-11.5 69.9-34z"/></svg>
+        <span class="as-label"><small>Download on the</small><b>Mac App Store</b></span>
+      </a>
+      <p class="hero-note">Free · macOS 14+</p>
+    </div>
+  </header>
+
+  <div class="section-head">
+    <h2>Upgrade to Pro</h2>
+    <p>Unlock automatic freezing — pick a subscription or a one-time license.</p>
+  </div>
+
+  <div class="cards">
+    <!-- Card 1: subscription via Setapp -->
+    <div class="card">
+      <div class="tag">Subscription</div>
+      <h2>Available on Setapp</h2>
+      <p>Already a Setapp subscriber? Get AppFreeze Pro as part of your plan —
+         nothing extra to pay.</p>
+      <!-- TODO: replace with the real Setapp catalog URL -->
+      <a class="btn btn--setapp" href="https://setapp.com/apps" rel="noopener">
+        Open in Setapp
+      </a>
+    </div>
+
+    <!-- Card 2: one-time lifetime license via Lemon Squeezy -->
+    <div class="card">
+      <div class="tag">One-time</div>
+      <h2>Lifetime license</h2>
+      <p class="price">$4.99 <small>once</small></p>
+      <p>Own it forever. Secure checkout, instant license and receipt by email.</p>
+      <!-- TODO: replace with the real Lemon Squeezy checkout/buy URL -->
+      <a class="btn btn--license" href="https://YOUR-STORE.lemonsqueezy.com/buy/PRODUCT" rel="noopener">
+        Buy lifetime license
+      </a>
+    </div>
+  </div>
+
+  <section class="compare">
+    <h2>Lite vs Pro</h2>
+    <p class="sub">The free Lite app shows you what’s running. Pro lets you act on it.</p>
+    <div class="compare-scroll">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th class="feat">Feature</th>
+            <th>Lite<small>Free</small></th>
+            <th class="pro">Pro · Setapp<small>Subscription</small></th>
+            <th class="pro">Pro · Lifetime<small>One-time</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feat">Background apps monitor</td>
+            <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Click to switch / hide an app</td>
+            <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">One-click freezing</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Smart auto-freeze</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Live energy monitor (per-app CPU)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Quit background apps</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Global shortcut</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Launch at Login</td>
+            <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Safe by design (never freezes active/system apps)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Free updates</td>
+            <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Distribution</td>
+            <td>Mac App Store</td><td class="pro">Setapp</td><td class="pro">Direct download</td>
+          </tr>
+          <tr>
+            <td class="feat">Price</td>
+            <td>Free</td><td class="pro">Setapp plan</td><td class="pro">$4.99 once</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cmp-note">Setapp and Lifetime unlock the same Pro features — pick whichever billing suits you.</p>
+  </section>
+
+  <section class="features">
+    <h2>What AppFreeze Pro does</h2>
+    <p class="sub">Everything the Lite monitor shows you — plus the power to act on it.</p>
+
+    <!--
+      SCREENSHOTS: each .shot expects a 2× (Retina) PNG dropped into landing/img/.
+      Replace the placeholder <div class="shot shot--empty">…</div> with:
+        <div class="shot"><img src="img/FILENAME.png" alt="…" loading="lazy"></div>
+      See landing/README.md for capture instructions and recommended sizes.
+    -->
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/switch-apps.png<br>(click a row to bring an app forward / hide it)</div>
+      <div class="text">
+        <h3>Switch &amp; hide apps in a click</h3>
+        <p>Click any app in the list to bring it forward, or click it again to hide
+           it — a quick way to jump between what’s running, right from the menu bar.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/freeze-toggles.png<br>(Freeze All / Freeze Selected switches)</div>
+      <div class="text">
+        <h3>One-click freezing</h3>
+        <p>Freeze every background app at once, or auto-freeze a remembered set.
+           Suspended apps stop using the CPU instantly — no quitting, no losing your work.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/smart-mode.png<br>(app thaws on focus, refreezes on leave)</div>
+      <div class="text">
+        <h3>Smart auto-freeze</h3>
+        <p>Apps thaw the moment you switch to them and refreeze when you leave.
+           You get the battery savings without ever thinking about it.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/energy-monitor.png<br>(per-app %CPU with Low/Med/High dot)</div>
+      <div class="text">
+        <h3>Live energy monitor</h3>
+        <p>See real per-app CPU usage with a colour-coded Low/Medium/High indicator,
+           so you know exactly which apps are draining your battery.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/shortcut-login.png<br>(global shortcut &amp; Launch at Login)</div>
+      <div class="text">
+        <h3>Shortcut &amp; Launch at Login</h3>
+        <p>Trigger freezing from anywhere with a global shortcut, and have AppFreeze
+           ready in your menu bar the moment you log in.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot shot--empty">Screenshot: img/safety.png<br>(active app / Finder / system protected)</div>
+      <div class="text">
+        <h3>Safe by design</h3>
+        <p>AppFreeze never suspends the app you’re using, Finder, or critical system
+           processes — your Mac stays responsive at all times.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    AppFreeze — a tiny menu-bar utility for macOS.<br>
+    The free <strong>Lite</strong> version is on the Mac App Store.<br>
+    by <a href="index.html">Metaflow Lab</a>
+  </footer>
+</div>
+<script src="theme.js"></script>
+</body>
+</html>
