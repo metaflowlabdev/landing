@@ -108,9 +108,13 @@
     render();
     // iOS Safari repaints only the visible tile when CSS variables change,
     // leaving the rest of the page on the old theme. Force a full repaint.
+    // Toggling display collapses the page, so capture and restore the scroll
+    // position — otherwise the user is bounced to the top on every toggle.
+    var sx = window.scrollX, sy = window.scrollY;
     root.style.display = "none";
     void root.offsetHeight; // reflow (same JS turn, so no visible flash)
     root.style.display = "";
+    window.scrollTo(sx, sy);
   });
 
   // When no manual choice is stored, keep following the system live.
