@@ -7,8 +7,9 @@
  * which wins over the system until cleared. A tiny inline guard in <head>
  * applies the stored theme before first paint to avoid a flash.
  *
- * Injecting the nav here keeps every page (and every future product page) in
- * sync — a page only needs to include this script.
+ * Injecting the nav (and the shared footer tail: brand mark + copyright) here
+ * keeps every page (and every future product page) in sync — a page only needs
+ * to include this script and provide an empty <footer> for its own content.
  */
 (function () {
   var root = document.documentElement;
@@ -119,4 +120,17 @@
 
   nav.querySelector(".right").appendChild(btn);
   document.body.insertBefore(nav, document.body.firstChild);
+
+  /* ---- shared footer tail (brand mark + copyright) -------------------- */
+  // Every page keeps its own page-specific footer content; here we append the
+  // common Metaflow Lab brand mark + copyright so it stays in sync everywhere.
+  var foot = document.querySelector("footer");
+  if (foot) {
+    foot.insertAdjacentHTML(
+      "beforeend",
+      '<a class="foot-brand" href="index.html" aria-label="Metaflow Lab — home">' +
+        mark + "<span>Metaflow Lab</span></a><br>" +
+        "© " + new Date().getFullYear() + " Metaflow Lab. All rights reserved."
+    );
+  }
 })();
