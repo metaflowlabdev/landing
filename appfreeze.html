@@ -121,9 +121,12 @@
   .compare-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table.cmp {
     width: 100%; border-collapse: collapse; min-width: 460px;
+    table-layout: fixed;
     background: var(--card); border: 1px solid var(--line);
     border-radius: var(--radius); overflow: hidden;
   }
+  /* three value columns share equal width → checkmarks line up dead-center */
+  table.cmp th:not(.feat), table.cmp td:not(.feat) { width: 150px; }
   table.cmp th, table.cmp td {
     padding: 13px 12px; text-align: center; border-bottom: 1px solid var(--line);
   }
@@ -134,7 +137,7 @@
     letter-spacing: 0.06em; color: var(--muted); margin-top: 3px;
   }
   table.cmp th.feat, table.cmp td.feat {
-    text-align: left; font-weight: 500; color: var(--text); white-space: nowrap;
+    text-align: left; font-weight: 500; color: var(--text);
   }
   table.cmp td { color: var(--muted); font-size: 14px; }
   table.cmp td a { color: var(--accent); text-decoration: none;
@@ -151,12 +154,14 @@
   .cmp-note { text-align: center; color: var(--muted); font-size: 12px; margin: 14px 0 0; }
   /* On phones, let all four columns fit instead of overflowing in a side-scroll */
   @media (max-width: 600px) {
-    table.cmp { min-width: 0; }
+    table.cmp { min-width: 0; table-layout: auto; }
+    table.cmp th:not(.feat), table.cmp td:not(.feat) { width: auto; }
     table.cmp th, table.cmp td { padding: 9px 6px; }
     table.cmp thead th { font-size: 12px; }
     table.cmp thead th small { font-size: 9px; }
     table.cmp td { font-size: 12px; }
     table.cmp th.feat, table.cmp td.feat { white-space: normal; }
+    table.cmp td a { white-space: normal; }
   }
 
   /* App Store button (hero) */
