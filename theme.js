@@ -49,6 +49,10 @@
     "transform:translateX(21px);" + /* default = dark: knob on the right */
     "transition:transform .24s cubic-bezier(.34,1.4,.5,1), background .2s;}" +
     ".theme-toggle .switch.is-light .knob{transform:translateX(0);}" +
+    ".foot-brand{display:inline-flex;align-items:center;gap:7px;text-decoration:none;" +
+    "color:var(--text);font-weight:600;}" +
+    ".foot-brand .mark{width:18px;height:18px;flex:none;}" +
+    ".foot-brand:hover{opacity:.7;}" +
     ".theme-toggle .label{font-size:13px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;}" +
     ".theme-toggle:hover .switch{border-color:color-mix(in srgb, var(--text) 30%, transparent);}" +
     "@media (max-width:460px){.theme-toggle .label{display:none;}}";
