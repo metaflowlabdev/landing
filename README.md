@@ -3,6 +3,21 @@
 Минималистичная посадочная страница ([index.html](index.html)) для воронки
 App Store (Lite) ➔ Web (Pro). Полная стратегия — в [../docs/ТЗ-Lite.md](../docs/ТЗ-Lite.md).
 
+## Деплой
+
+**Источник правды** — эта папка `landing/` в репо кода `kolocim/AppFreeze`.
+**Живой сайт** — `https://metaflowlabdev.github.io/landing/`, отдаётся из публичного
+репо `metaflowlabdev/landing` (GitHub Pages, файлы в корне).
+
+После апрува правок сайта:
+1. Закоммитить `landing/*` в `kolocim/AppFreeze`, `git push`.
+2. `gh auth switch --user metaflowlabdev`
+3. `gh repo clone metaflowlabdev/landing /tmp/landing-deploy`, скопировать
+   изменённые файлы поверх (в корень), сверить `diff`, commit, `git push`.
+4. `gh auth switch --user kolocim`, удалить `/tmp/landing-deploy`.
+
+> Таблицу сравнения фич держать в синхроне с [../docs/FEATURES.md](../docs/FEATURES.md).
+
 ## Как это связано с приложением
 
 В коде Lite зашит **только** короткий редирект `ProUpsell.storeURL`
