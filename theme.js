@@ -117,10 +117,17 @@
     // Toggling display collapses the page, so capture and restore the scroll
     // position — otherwise the user is bounced to the top on every toggle.
     var sx = window.scrollX, sy = window.scrollY;
+    // If a page sets `html { scroll-behavior: smooth }` (e.g. the docs page, for
+    // its anchor links), the restore below would ANIMATE from the collapsed top
+    // back down — a visible jump-to-top-then-back. Neutralise it for the restore,
+    // then put it back so anchor scrolling stays smooth.
+    var prevScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
     root.style.display = "none";
     void root.offsetHeight; // reflow (same JS turn, so no visible flash)
     root.style.display = "";
     window.scrollTo(sx, sy);
+    root.style.scrollBehavior = prevScrollBehavior;
   });
 
   // When no manual choice is stored, keep following the system live.
