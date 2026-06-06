@@ -90,13 +90,32 @@ App Store (Lite) ➔ Web (Pro). Полная стратегия — в [../docs/
 ```bash
 gh auth switch -u metaflowlabdev
 TMP=$(mktemp -d); gh repo clone metaflowlabdev/landing "$TMP/site"
-cp index.html appfreeze.html theme.js README.md "$TMP/site/"; cp img/appfreeze-icon.png "$TMP/site/img/"
+# Зеркалим ВСЮ папку (rsync --delete), чтобы новые файлы (напр. appfreeze-docs.html,
+# новые img/) не потерялись и удалённые удалились. Тестовую папку test/ не публикуем.
+rsync -a --delete --exclude '.git' --exclude 'test' ./ "$TMP/site/"
 cd "$TMP/site" && git add -A && git commit -m "update" && git push origin main
 gh auth switch -u kolocim
 ```
 
 Живой адрес: **https://metaflowlabdev.github.io/landing/**
 (старый хост `metaflowlabdev/appfreeze` выведен из эксплуатации).
+
+## Тема (`theme.js`) и подводные камни
+
+`theme.js` — общая шапка/футер + переключатель темы для всех страниц. Подключать с
+версией для кэш-баста (`theme.js?v=N`, бампить при правке) и давать пустой `<footer>`.
+
+- **Переключатель темы делает `display:none`-реплейнт** (фикс iOS Safari, который
+  иначе перекрашивает только видимую часть) и восстанавливает скролл. **Если страница
+  использует `html { scroll-behavior: smooth }`** (как `appfreeze-docs.html` для якорей
+  сайдбара), восстановление скролла будет **анимироваться от верха → видимый «прыжок
+  вверх и обратно»**. Поэтому `theme.js` на время восстановления принудительно ставит
+  `scroll-behavior:auto`. Не убирать это — иначе баг вернётся на любой smooth-странице.
+- Регрессионный тест: `landing/test/theme-toggle-scroll.test.html` — открыть в браузере
+  (вкладка должна быть **активной**: фоновые вкладки тормозят таймеры), внизу слева
+  должно быть зелёное **PASS**. Тест грузит реальный `theme.js` (cache-busted), скроллит
+  вниз, жмёт тоггл и проверяет, что скролл не ушёл к верху. Папку `test/` в паблик-репо
+  не деплоим.
 
 ## Настройка «вечного» редиректа (Dub.co)
 
