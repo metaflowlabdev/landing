@@ -450,5 +450,41 @@
   document.querySelectorAll(".js-was").forEach(function(el){ el.textContent = REG_PRICE; });
 </script>
 <script src="theme.js"></script>
+<script>
+/* Swap the app-interface media (screenshots + demo videos) between the dark and
+ * light renders whenever the page theme changes. Dark assets are the canonical
+ * src in the markup; light assets share the same name with a "-light" suffix
+ * (e.g. demo-freeze.mp4 → demo-freeze-light.mp4). Only the active theme's files
+ * load, so this costs no extra weight. Mirrors theme.js's effective() logic. */
+(function () {
+  var root = document.documentElement;
+  var mq = window.matchMedia("(prefers-color-scheme: light)");
+  function effective() { return root.getAttribute("data-theme") || (mq.matches ? "light" : "dark"); }
+  function lightURL(u) { return u.replace(/(\.[a-z0-9]+)$/i, "-light$1"); }
+
+  var media = document.querySelectorAll(".features .shot img, .features .shot video, .hero-demo video");
+  media.forEach(function (el) {
+    el.dataset.darkSrc = el.getAttribute("src") || "";
+    if (el.hasAttribute("poster")) el.dataset.darkPoster = el.getAttribute("poster");
+  });
+
+  function apply() {
+    var light = effective() === "light";
+    media.forEach(function (el) {
+      var src = light ? lightURL(el.dataset.darkSrc) : el.dataset.darkSrc;
+      if (el.getAttribute("src") !== src) {
+        el.setAttribute("src", src);
+        if (el.tagName === "VIDEO") { try { el.load(); el.play().catch(function () {}); } catch (e) {} }
+      }
+      if (el.dataset.darkPoster) {
+        el.setAttribute("poster", light ? lightURL(el.dataset.darkPoster) : el.dataset.darkPoster);
+      }
+    });
+  }
+  apply();
+  new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  mq.addEventListener("change", function () { if (!root.getAttribute("data-theme")) apply(); });
+})();
+</script>
 </body>
 </html>
