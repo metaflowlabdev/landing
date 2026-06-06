@@ -36,6 +36,12 @@
     ".brand .mark{width:22px;height:22px;display:block;flex:none;}" +
     ".brand:hover{opacity:.75;}" +
     ".site-nav .right{display:flex;align-items:center;gap:14px;}" +
+    ".site-nav .navlink{color:var(--text);text-decoration:none;font-size:14px;" +
+    "font-weight:500;letter-spacing:-.01em;white-space:nowrap;opacity:.78;" +
+    "transition:opacity .15s;}" +
+    ".site-nav .navlink:hover{opacity:1;}" +
+    ".site-nav .navlink.is-active{opacity:1;font-weight:600;color:var(--accent);}" +
+    "@media (max-width:520px){.site-nav .right{gap:10px;}.site-nav .navlink{font-size:13px;}}" +
     ".theme-toggle{display:inline-flex;align-items:center;gap:9px;border:0;padding:0;" +
     "background:transparent;color:var(--text);font:inherit;cursor:pointer;}" +
     ".theme-toggle .switch{position:relative;width:50px;height:29px;border-radius:999px;" +
@@ -121,6 +127,26 @@
   mq.addEventListener("change", function () {
     if (!root.getAttribute("data-theme")) render();
   });
+
+  /* ---- product nav links (product pages only) ------------------------- */
+  // Shown only when a page opts in via <body data-product="appfreeze">, so the
+  // studio home (index.html) stays a clean brand + theme toggle. Order in the
+  // right group: AppFreeze, Documentation, theme toggle.
+  if (document.body.getAttribute("data-product") === "appfreeze") {
+    var right = nav.querySelector(".right");
+    var here = location.pathname.split("/").pop() || "index.html";
+    var links = [
+      { label: "AppFreeze", href: "appfreeze.html" },
+      { label: "Documentation", href: "appfreeze-docs.html" }
+    ];
+    links.forEach(function (l) {
+      var a = document.createElement("a");
+      a.className = "navlink" + (here === l.href ? " is-active" : "");
+      a.href = l.href;
+      a.textContent = l.label;
+      right.appendChild(a);
+    });
+  }
 
   nav.querySelector(".right").appendChild(btn);
   document.body.insertBefore(nav, document.body.firstChild);

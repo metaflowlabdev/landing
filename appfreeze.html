@@ -221,7 +221,7 @@
                    font-size: 12.5px; color: var(--text); }
 </style>
 </head>
-<body>
+<body data-product="appfreeze">
 <div class="wrap">
   <header class="hero">
     <div class="hero-brand">
@@ -518,6 +518,7 @@
     AppFreeze — a tiny menu-bar utility for macOS.<br>
     The free <strong>Lite</strong> version is on the Mac App Store.<br>
     Support: <a href="mailto:metaflowlab.info@gmail.com">metaflowlab.info@gmail.com</a><br><br>
+    <span style="opacity:.7">Screenshots and videos are illustrative and may differ slightly from the current release as AppFreeze is updated.</span><br><br>
   </footer>
 </div>
 <script>
@@ -529,7 +530,7 @@
   document.querySelectorAll(".js-price").forEach(function(el){ el.textContent = PRO_PRICE; });
   document.querySelectorAll(".js-was").forEach(function(el){ el.textContent = REG_PRICE; });
 </script>
-<script src="theme.js"></script>
+<script src="theme.js?v=2"></script>
 <script>
 /* Swap the app-interface media (screenshots + demo videos) between the dark and
  * light renders whenever the page theme changes. Dark assets are the canonical

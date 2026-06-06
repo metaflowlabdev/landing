@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppFreeze Documentation — how to use AppFreeze on Mac</title>
+<meta name="description" content="Learn how to use AppFreeze: install it, monitor background apps, freeze them to save battery, set a global shortcut, lock apps, and activate Pro.">
+<link rel="icon" type="image/png" href="img/appfreeze-icon.png">
+<link rel="apple-touch-icon" href="img/appfreeze-icon.png">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<style>
+  :root {
+    --bg: #000000; --card: #1d1d1f; --line: #2a2a2c;
+    --text: #f5f5f7; --muted: #a1a1a6; --accent: #2997ff; --accent2: #34c759;
+    --glass-border: color-mix(in srgb, #fff 14%, transparent);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+      --glass-border: var(--line);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+    --glass-border: var(--line);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 0 20px 48px;
+    position: relative; overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(60rem 60rem at 50% -10%, color-mix(in srgb, var(--text) 6%, transparent), transparent 60%);
+  }
+  .docs-wrap { width: 100%; max-width: 1000px; }
+
+  /* Page intro */
+  .docs-head { margin: 0 0 36px; }
+  .docs-head h1 { font-size: 30px; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .docs-head p { color: var(--muted); margin: 0; max-width: 60ch; }
+
+  /* Two-column layout: sticky table of contents + scrolling content */
+  .docs-layout { display: grid; grid-template-columns: 210px 1fr; gap: 48px; align-items: start; }
+
+  .toc { position: sticky; top: 72px; }
+  .toc .toc-group { font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted); margin: 0 0 8px; }
+  .toc ul { list-style: none; margin: 0 0 22px; padding: 0; }
+  .toc li { margin: 0; }
+  .toc a {
+    display: block; padding: 5px 10px; border-radius: 8px;
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    border-left: 2px solid transparent; transition: color .15s, background .15s;
+  }
+  .toc a:hover { color: var(--text); background: color-mix(in srgb, var(--text) 6%, transparent); }
+  .toc a.is-active { color: var(--accent); border-left-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, transparent); }
+
+  /* Content */
+  .doc-section { margin: 0 0 60px; scroll-margin-top: 70px; }
+  .doc-section > h2 { font-size: 23px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .doc-section > .lead { color: var(--muted); margin: 0 0 22px; }
+  .doc-section h3 { font-size: 17px; margin: 28px 0 8px; }
+  .doc-section p { color: var(--muted); margin: 0 0 14px; }
+  .doc-section a { color: var(--accent); text-decoration: none; }
+  .doc-section a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .doc-section code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; color: var(--text);
+    background: color-mix(in srgb, var(--text) 8%, transparent);
+    padding: 1px 6px; border-radius: 5px; }
+  kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
+    color: var(--text); background: color-mix(in srgb, var(--card) 70%, transparent);
+    border: 1px solid var(--glass-border); border-bottom-width: 2px;
+    border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+
+  /* Numbered steps */
+  ol.steps { counter-reset: step; list-style: none; margin: 0 0 18px; padding: 0; }
+  ol.steps > li {
+    position: relative; padding: 0 0 4px 40px; margin: 0 0 14px;
+    color: var(--muted);
+  }
+  ol.steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: 0; top: -1px;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #fff; background: var(--accent);
+  }
+  ol.steps > li strong { color: var(--text); font-weight: 600; }
+
+  /* Status-dot legend: the swatch mirrors the 7px leading dot in the app row */
+  ul.legend { list-style: none; margin: 8px 0 18px; padding: 0; }
+  ul.legend li { display: flex; align-items: flex-start; gap: 11px; margin: 0 0 11px; color: var(--muted); }
+  ul.legend li b { color: var(--text); font-weight: 600; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; margin-top: 6px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent); }
+  .dot--green  { background: var(--accent2); }
+  .dot--blue   { background: var(--accent); }
+  .dot--orange { background: #ff9f0a; }
+  .dot--grey   { background: var(--muted); }
+
+  /* Pro badge */
+  .pro-badge { display: inline-block; vertical-align: middle; margin-left: 8px;
+    font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 1px 8px; }
+
+  /* Media frame (mirrors the product page .shot) */
+  .media {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    margin: 6px 0 8px;
+  }
+  .media img, .media video { display: block; width: 100%; height: auto; }
+  /* Utility-only shots (just the AppFreeze panel) are capped to a consistent
+     width so the interface appears at the same scale across the whole page.
+     Shots that include the desktop (.media--wide) stay large. */
+  .media--util { max-width: 360px; margin-left: auto; margin-right: auto; }
+  .media + .cap, .cap { color: var(--muted); font-size: 13px; margin: 0 0 22px; text-align: center; }
+  /* Step-by-step image series: stacked, each at the same scale as other
+     utility shots so the interface stays a consistent size down the page. */
+  .step-shots { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 6px 0 22px; }
+  .step-shots figure { margin: 0; width: 100%; max-width: 360px; }
+  .step-shots .media { margin: 0 0 8px; }
+  .step-shots figcaption { color: var(--muted); font-size: 12.5px; text-align: center; }
+
+  /* Callout */
+  .note {
+    border: 1px solid var(--glass-border); border-left: 3px solid var(--accent2);
+    background: color-mix(in srgb, var(--card) 55%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
+    border-radius: 12px; padding: 14px 16px; margin: 0 0 18px;
+  }
+  .note p { margin: 0; color: var(--text); font-size: 14px; }
+  .note strong { font-weight: 600; }
+
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--muted); }
+
+  /* Mobile: TOC becomes a horizontal scroll strip under the nav */
+  @media (max-width: 820px) {
+    .docs-layout { grid-template-columns: 1fr; gap: 24px; }
+    .toc {
+      position: sticky; top: 48px; z-index: 30;
+      margin: 0 -20px; padding: 10px 20px;
+      background: color-mix(in srgb, var(--bg) 80%, transparent);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--glass-border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .toc .toc-group { display: none; }
+    .toc ul { display: flex; gap: 6px; margin: 0; white-space: nowrap; }
+    .toc a { border-left: 0; padding: 5px 12px; }
+    .toc a.is-active { border-left: 0; }
+  }
+</style>
+</head>
+<body data-product="appfreeze">
+<div class="docs-wrap">
+
+  <div class="docs-head">
+    <h1>AppFreeze Documentation</h1>
+    <p>A practical guide to using AppFreeze on your Mac — from installing it to
+       freezing background apps, watching energy use, and activating Pro.</p>
+  </div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky table of contents -->
+    <nav class="toc" aria-label="Documentation sections">
+      <p class="toc-group">Start here</p>
+      <ul>
+        <li><a href="#getting-started">Getting started</a></li>
+        <li><a href="#viewing-apps">Viewing your apps</a></li>
+      </ul>
+      <p class="toc-group">Pro features</p>
+      <ul>
+        <li><a href="#freezing">Freezing apps</a></li>
+        <li><a href="#energy">Energy monitor</a></li>
+        <li><a href="#lock-safety">Lock &amp; safety</a></li>
+        <li><a href="#shortcut">Global shortcut</a></li>
+        <li><a href="#activation">Activating Pro</a></li>
+      </ul>
+    </nav>
+
+    <main class="docs-content">
+
+      <!-- 1. Getting started -->
+      <section class="doc-section" id="getting-started">
+        <h2>Getting started</h2>
+        <p class="lead">AppFreeze is a tiny menu-bar utility that suspends background
+          apps so they stop draining your battery and CPU — without quitting them or
+          losing your work.</p>
+
+        <h3>Which version do I need?</h3>
+        <p>There are two editions. <strong>Lite</strong> is free on the Mac App Store
+          and is a read-only monitor: it shows you everything that’s running.
+          <strong>Pro</strong> adds the ability to act on that list — freezing,
+          the energy monitor, sorting, locking and the global shortcut. Pro is
+          available through <a href="appfreeze.html">Setapp or a one-time license</a>.</p>
+
+        <h3>Install &amp; first launch</h3>
+        <ol class="steps">
+          <li><strong>Install</strong> AppFreeze (Lite from the Mac App Store, or Pro
+            from Setapp / your license download).</li>
+          <li><strong>Launch it.</strong> AppFreeze lives in the menu bar — there’s no
+            Dock icon and no window. Look for its icon near the clock.</li>
+          <li><strong>Click the menu-bar icon</strong> to open the panel. Click it
+            again (or click away) to close it.</li>
+        </ol>
+
+        <h3>The panel at a glance</h3>
+        <p>The panel lists your running apps. Each row shows the app, and — on Pro —
+          its CPU and memory use, plus controls to freeze, lock or quit it. A
+          collapsible <strong>Settings</strong> section at the bottom holds list size,
+          Launch at Login and (Pro) the shortcut.</p>
+        <div class="media">
+          <video src="img/hero-demo.mp4" poster="img/hero-demo.jpg" autoplay loop muted playsinline
+                 aria-label="The AppFreeze panel opening from the menu bar and freezing background apps"></video>
+        </div>
+        <p class="cap">The AppFreeze Pro panel, open from the menu bar.</p>
+
+        <div class="note">
+          <p><strong>Launch at Login:</strong> turn it on in Settings so AppFreeze is
+            ready in your menu bar every time you start your Mac.</p>
+        </div>
+      </section>
+
+      <!-- 2. Viewing your apps -->
+      <section class="doc-section" id="viewing-apps">
+        <h2>Viewing your apps</h2>
+        <p class="lead">The core of AppFreeze is a live list of what’s running. This
+          works in both Lite and Pro.</p>
+
+        <h3>Reading the status dots <span class="pro-badge">Pro</span></h3>
+        <p>To the left of each app icon is a small coloured dot — a one-glance summary
+          of that app’s state. The colour tells you what AppFreeze is doing with it:</p>
+        <ul class="legend">
+          <li><span class="dot dot--green"></span><span><b>Green — Running.</b> The app
+            is active and not frozen, using the CPU as normal.</span></li>
+          <li><span class="dot dot--blue"></span><span><b>Blue — Frozen.</b> The app is
+            suspended; its CPU is at zero until you switch to it or unfreeze it.</span></li>
+          <li><span class="dot dot--orange"></span><span><b>Orange — Queued to freeze.</b>
+            The app is part of your <em>Freeze&nbsp;Selected</em> set and will freeze
+            automatically the next time it goes to the background.</span></li>
+          <li><span class="dot dot--grey"></span><span><b>Grey — Protected or locked.</b>
+            AppFreeze never freezes this one — either it’s a system app that’s in use,
+            or an app you’ve locked yourself.</span></li>
+        </ul>
+        <p>Hover a row and the dot turns into a <strong>×</strong> button for quitting
+          the app. (In the free Lite monitor nothing is frozen, so every dot stays green.)</p>
+
+        <h3>Switch, restore &amp; hide</h3>
+        <p>Click any app in the list to bring it to the front. If you’d minimized its
+          window to the Dock, it comes right back. Click the same app again to hide it.
+          It’s a fast way to jump between apps without leaving the menu bar.</p>
+        <div class="media">
+          <video src="img/demo-switch.mp4" poster="img/demo-switch.jpg" autoplay loop muted playsinline
+                 aria-label="Clicking an app in the list brings it forward; clicking again hides it"></video>
+        </div>
+
+        <h3>Adjust the list size</h3>
+        <p>Open the <strong>Settings</strong> section and use the
+          <strong>Rows&nbsp;shown: N</strong> row — tap its <strong>−</strong> and
+          <strong>+</strong> stepper to choose how many apps the list shows, anywhere
+          from <strong>3</strong> to <strong>15</strong>.</p>
+        <p>While Settings is open the list shrinks to make room for the controls;
+          close Settings and the list springs back to the height you picked, so the
+          panel never takes more space than you need.</p>
+
+        <h3>Sort the list <span class="pro-badge">Pro</span></h3>
+        <p>Click a column header — <strong>Name</strong>, <strong>%CPU</strong> or
+          <strong>memory</strong> — to re-sort, ascending or descending. Sort by CPU to
+          surface your biggest battery hogs in one click. (Lite sorts by name only.)</p>
+        <div class="media media--util">
+          <video src="img/demo-sort.mp4" poster="img/demo-sort.jpg" autoplay loop muted playsinline
+                 aria-label="Clicking a column header re-sorts the app list by name, CPU or memory"></video>
+        </div>
+
+        <h3>Quit an app <span class="pro-badge">Pro</span></h3>
+        <p>Hover an app to reveal a close (×) button, or right-click the row and choose
+          Quit. AppFreeze asks you to confirm first, so you never lose unsaved work by
+          accident.</p>
+        <div class="media media--util">
+          <video src="img/demo-quit.mp4" poster="img/demo-quit.jpg" autoplay loop muted playsinline
+                 aria-label="Closing a background app from the list, with a confirmation dialog"></video>
+        </div>
+      </section>
+
+      <!-- 3. Freezing apps -->
+      <section class="doc-section" id="freezing">
+        <h2>Freezing apps <span class="pro-badge">Pro</span></h2>
+        <p class="lead">Freezing is what makes AppFreeze save battery. A frozen app is
+          paused in place — its CPU use drops to zero — and resumes instantly when you
+          need it.</p>
+
+        <h3>Suspend, not quit</h3>
+        <p>Freezing sends the app a <code>SIGSTOP</code> signal, the same primitive
+          macOS uses internally. The app stops where it is and its CPU drops to zero.
+          A <code>SIGCONT</code> wakes it up exactly where it left off — nothing is
+          killed, nothing is lost. This is why freezing isn’t possible in Lite: the App
+          Store sandbox won’t let an app send signals to other processes.</p>
+
+        <h3>Freeze All vs Freeze Selected</h3>
+        <p>There are two modes, and they’re mutually exclusive — you’re in one or the
+          other:</p>
+        <ol class="steps">
+          <li><strong>Freeze All</strong> — suspend every eligible background app right
+            now. Best when you want maximum battery immediately.</li>
+          <li><strong>Freeze Selected</strong> — choose a set of apps once; AppFreeze
+            keeps them frozen in the background and remembers the set. This is the
+            “set it and forget it” mode.</li>
+        </ol>
+        <div class="media media--util">
+          <video src="img/demo-freeze.mp4" poster="img/freeze-toggles.png" autoplay loop muted playsinline
+                 aria-label="Freezing a background app from the panel; its CPU drops to zero"></video>
+        </div>
+
+        <h3>Smart auto-freeze</h3>
+        <p>With <strong>Freeze Selected</strong>, an app thaws automatically the moment
+          you switch to it, and refreezes when you leave. You get the battery savings
+          without ever thinking about it.</p>
+        <div class="media media--util">
+          <video src="img/demo-smart.mp4" poster="img/smart-mode.png" autoplay loop muted playsinline
+                 aria-label="Switching to an app thaws it automatically while the previous one refreezes"></video>
+        </div>
+
+        <div class="note">
+          <p><strong>Tip:</strong> you can also switch modes from the menu-bar icon’s
+            right-click menu — Unfreeze, Freeze, or Freeze Selected.</p>
+        </div>
+      </section>
+
+      <!-- 4. Energy monitor -->
+      <section class="doc-section" id="energy">
+        <h2>Energy monitor <span class="pro-badge">Pro</span></h2>
+        <p class="lead">See exactly which apps are draining your battery, live, right in
+          the panel.</p>
+        <p>Each row shows the app’s real <strong>%CPU</strong>, colour-coded by load —
+          grey for low, yellow for medium, red for high — plus its
+          <strong>memory</strong> use in compact units. Combine it with sort-by-CPU to
+          find and freeze your worst offenders in seconds.</p>
+        <div class="media media--util">
+          <video src="img/demo-energy.mp4" poster="img/energy-monitor.png" autoplay loop muted playsinline
+                 aria-label="Live per-app CPU usage updating, colour-coded by energy level"></video>
+        </div>
+      </section>
+
+      <!-- 5. Lock & safety -->
+      <section class="doc-section" id="lock-safety">
+        <h2>Lock &amp; safety <span class="pro-badge">Pro</span></h2>
+        <p class="lead">AppFreeze is safe by design, and Pro lets you protect specific
+          apps from ever being frozen.</p>
+
+        <h3>Lock an app</h3>
+        <p>Right-click any app and choose <strong>Lock</strong>. A locked app is skipped
+          by every freeze operation, no matter which mode you’re in — useful for a
+          download, a render, or anything you need to keep running. A lock icon marks it
+          in the list; click the lock to unlock it again.</p>
+        <div class="media media--util">
+          <video src="img/demo-lock.mp4" poster="img/demo-lock.jpg" autoplay loop muted playsinline
+                 aria-label="Locking an app from the context menu; a lock icon appears and the app stays running"></video>
+        </div>
+
+        <h3>Always safe</h3>
+        <p>AppFreeze <strong>never</strong> freezes the app you’re actively using,
+          Finder, the Dock, core system processes, or itself. A shield icon marks
+          protected apps. Your Mac stays responsive at all times — by design.</p>
+        <div class="media media--util">
+          <video src="img/demo-safety.mp4" poster="img/safety.png" autoplay loop muted playsinline
+                 aria-label="Finder marked as protected with a shield and never frozen while other apps are suspended"></video>
+        </div>
+      </section>
+
+      <!-- 6. Global shortcut -->
+      <section class="doc-section" id="shortcut">
+        <h2>Global shortcut <span class="pro-badge">Pro</span></h2>
+        <p class="lead">Freeze without opening the panel at all.</p>
+        <p>By default, <kbd>⌥⌘F</kbd> triggers freezing from anywhere. In
+          <strong>Settings</strong> you can record your own shortcut, reset it to the
+          default, and choose what it does — <strong>Freeze All</strong> or
+          <strong>Freeze Selected</strong>.</p>
+        <ol class="steps">
+          <li>Open <strong>Settings</strong> in the panel.</li>
+          <li>Click the shortcut field and <strong>press your key combination</strong>
+            to record it (or Reset to return to <kbd>⌥⌘F</kbd>).</li>
+          <li>Pick the <strong>action</strong> the shortcut performs.</li>
+        </ol>
+        <div class="media media--util">
+          <video src="img/demo-customize.mp4" poster="img/demo-customize.jpg" autoplay loop muted playsinline
+                 aria-label="Recording a custom global shortcut and resetting it, plus enabling Launch at Login"></video>
+        </div>
+      </section>
+
+      <!-- 7. Activating Pro -->
+      <section class="doc-section" id="activation">
+        <h2>Activating Pro</h2>
+        <p class="lead">If you bought a one-time license, here’s how to activate it.
+          (On Setapp, Pro is unlocked automatically as part of your subscription —
+          there’s nothing to enter.)</p>
+
+        <h3>Trial</h3>
+        <p>The direct download starts with a <strong>14-day trial</strong> the first
+          time you launch it — full freezing included, no key required.</p>
+
+        <h3>Enter your license key</h3>
+        <ol class="steps">
+          <li>Open <strong>Settings → License → Activate…</strong></li>
+          <li><strong>Paste the license key</strong> from your purchase email and
+            confirm. AppFreeze checks it online <strong>once</strong> and stores it
+            securely in your Keychain.</li>
+          <li>That’s it — Pro is active. There are no repeated online checks afterward;
+            AppFreeze trusts the Keychain. One key works on about three Macs.</li>
+        </ol>
+        <div class="step-shots">
+          <figure>
+            <div class="media"><img src="img/docs-activate-1.png" alt="Settings → License with an empty key field" loading="lazy"></div>
+            <figcaption>1 · Open License, paste your key</figcaption>
+          </figure>
+          <figure>
+            <div class="media"><img src="img/docs-activate-2.png" alt="License key entered, Activate highlighted" loading="lazy"></div>
+            <figcaption>2 · Click Activate</figcaption>
+          </figure>
+          <figure>
+            <div class="media"><img src="img/docs-activate-3.png" alt="License activated, showing account and Deactivate this Mac" loading="lazy"></div>
+            <figcaption>3 · Pro is active on this Mac</figcaption>
+          </figure>
+        </div>
+
+        <h3>Moving to another Mac</h3>
+        <p>To free up a slot, open <strong>Settings → License → Deactivate this Mac</strong>
+          before you stop using a machine. If a Mac is lost, you can release its slot
+          from your Lemon Squeezy account.</p>
+
+        <div class="note">
+          <p><strong>If your trial ends or you deactivate a key, nothing gets stuck:</strong>
+            AppFreeze automatically thaws everything it had frozen, so no app is ever
+            left paused behind a paywall.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    AppFreeze — a tiny menu-bar utility for macOS.<br>
+    Looking for pricing and downloads? See the <a href="appfreeze.html">AppFreeze page</a>.<br>
+    Support: <a href="mailto:metaflowlab.info@gmail.com">metaflowlab.info@gmail.com</a><br><br>
+    <span style="opacity:.7">Screenshots and videos are illustrative and may differ slightly from the current release as AppFreeze is updated.</span><br><br>
+  </footer>
+</div>
+
+<script src="theme.js?v=2"></script>
+<script>
+/* Swap demo media between the dark and light renders when the theme changes.
+ * Dark assets are the canonical src; light assets share the name + "-light"
+ * suffix. Mirrors the logic on appfreeze.html. */
+(function () {
+  var root = document.documentElement;
+  var mq = window.matchMedia("(prefers-color-scheme: light)");
+  function effective() { return root.getAttribute("data-theme") || (mq.matches ? "light" : "dark"); }
+  function lightURL(u) { return u.replace(/(\.[a-z0-9]+)$/i, "-light$1"); }
+
+  var media = document.querySelectorAll(".media img, .media video");
+  media.forEach(function (el) {
+    el.dataset.darkSrc = el.getAttribute("src") || "";
+    if (el.hasAttribute("poster")) el.dataset.darkPoster = el.getAttribute("poster");
+  });
+
+  function apply() {
+    var light = effective() === "light";
+    media.forEach(function (el) {
+      if (!el.dataset.darkSrc) return;
+      var src = light ? lightURL(el.dataset.darkSrc) : el.dataset.darkSrc;
+      if (el.getAttribute("src") !== src) {
+        el.setAttribute("src", src);
+        if (el.tagName === "VIDEO") { try { el.load(); el.play().catch(function () {}); } catch (e) {} }
+      }
+      if (el.dataset.darkPoster) {
+        el.setAttribute("poster", light ? lightURL(el.dataset.darkPoster) : el.dataset.darkPoster);
+      }
+    });
+  }
+  apply();
+  new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  mq.addEventListener("change", function () { if (!root.getAttribute("data-theme")) apply(); });
+})();
+</script>
+<script>
+/* Highlight the table-of-contents link for the section currently in view. */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+  var sections = links
+    .map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); })
+    .filter(Boolean);
+
+  function setActive(id) {
+    links.forEach(function (a) { a.classList.toggle("is-active", a === byId[id]); });
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) setActive(e.target.id);
+    });
+  }, { rootMargin: "-64px 0px -65% 0px", threshold: 0 });
+  sections.forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>
