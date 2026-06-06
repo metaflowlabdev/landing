@@ -201,6 +201,24 @@
   .section-head { text-align: center; margin: 56px 0 18px; }
   .section-head h2 { font-size: 22px; margin: 0 0 4px; }
   .section-head p { color: var(--muted); margin: 0; }
+
+  /* "Under the hood" — technical trust section */
+  .how { margin: 64px 0 8px; }
+  .how > h2 { font-size: 22px; text-align: center; margin: 0 0 4px; }
+  .how > .sub { color: var(--muted); text-align: center; margin: 0 0 28px; }
+  .how-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  @media (max-width: 600px) { .how-grid { grid-template-columns: 1fr; } }
+  .how-item {
+    background: color-mix(in srgb, var(--card) 55%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    backdrop-filter: blur(22px) saturate(1.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px; padding: 22px 20px;
+  }
+  .how-item h3 { font-size: 16px; margin: 0 0 8px; }
+  .how-item p { color: var(--muted); font-size: 14px; margin: 0; }
+  .how-item code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                   font-size: 12.5px; color: var(--text); }
 </style>
 </head>
 <body>
@@ -290,6 +308,10 @@
           </tr>
           <tr>
             <td class="feat">One-click freezing</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">True suspend, not quit (SIGSTOP — apps paused, not killed)</td>
             <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
           </tr>
           <tr>
@@ -463,6 +485,31 @@
         <h3>Safe by design</h3>
         <p>AppFreeze never suspends the app you’re using, Finder, or critical system
            processes — your Mac stays responsive at all times.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how">
+    <h2>Under the hood</h2>
+    <p class="sub">No memory cleaners, no magic — just how Unix already works.</p>
+    <div class="how-grid">
+      <div class="how-item">
+        <h3>Suspend, not quit</h3>
+        <p>AppFreeze sends a <code>SIGSTOP</code> signal — the same primitive macOS
+           uses internally. The app freezes in place and its CPU drops to zero.
+           <code>SIGCONT</code> wakes it instantly, exactly where it left off.
+           Nothing is killed, nothing is lost.</p>
+      </div>
+      <div class="how-item">
+        <h3>Why Pro lives outside the App Store</h3>
+        <p>Sending signals to other processes is a privileged operation Apple’s
+           sandbox doesn’t allow. So Lite is a read-only monitor on the App Store,
+           and the actual freezing lives in Pro — distributed directly and on Setapp.</p>
+      </div>
+      <div class="how-item">
+        <h3>Always safe</h3>
+        <p>The app you’re using, Finder, the Dock and core system processes are
+           never frozen — by design. Your Mac stays responsive at all times.</p>
       </div>
     </div>
   </section>
