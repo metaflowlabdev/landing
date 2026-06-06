@@ -169,6 +169,15 @@
   table.cmp thead .pro { color: var(--text); font-weight: 700; }
   .yes { color: var(--accent2); font-weight: 700; }
   .no  { color: var(--muted); opacity: .5; }
+  /* Block sub-header rows that group features by theme */
+  table.cmp tr.group td {
+    text-align: left; padding: 18px 12px 8px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted);
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  table.cmp tr.group:first-child td { padding-top: 12px; }
   .cmp-note { text-align: center; color: var(--muted); font-size: 12px; margin: 14px 0 0; }
   /* On phones, let all four columns fit instead of overflowing in a side-scroll */
   @media (max-width: 600px) {
@@ -290,6 +299,51 @@
           </tr>
         </thead>
         <tbody>
+          <tr class="group"><td colspan="4">Freeze &amp; save battery</td></tr>
+          <tr>
+            <td class="feat">One-click freezing</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Smart auto-freeze</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">True suspend, not quit (SIGSTOP — apps paused, not killed)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Live energy monitor (per-app CPU)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Per-app memory (RAM)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+
+          <tr class="group"><td colspan="4">Control your apps</td></tr>
+          <tr>
+            <td class="feat">Quit background apps</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Lock apps from freezing</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Restore minimized windows from the Dock in one click</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Sortable list (by CPU / memory / freeze state)</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+          <tr>
+            <td class="feat">Customizable global shortcut</td>
+            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
+          </tr>
+
+          <tr class="group"><td colspan="4">Everyday essentials</td></tr>
           <tr>
             <td class="feat">Menu bar app — one click to open or close, no Dock icon</td>
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
@@ -303,46 +357,6 @@
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
           </tr>
           <tr>
-            <td class="feat">Restore minimized windows from the Dock in one click</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">One-click freezing</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">True suspend, not quit (SIGSTOP — apps paused, not killed)</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Smart auto-freeze</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Live energy monitor (per-app CPU)</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Per-app memory (RAM)</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Sortable list (by CPU / memory / freeze state)</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Quit background apps</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Lock apps from freezing</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
-            <td class="feat">Customizable global shortcut</td>
-            <td class="no">—</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
-          </tr>
-          <tr>
             <td class="feat">Adjustable list size</td>
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
           </tr>
@@ -350,6 +364,8 @@
             <td class="feat">Launch at Login</td>
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
           </tr>
+
+          <tr class="group"><td colspan="4">Trust &amp; privacy</td></tr>
           <tr>
             <td class="feat">Safe by design</td>
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
@@ -362,6 +378,8 @@
             <td class="feat">Free updates (within current major version)</td>
             <td class="yes">✓</td><td class="pro yes">✓</td><td class="pro yes">✓</td>
           </tr>
+
+          <tr class="group"><td colspan="4">Availability &amp; pricing</td></tr>
           <tr>
             <td class="feat">Distribution</td>
             <td><a href="https://apps.apple.com/app/idTODO" rel="noopener"><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Mac App Store</a></td>
