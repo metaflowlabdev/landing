@@ -113,7 +113,14 @@
     border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
     background: var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.25);
   }
-  .shot img { display: block; width: 100%; height: auto; }
+  .shot img, .shot video { display: block; width: 100%; height: auto; }
+  /* Hero: a faux top-right corner of the desktop with the panel open */
+  .hero-demo {
+    max-width: 880px; margin: 4px auto 52px;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--line); box-shadow: 0 20px 55px rgba(0,0,0,.4);
+  }
+  .hero-demo video { display: block; width: 100%; height: auto; }
   /* Placeholder shown until a real screenshot is dropped in */
   .shot--empty {
     aspect-ratio: 16 / 11; display: flex; align-items: center; justify-content: center;
@@ -337,6 +344,12 @@
     <h2>What AppFreeze Pro does</h2>
     <p class="sub">Everything the Lite monitor shows you — plus the power to act on it.</p>
 
+    <!-- Hero demo: the panel living in the menu bar, freezing apps in real time -->
+    <div class="hero-demo">
+      <video src="img/hero-demo.mp4" poster="img/hero-demo.jpg" autoplay loop muted playsinline
+             aria-label="AppFreeze Pro running in the macOS menu bar: the panel opens from its status-bar icon and freezes background apps in a click"></video>
+    </div>
+
     <!--
       SCREENSHOTS: each .shot expects a 2× (Retina) PNG dropped into landing/img/.
       Replace the placeholder <div class="shot shot--empty">…</div> with:
@@ -354,7 +367,7 @@
     </div>
 
     <div class="feature">
-      <div class="shot"><img src="img/freeze-toggles.png" alt="Freeze All and Freeze Selected switches above a list of suspended apps" loading="lazy"></div>
+      <div class="shot"><video src="img/demo-freeze.mp4" poster="img/freeze-toggles.png" autoplay loop muted playsinline aria-label="Clicking an app's switch instantly freezes it: its CPU drops to zero"></video></div>
       <div class="text">
         <h3>One-click freezing</h3>
         <p>Freeze every background app at once, or auto-freeze a remembered set.
@@ -363,7 +376,7 @@
     </div>
 
     <div class="feature">
-      <div class="shot"><img src="img/smart-mode.png" alt="Freeze Selected armed: the active app stays awake while background apps are frozen automatically" loading="lazy"></div>
+      <div class="shot"><video src="img/demo-smart.mp4" poster="img/smart-mode.png" autoplay loop muted playsinline aria-label="Switching to an app thaws it automatically while the previous one refreezes"></video></div>
       <div class="text">
         <h3>Smart auto-freeze</h3>
         <p>Apps thaw the moment you switch to them and refreeze when you leave.
@@ -372,11 +385,29 @@
     </div>
 
     <div class="feature">
-      <div class="shot"><img src="img/energy-monitor.png" alt="Per-app CPU usage colour-coded by energy level: high drain in red, medium in yellow, idle in grey" loading="lazy"></div>
+      <div class="shot"><video src="img/demo-energy.mp4" poster="img/energy-monitor.png" autoplay loop muted playsinline aria-label="Live per-app CPU usage updating, colour-coded red, yellow and grey by energy level"></video></div>
       <div class="text">
         <h3>Live energy monitor</h3>
         <p>See real per-app CPU usage with a colour-coded Low/Medium/High indicator,
            so you know exactly which apps are draining your battery.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot"><video src="img/demo-sort.mp4" poster="img/demo-sort.jpg" autoplay loop muted playsinline aria-label="Clicking a column header re-sorts the app list by name, CPU or memory, ascending or descending"></video></div>
+      <div class="text">
+        <h3>Sort the list your way</h3>
+        <p>Click any column header — Name, %CPU or memory — to re-sort the list,
+           ascending or descending. Surface your biggest battery hogs in one click.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot"><video src="img/demo-quit.mp4" poster="img/demo-quit.jpg" autoplay loop muted playsinline aria-label="Hovering an app reveals a close button; clicking it asks to confirm before quitting the app"></video></div>
+      <div class="text">
+        <h3>Quit background apps</h3>
+        <p>Hover any app for a close button and shut it down right from the menu bar —
+           with a quick confirm so you never lose unsaved work by accident.</p>
       </div>
     </div>
 
