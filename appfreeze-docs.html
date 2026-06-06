@@ -132,6 +132,19 @@
   .step-shots .media { margin: 0 0 8px; }
   .step-shots figcaption { color: var(--muted); font-size: 12.5px; text-align: center; }
 
+  /* Stylised macOS context-menu mock (the menu-bar icon right-click radio) */
+  .menumock { max-width: 260px; margin: 6px 0 8px; padding: 6px;
+    border-radius: 10px; border: 1px solid var(--glass-border);
+    background: color-mix(in srgb, var(--card) 80%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6);
+    box-shadow: 0 12px 34px rgba(0,0,0,.35); font-size: 14px; }
+  .menumock .mi { display: flex; align-items: center; gap: 8px; padding: 5px 10px;
+    border-radius: 6px; color: var(--text); }
+  .menumock .mi .check { width: 14px; flex: none; text-align: center; color: var(--text); opacity: 0; }
+  .menumock .mi.on .check { opacity: 1; }
+  .menumock .mi.on { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .menumock .mi small { color: var(--muted); margin-left: auto; padding-left: 14px; }
+
   /* Callout */
   .note {
     border: 1px solid var(--glass-border); border-left: 3px solid var(--accent2);
@@ -333,10 +346,27 @@
                  aria-label="Switching to an app thaws it automatically while the previous one refreezes"></video>
         </div>
 
-        <div class="note">
-          <p><strong>Tip:</strong> you can also switch modes from the menu-bar icon’s
-            right-click menu — Unfreeze, Freeze, or Freeze Selected.</p>
+        <h3>Quick switch from the menu-bar icon</h3>
+        <p>You don’t have to open the panel to change modes. <strong>Right-click the
+          AppFreeze icon</strong> in the menu bar for a compact radio menu — the three
+          freeze modes are mutually exclusive, so exactly one is always checked, showing
+          your current state at a glance:</p>
+        <div class="menumock" role="img" aria-label="Right-click menu on the AppFreeze menu-bar icon: Unfreeze (checked), Freeze, Freeze Selected">
+          <div class="mi on"><span class="check">✓</span>Unfreeze</div>
+          <div class="mi"><span class="check">✓</span>Freeze</div>
+          <div class="mi"><span class="check">✓</span>Freeze Selected</div>
         </div>
+        <ul class="legend" style="margin-top:6px">
+          <li><span style="width:14px;flex:none"></span><span><b>Unfreeze</b> — idle:
+            nothing is frozen and smart mode is off.</span></li>
+          <li><span style="width:14px;flex:none"></span><span><b>Freeze</b> — freeze every
+            eligible background app right now (Freeze All).</span></li>
+          <li><span style="width:14px;flex:none"></span><span><b>Freeze Selected</b> — arm
+            smart auto-freeze for your chosen set.</span></li>
+        </ul>
+        <p>Picking a row switches straight to that mode; choosing the one that’s already
+          checked does nothing. A <strong>left-click</strong> on the icon still just opens
+          the panel as usual.</p>
       </section>
 
       <!-- 4. Energy monitor -->
