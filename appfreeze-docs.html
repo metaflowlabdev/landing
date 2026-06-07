@@ -205,6 +205,7 @@
       <p class="toc-group">Reference</p>
       <ul>
         <li><a href="#under-the-hood">Under the hood</a></li>
+        <li><a href="battery-methodology.html">Battery savings — measured ↗</a></li>
         <li><a href="#permissions">Permissions</a></li>
       </ul>
     </nav>
@@ -229,8 +230,8 @@
         <ol class="steps">
           <li><strong>Install</strong> AppFreeze (Lite from the Mac App Store, or Pro
             from Setapp / your license download).</li>
-          <li><strong>Launch it.</strong> AppFreeze lives in the menu bar — there’s no
-            Dock icon and no window. Look for its icon near the clock.</li>
+          <li><strong>Launch it.</strong> AppFreeze lives in the menu bar — it has no
+            separate window. Look for its icon near the clock.</li>
           <li><strong>Click the menu-bar icon</strong> to open the panel. Click it
             again (or click away) to close it.</li>
         </ol>
@@ -497,6 +498,14 @@
           instantly, right where it left off. Nothing is killed, nothing is lost.</p>
         <p>This is fundamentally different from force-quitting or memory-compressing:
           the app doesn't even know it was paused.</p>
+
+        <h3>Does this actually save battery? We measured it</h3>
+        <p>A suspended process burns no CPU — but how much battery does that really save?
+          We measured it on real hardware (CPU power via <code>powermetrics</code>, real
+          battery discharge via IOKit): freezing a busy background app cut its power draw
+          by about 98%, and removed roughly 85% of its real battery drain.
+          <a href="battery-methodology.html">See the full methodology, charts &amp; raw
+          measurements →</a></p>
 
         <h3>NSRunningApplication — process discovery</h3>
         <p><code>NSWorkspace.shared.runningApplications</code> gives AppFreeze the live
