@@ -202,6 +202,11 @@
         <li><a href="#shortcut">Global shortcut</a></li>
         <li><a href="#activation">Activating Pro</a></li>
       </ul>
+      <p class="toc-group">Reference</p>
+      <ul>
+        <li><a href="#under-the-hood">Under the hood</a></li>
+        <li><a href="#permissions">Permissions</a></li>
+      </ul>
     </nav>
 
     <main class="docs-content">
@@ -475,6 +480,115 @@
             AppFreeze automatically thaws everything it had frozen, so no app is ever
             left paused behind a paywall.</p>
         </div>
+      </section>
+
+      <!-- 8. Under the hood -->
+      <section class="doc-section" id="under-the-hood">
+        <h2>Under the hood</h2>
+        <p class="lead">AppFreeze is a native macOS app built in Swift and SwiftUI.
+          It uses only standard OS primitives — no kernel extensions, no memory
+          cleaners, no background daemons.</p>
+
+        <h3>SIGSTOP / SIGCONT — true Unix suspend</h3>
+        <p>When you freeze an app, AppFreeze sends it a <code>SIGSTOP</code> signal —
+          the same Unix primitive the macOS kernel uses internally. The process is
+          suspended at the OS level: its CPU usage drops to exactly zero, but the app
+          stays in memory with all its state intact. <code>SIGCONT</code> wakes it
+          instantly, right where it left off. Nothing is killed, nothing is lost.</p>
+        <p>This is fundamentally different from force-quitting or memory-compressing:
+          the app doesn't even know it was paused.</p>
+
+        <h3>NSRunningApplication — process discovery</h3>
+        <p><code>NSWorkspace.shared.runningApplications</code> gives AppFreeze the live
+          list of all user-visible processes. No scraping, no polling beyond the system
+          refresh rate, no private APIs. AppFreeze filters to
+          <code>.regularActivation</code> apps (those with a Dock icon) and excludes
+          system agents.</p>
+
+        <h3>No App Sandbox in Pro</h3>
+        <p>Sending <code>SIGSTOP</code> to another process requires leaving Apple's
+          sandbox. That's why <strong>Pro is distributed directly and via Setapp</strong>
+          — outside the Mac App Store, which mandates sandbox. The Lite version runs
+          fully sandboxed and only reads the process list, which doesn't require any
+          special permissions.</p>
+
+        <h3>Global hotkey via Carbon RegisterEventHotKey</h3>
+        <p>The customizable keyboard shortcut (default <kbd>⌥⌘F</kbd>) is registered
+          using the low-level Carbon <code>RegisterEventHotKey</code> API. This works
+          system-wide without requiring the Accessibility or Input Monitoring
+          permission — which is why AppFreeze never asks for either of those just to
+          handle the shortcut.</p>
+
+        <h3>License stored in the system Keychain</h3>
+        <p>Your Pro license key is kept in the macOS login Keychain, not in a
+          plain-text file or defaults database. It survives reinstalls and is never
+          sent anywhere except the Lemon Squeezy activation endpoint at the moment you
+          activate. AppFreeze works fully offline after activation — no always-on
+          internet connection required.</p>
+
+        <h3>SwiftUI + AppKit menu-bar window</h3>
+        <p>The panel is a native <code>NSPanel</code> with <code>SwiftUI</code> content
+          rendered through <code>NSHostingView</code>. It floats above other windows
+          and dismisses on click-outside, exactly like a system popover. No web views,
+          no Electron, no embedded runtimes.</p>
+      </section>
+
+      <!-- 9. Permissions -->
+      <section class="doc-section" id="permissions">
+        <h2>Permissions</h2>
+        <p class="lead">AppFreeze is designed to ask for as little as possible.
+          Freezing itself requires no user permission — only one optional feature
+          triggers a system prompt.</p>
+
+        <h3>Accessibility — window restore only</h3>
+        <p>macOS requires the <strong>Accessibility</strong> permission for any app
+          that programmatically raises or restores another app's windows. AppFreeze
+          needs it for exactly one feature: <strong>restoring a minimised app from
+          the Dock</strong> by clicking its row in the panel.</p>
+
+        <div class="note">
+          <p>Freezing, unfreezing, switching focus, hiding, and quitting apps all work
+            <strong>without</strong> Accessibility access. The permission is only
+            needed if you want AppFreeze to un-minimise a window for you.</p>
+        </div>
+
+        <h3>When it's requested</h3>
+        <ol class="steps">
+          <li>The <strong>first time</strong> you click a row for an app whose window
+            is minimised in the Dock, AppFreeze shows a one-time explanation dialog
+            and then opens the system Accessibility prompt.</li>
+          <li>If you click <strong>Don't allow</strong>, a gentle banner appears in
+            the Settings panel. AppFreeze will <em>not</em> ask again on its own —
+            no repeated system popups.</li>
+          <li>The Settings panel has an <strong>Accessibility</strong> row that shows
+            live status (Granted / Not granted) and a button to jump directly to
+            System Settings if you change your mind later.</li>
+        </ol>
+
+        <h3>How to grant it</h3>
+        <ol class="steps">
+          <li>Open <strong>System Settings → Privacy &amp; Security → Accessibility</strong>.</li>
+          <li>Find <strong>AppFreeze</strong> in the list and toggle it on.</li>
+          <li>Or: click the <strong>Accessibility</strong> row in AppFreeze Settings —
+            it opens the right pane automatically.</li>
+        </ol>
+
+        <h3>How to revoke it</h3>
+        <p>Same path: <strong>System Settings → Privacy &amp; Security → Accessibility
+          → AppFreeze → toggle off</strong>. After revoking, freezing and all other
+          features continue to work normally — only the window-restore action is
+          disabled until you grant it again.</p>
+
+        <h3>What AppFreeze does NOT request</h3>
+        <ul>
+          <li><strong>Input Monitoring</strong> — not needed. The global shortcut uses
+            the Carbon <code>RegisterEventHotKey</code> API, which is exempt from Input
+            Monitoring.</li>
+          <li><strong>Full Disk Access</strong> — AppFreeze never reads files.</li>
+          <li><strong>Contacts, Calendar, Camera, Microphone</strong> — not used.</li>
+          <li><strong>Screen Recording</strong> — not used. AppFreeze never captures
+            your screen.</li>
+        </ul>
       </section>
 
     </main>
