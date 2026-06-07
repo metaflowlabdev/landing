@@ -406,6 +406,31 @@
              aria-label="AppFreeze Pro running in the macOS menu bar: the panel opens from its status-bar icon and freezes background apps in a click"></video>
     </div>
 
+    <!-- Energy proof: battery power draw collapses the moment you freeze -->
+    <h3 style="text-align:center;margin:52px 0 6px;font-size:19px;">See where your battery goes</h3>
+    <p class="sub" style="margin-bottom:22px;">Background apps quietly drain power. Hit Freeze All and watch the draw fall.</p>
+    <div class="hero-demo">
+      <video src="img/demo-energy-proof.mp4" poster="img/demo-energy-proof.jpg" autoplay loop muted playsinline
+             aria-label="A system monitor plots the Mac's battery power draw while it runs high; turning on AppFreeze's Freeze All makes the power draw drop by about 80 percent. Figure is illustrative."></video>
+    </div>
+
+    <!-- Per-app control: freeze apps one by one, draw falls step by step -->
+    <h3 style="text-align:center;margin:52px 0 6px;font-size:19px;">Or dial it in, app by app</h3>
+    <p class="sub" style="margin-bottom:22px;">Freeze just the apps you don't need right now — each one trims the draw a little further.</p>
+    <div class="hero-demo">
+      <video src="img/demo-energy-steps.mp4" poster="img/demo-energy-steps.jpg" autoplay loop muted playsinline
+             aria-label="Freezing three background apps one at a time; the battery power-draw graph drops a step with each freeze, ending about a third at a time lower. Figures are illustrative."></video>
+    </div>
+
+    <p style="max-width:680px;margin:16px auto 0;padding:12px 16px;border:1px solid var(--line);
+              border-radius:10px;color:var(--muted);font-size:12.5px;line-height:1.5;text-align:center;">
+      <strong>For illustration only.</strong> These two clips are a demonstration of the idea, not a recording of
+      real measurements. The energy graph is a simulation — AppFreeze suspends apps to cut their CPU use; it does
+      not measure wattage, and actual battery savings vary by app and workload.
+      <em>Activity Monitor</em> is Apple’s own utility, shown here purely to illustrate the concept — it is not part
+      of AppFreeze.
+    </p>
+
     <!--
       SCREENSHOTS: each .shot expects a 2× (Retina) PNG dropped into landing/img/.
       Replace the placeholder <div class="shot shot--empty">…</div> with:
