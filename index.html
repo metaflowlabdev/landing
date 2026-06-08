@@ -98,10 +98,20 @@
 
   /* Coming-soon tiles are muted and non-interactive */
   .tile--soon { opacity: .6; }
+  /* Universal greyed-out app-icon placeholder (no "?" — that read as a bug) */
   .tile--soon .icon {
-    background: var(--line); box-shadow: none;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--muted) 22%, transparent),
+        color-mix(in srgb, var(--muted) 12%, transparent));
+    box-shadow: none;
+    border: 1px solid color-mix(in srgb, var(--muted) 26%, transparent);
     display: flex; align-items: center; justify-content: center;
-    color: var(--muted); font-size: 30px; font-weight: 300;
+  }
+  /* faint inner squircle hints "app icon" without any glyph */
+  .tile--soon .icon::after {
+    content: ""; width: 36px; height: 36px; border-radius: 9px;
+    border: 2px solid color-mix(in srgb, var(--muted) 30%, transparent);
   }
 
   footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 56px; }
@@ -140,14 +150,14 @@
 
     <!-- Coming soon -->
     <div class="tile tile--soon">
-      <div class="icon">?</div>
+      <div class="icon" aria-hidden="true"></div>
       <h2>In the works</h2>
       <p>Another focused Mac app is on the way.</p>
       <span class="badge badge--soon">Coming soon</span>
     </div>
 
     <div class="tile tile--soon">
-      <div class="icon">?</div>
+      <div class="icon" aria-hidden="true"></div>
       <h2>In the works</h2>
       <p>More to come from the lab.</p>
       <span class="badge badge--soon">Coming soon</span>
