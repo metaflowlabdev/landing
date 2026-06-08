@@ -192,6 +192,56 @@
     .toc a { border-left: 0; padding: 5px 12px; }
     .toc a.is-active { border-left: 0; }
   }
+
+  /* ---- Animated how-to demos (self-contained, themed, loop) ---- */
+  .demo { position:relative; height:200px; border:1px solid var(--line); border-radius:14px;
+    background:var(--card); overflow:hidden; margin:14px 0 6px; }
+  .demo .scene { position:absolute; left:50%; top:0; width:540px; height:100%; transform:translateX(-50%); }
+  .demo .badge { position:absolute; top:8px; right:10px; font-size:11px; color:var(--muted);
+    border:1px solid var(--line); border-radius:20px; padding:2px 9px; }
+  .dcur { position:absolute; z-index:8; pointer-events:none; }
+  .dcur svg, .lic-cur svg { display:block; filter:drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+  .dapp { position:absolute; width:74px; text-align:center; z-index:3; }
+  .dapp .ic { width:58px; height:58px; margin:0 auto; border-radius:15px;
+    background:linear-gradient(160deg,#4a90ff,#1d4ed8); display:flex; align-items:center; justify-content:center;
+    font-size:30px; color:#eaf2ff; box-shadow:0 5px 12px rgba(0,0,0,.25); }
+  .dapp .nm { font-size:11px; color:var(--text); margin-top:5px; }
+  .dfold { position:absolute; width:96px; text-align:center; z-index:2; }
+  .dfold .ic { font-size:56px; line-height:1; } .dfold .nm { font-size:11px; color:var(--text); margin-top:-4px; }
+  .dc1 { animation:dcur1 6s linear infinite; } .da1 { animation:dapp1 6s linear infinite; } .df1 { animation:dfold1 6s linear infinite; }
+  @keyframes dcur1 { 0%{left:270px;top:195px;opacity:0} 6%{left:270px;top:195px;opacity:1} 14%{left:108px;top:92px}
+    50%{left:430px;top:88px} 88%{left:430px;top:88px;opacity:1} 95%{opacity:0} 100%{left:430px;top:88px;opacity:0} }
+  @keyframes dapp1 { 0%{left:86px;top:58px;opacity:1} 12%{left:86px;top:58px;opacity:1} 50%{left:408px;top:54px;opacity:1}
+    88%{left:408px;top:54px;opacity:1} 95%{opacity:0} 100%{left:408px;top:54px;opacity:0} }
+  @keyframes dfold1 { 0%,46%{transform:scale(1);filter:none} 54%{transform:scale(1.1);filter:drop-shadow(0 0 12px var(--accent))}
+    66%{transform:scale(1);filter:none} 100%{filter:none} }
+  /* license activation */
+  .lic { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:360px;
+    border:1px solid var(--line); border-radius:12px; background:var(--card); box-shadow:0 10px 28px rgba(0,0,0,.14); }
+  .lic .hd { display:flex; align-items:center; gap:8px; padding:11px 14px; border-bottom:1px solid var(--line); font-weight:600; }
+  .lic .hd .sp { margin-left:auto; font-weight:500; }
+  .lic .bd { padding:12px 14px; position:relative; min-height:104px; }
+  .lic .field { border:1px solid var(--line); border-radius:7px; padding:8px 10px;
+    font:12px ui-monospace,Menlo,Consolas,monospace; color:var(--text); overflow:hidden; }
+  .lic .field .typed { display:inline-block; overflow:hidden; white-space:nowrap; vertical-align:bottom;
+    animation:lictype 6s steps(28,end) infinite; }
+  .lic .actbtn { margin-top:10px; display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:#fff;
+    border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; animation:licbtn 6s ease-in-out infinite; }
+  .lic .before { animation:licbefore 6s ease-in-out infinite; }
+  .lic .after { position:absolute; inset:12px 14px; display:flex; flex-direction:column; justify-content:center; gap:5px;
+    opacity:0; animation:licafter 6s ease-in-out infinite; }
+  .lic .after .ok { color:#1a9e4b; font-weight:700; }
+  .lic-cur { position:absolute; z-index:9; animation:liccur 6s ease-in-out infinite; }
+  @keyframes lictype { 0%,18%{width:0} 44%{width:15ch} 100%{width:15ch} }
+  @keyframes licbtn { 0%,52%{transform:scale(1)} 56%{transform:scale(.93)} 60%{transform:scale(1)} 100%{transform:scale(1)} }
+  @keyframes licbefore { 0%,58%{opacity:1} 64%{opacity:0} 100%{opacity:0} }
+  @keyframes licafter { 0%,60%{opacity:0} 66%{opacity:1} 96%{opacity:1} 100%{opacity:0} }
+  @keyframes liccur { 0%{left:180px;top:150px;opacity:0} 8%{opacity:1} 40%{left:74px;top:96px} 56%{left:74px;top:96px}
+    60%{left:74px;top:96px} 90%{opacity:1} 96%{left:74px;top:120px;opacity:0} 100%{opacity:0} }
+  @media (prefers-reduced-motion: reduce) {
+    .dc1,.da1,.df1,.lic .before,.lic .after,.lic .field .typed,.lic .actbtn,.lic-cur { animation:none; }
+    .lic .after { opacity:1; } .lic .field .typed { width:15ch; }
+  }
 </style>
 </head>
 <body data-product="appfreeze">
@@ -253,6 +303,13 @@
           <li><strong>Click the menu-bar icon</strong> to open the panel. Click it
             again (or click away) to close it.</li>
         </ol>
+
+        <div class="demo"><span class="badge">demo</span><div class="scene">
+          <div class="dfold df1" style="left:418px;top:54px"><div class="ic">📁</div><div class="nm">Applications</div></div>
+          <div class="dapp da1" style="left:86px;top:58px"><div class="ic">❄︎</div><div class="nm">AppFreeze</div></div>
+          <span class="dcur dc1" style="left:86px;top:58px"><svg width="20" height="24" viewBox="0 0 12 19"><path d="M1 1V15l3.3-3.2L7 17l2-.8-2.5-5.4H11z" fill="#000" stroke="#fff" stroke-width="1.1"/></svg></span>
+        </div></div>
+        <p class="cap">Direct download: drag AppFreeze into your Applications folder, then launch it.</p>
 
         <h3>The panel at a glance</h3>
         <p>The panel lists your running apps. Each row shows the app, and — on Pro —
@@ -509,6 +566,25 @@
           <li>That’s it — Pro is active. There are no repeated online checks afterward;
             AppFreeze trusts the Keychain. One key works on about three Macs.</li>
         </ol>
+        <div class="demo"><span class="badge">demo</span>
+          <div class="lic">
+            <div class="hd">🔑 License <span class="sp" style="color:var(--accent)">Activate…</span></div>
+            <div class="bd">
+              <div class="before">
+                <div class="field"><span class="typed">AFREE-7K2M-9QX4-PD8T</span></div>
+                <div class="actbtn">🔑 Activate</div>
+              </div>
+              <div class="after">
+                <div class="ok">✓ License — Active</div>
+                <div style="color:var(--muted);font-size:12px">Account: you@example.com</div>
+                <div style="color:var(--muted);font-size:12px">Status: Pro · this Mac</div>
+              </div>
+              <span class="lic-cur" style="left:180px;top:150px"><svg width="20" height="24" viewBox="0 0 12 19"><path d="M1 1V15l3.3-3.2L7 17l2-.8-2.5-5.4H11z" fill="#000" stroke="#fff" stroke-width="1.1"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <p class="cap">Settings → License → paste your key → Activate → Pro is active on this Mac.</p>
+
         <div class="step-shots">
           <figure>
             <div class="media"><img src="img/docs-activate-1.png" alt="Settings → License with an empty key field" loading="lazy"></div>
