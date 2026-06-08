@@ -270,9 +270,24 @@
   @keyframes licafter { 0%,60%{opacity:0} 66%{opacity:1} 96%{opacity:1} 100%{opacity:0} }
   @keyframes liccur { 0%{left:180px;top:150px;opacity:0} 8%{opacity:1} 40%{left:74px;top:96px} 56%{left:74px;top:96px}
     60%{left:74px;top:96px} 90%{opacity:1} 96%{left:74px;top:120px;opacity:0} 100%{opacity:0} }
+  /* uninstall: drag the app icon into the Trash */
+  .dtrash { position:absolute; width:96px; text-align:center; z-index:2; }
+  .dtrash .ic { font-size:54px; line-height:1; } .dtrash .nm { font-size:11px; color:var(--text); margin-top:-2px; }
+  .du-app { animation:duapp 3.8s cubic-bezier(.45,.05,.25,1) infinite; }
+  .du-cur { animation:ducur 3.8s cubic-bezier(.45,.05,.25,1) infinite; }
+  .du-trash { animation:dutrash 3.8s ease-in-out infinite; }
+  @keyframes duapp { 0%,16%{left:78px;top:62px;opacity:1;transform:scale(1)} 56%{left:404px;top:60px;opacity:1;transform:scale(1)}
+    70%{left:412px;top:66px;transform:scale(.55);opacity:.55} 80%{left:412px;top:66px;transform:scale(.18);opacity:0}
+    100%{left:78px;top:62px;transform:scale(1);opacity:0} }
+  @keyframes ducur { 0%{left:270px;top:195px;opacity:0} 6%{opacity:1} 20%{left:100px;top:96px} 56%{left:426px;top:94px}
+    72%{left:426px;top:100px} 86%{opacity:1} 92%{opacity:0} 100%{left:426px;top:94px;opacity:0} }
+  @keyframes dutrash { 0%,66%{transform:scale(1);filter:none} 74%{transform:scale(1.15);filter:drop-shadow(0 0 11px #ff5a52)}
+    86%{transform:scale(1);filter:none} 100%{filter:none} }
   @media (prefers-reduced-motion: reduce) {
-    .dc1,.da1,.df1,.lic .before,.lic .after,.lic .field .typed,.lic .actbtn,.lic-cur { animation:none; }
+    .dc1,.da1,.df1,.lic .before,.lic .after,.lic .field .typed,.lic .actbtn,.lic-cur,
+    .du-app,.du-cur,.du-trash { animation:none; }
     .lic .after { opacity:1; } .lic .field .typed { width:15ch; }
+    .du-app { left:78px; top:62px; opacity:1; }
   }
 </style>
 </head>
@@ -308,6 +323,7 @@
         <li><a href="battery-methodology.html">Battery savings — measured ↗</a></li>
         <li><a href="#permissions">Permissions</a></li>
         <li><a href="#extras">Small touches</a></li>
+        <li><a href="#uninstall">Uninstalling</a></li>
       </ul>
     </nav>
 
@@ -833,6 +849,72 @@
           with the version number and an <strong>“AppFreeze website →”</strong> link, plus
           short tooltips on the controls — hover any button for a one-line reminder of what
           it does.</p>
+      </section>
+
+      <!-- 11. Uninstalling -->
+      <section class="doc-section" id="uninstall">
+        <h2>Uninstalling AppFreeze</h2>
+        <p class="lead">Removing AppFreeze is a normal app uninstall — drag it to the
+          Trash. It leaves nothing running in the background and installs no system
+          extensions. The exact steps differ slightly between the two editions.</p>
+
+        <div class="demo"><span class="badge">demo</span><div class="scene">
+          <div class="dtrash du-trash" style="left:404px;top:48px"><div class="ic">🗑️</div><div class="nm">Trash</div></div>
+          <div class="dapp du-app" style="left:78px;top:62px"><div class="ic">❄︎</div><div class="nm">AppFreeze</div></div>
+          <span class="dcur du-cur" style="left:78px;top:62px"><svg width="20" height="24" viewBox="0 0 12 19"><path d="M1 1V15l3.3-3.2L7 17l2-.8-2.5-5.4H11z" fill="#000" stroke="#fff" stroke-width="1.1"/></svg></span>
+        </div></div>
+        <p class="cap">To uninstall: quit AppFreeze, then drag it from Applications into the Trash.</p>
+
+        <h3>Pro (direct download or Setapp)</h3>
+        <ol class="steps">
+          <li><strong>Quit AppFreeze first.</strong> Click the menu-bar icon, open
+            <strong>Settings → About</strong> (or use the panel’s quit control) and quit
+            so no process is left running. If you froze any apps, AppFreeze
+            <strong>unfreezes them all automatically on quit</strong> — nothing stays
+            suspended.</li>
+          <li><strong>Drag the app to the Trash.</strong> Open
+            <strong>Applications</strong> in Finder, drag <code>AppFreeze.app</code> to the
+            Trash, and empty it. (On <strong>Setapp</strong>, open the Setapp app and choose
+            <em>Uninstall</em> on the AppFreeze tile instead.)</li>
+          <li><strong>Optional — remove settings.</strong> Your preferences live in
+            <code>~/Library/Preferences/com.kolocim.AppFreeze.plist</code>. Delete that file
+            if you want a fully clean removal. (Your Pro license is stored separately in the
+            macOS login Keychain under <code>com.metaflowlab.appfreeze.license</code> and can
+            be left in place for a future reinstall, or removed via <strong>Keychain
+            Access</strong>.)</li>
+          <li><strong>Optional — revoke the permission.</strong> If you ever granted
+            Accessibility access (used only to restore minimised windows), open
+            <strong>System Settings → Privacy &amp; Security → Accessibility</strong> and
+            remove AppFreeze from the list.</li>
+        </ol>
+
+        <div class="note">
+          <p><strong>No leftovers to hunt down.</strong> AppFreeze installs no launch
+            agents, daemons, kernel/system extensions or login items beyond the optional
+            <em>Launch at Login</em> toggle — which macOS clears automatically once the app
+            is in the Trash. Dragging the app out is enough; the steps above are only for a
+            spotless removal.</p>
+        </div>
+
+        <h3>Lite (Mac App Store)</h3>
+        <ol class="steps">
+          <li><strong>Quit AppFreeze</strong> from its menu-bar icon.</li>
+          <li><strong>Remove it like any App Store app.</strong> Open
+            <strong>Launchpad</strong>, click and hold the AppFreeze icon until it jiggles,
+            then click the <strong>✕</strong>. (You can also delete it from the
+            <strong>App&nbsp;Store</strong> app’s account/Updates list, or drag
+            <code>AppFreeze light.app</code> from Applications to the Trash.)</li>
+          <li><strong>Optional — remove settings.</strong> Lite’s preferences live in
+            <code>~/Library/Preferences/com.kolocim.AppFreezeLite.plist</code>. Lite is fully
+            sandboxed and never requests any system permission, so there’s nothing to revoke
+            in System Settings.</li>
+        </ol>
+
+        <div class="note">
+          <p><strong>Reinstalling later?</strong> If you keep the preference file, AppFreeze
+            picks up your list size, shortcut and other settings again on the next launch.
+            Pro reactivates instantly from the Keychain if you left the license in place.</p>
+        </div>
       </section>
 
     </main>
