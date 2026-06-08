@@ -108,6 +108,24 @@
   .dot--orange { background: #ff9f0a; }
   .dot--grey   { background: var(--muted); }
 
+  /* Consolidated status reference: dot + row icon + meaning, one card */
+  .statuses { margin: 6px 0 20px; border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; background: color-mix(in srgb, var(--card) 60%, transparent); }
+  .statuses .srow { display: grid; grid-template-columns: 26px 22px 1fr; align-items: start;
+    gap: 14px; padding: 15px 18px; }
+  .statuses .srow + .srow { border-top: 1px solid var(--line); }
+  .statuses .sdot { display: flex; justify-content: center; padding-top: 4px; }
+  .statuses .sdot .dot { margin-top: 0; }
+  .statuses .sico { display: flex; justify-content: center; padding-top: 2px; }
+  .statuses .sico svg { width: 17px; height: 17px; display: block; }
+  .statuses .sico .none { color: var(--muted); opacity: .4; font-size: 15px; line-height: 1.4; }
+  .statuses .smeaning { color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .statuses .smeaning b { color: var(--text); font-weight: 600; }
+  .statuses .smeaning .pair { color: var(--muted); font-weight: 600; }
+  @media (max-width: 540px) {
+    .statuses .srow { grid-template-columns: 22px 20px 1fr; gap: 10px; padding: 13px 14px; }
+  }
+
   /* Pro badge */
   .pro-badge { display: inline-block; vertical-align: middle; margin-left: 8px;
     font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
@@ -259,23 +277,58 @@
         <p class="lead">The core of AppFreeze is a live list of what’s running. This
           works in both Lite and Pro.</p>
 
-        <h3>Reading the status dots <span class="pro-badge">Pro</span></h3>
-        <p>To the left of each app icon is a small coloured dot — a one-glance summary
-          of that app’s state. The colour tells you what AppFreeze is doing with it:</p>
-        <ul class="legend">
-          <li><span class="dot dot--green"></span><span><b>Green — Running.</b> The app
-            is active and not frozen, using the CPU as normal.</span></li>
-          <li><span class="dot dot--blue"></span><span><b>Blue — Frozen.</b> The app is
-            suspended; its CPU is at zero until you switch to it or unfreeze it.</span></li>
-          <li><span class="dot dot--orange"></span><span><b>Orange — Queued to freeze.</b>
-            The app is part of your <em>Freeze&nbsp;Selected</em> set and will freeze
-            automatically the next time it goes to the background.</span></li>
-          <li><span class="dot dot--grey"></span><span><b>Grey — Protected or locked.</b>
-            AppFreeze never freezes this one — either it’s a system app that’s in use,
-            or an app you’ve locked yourself.</span></li>
-        </ul>
-        <p>Hover a row and the dot turns into a <strong>×</strong> button for quitting
-          the app. (In the free Lite monitor nothing is frozen, so every dot stays green.)</p>
+        <h3>App statuses at a glance <span class="pro-badge">Pro</span></h3>
+        <p>Every app in the list carries two visual cues: a coloured <strong>status
+          dot</strong> on the left edge, and — where it matters — a small
+          <strong>icon</strong> next to its name. Together they tell you, in one
+          glance, exactly what AppFreeze will (or won’t) do with that app. Here’s the
+          full set:</p>
+        <div class="statuses" role="table" aria-label="App status reference">
+          <div class="srow" role="row">
+            <span class="sdot"><span class="dot dot--green"></span></span>
+            <span class="sico"><span class="none">—</span></span>
+            <span class="smeaning"><b>Running</b> — the app is awake and using the CPU
+              normally. This is the <span class="pair">unfrozen</span> state: nothing is
+              suspended. (In free Lite every app stays here — Lite only watches.)</span>
+          </div>
+          <div class="srow" role="row">
+            <span class="sdot"><span class="dot dot--orange"></span></span>
+            <span class="sico"><span class="none">—</span></span>
+            <span class="smeaning"><b>Queued to freeze</b> — the app is in your
+              <em>Freeze&nbsp;Selected</em> set and is still running, but will freeze
+              automatically the next time it drops to the background.</span>
+          </div>
+          <div class="srow" role="row">
+            <span class="sdot"><span class="dot dot--blue"></span></span>
+            <span class="sico"><span class="none">—</span></span>
+            <span class="smeaning"><b>Frozen</b> — the process is suspended; its CPU is
+              at zero and it can’t drain the battery. Switch to it or unfreeze it and it
+              picks up exactly where it left off — nothing is quit or lost.</span>
+          </div>
+          <div class="srow" role="row">
+            <span class="sdot"><span class="dot dot--grey"></span></span>
+            <span class="sico" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.2 2.6 3.3v3.4c0 3.3 2.2 6.3 5.4 7.4 3.2-1.1 5.4-4.1 5.4-7.4V3.3L8 1.2Zm3 4.6L7.4 9.4a.7.7 0 0 1-1 0L4.9 7.8a.7.7 0 1 1 1-1l1 1L10 4.8a.7.7 0 1 1 1 1Z"/></svg>
+            </span>
+            <span class="smeaning"><b>Protected</b> — a system app, your active app, or
+              AppFreeze itself, marked with a <strong>shield</strong>. AppFreeze refuses
+              to freeze these so your Mac never hangs. Reads
+              <em>“In&nbsp;use&nbsp;·&nbsp;protected.”</em> You can’t turn this off.</span>
+          </div>
+          <div class="srow" role="row">
+            <span class="sdot"><span class="dot dot--grey"></span></span>
+            <span class="sico" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.6 6.4V5a3.4 3.4 0 0 1 6.8 0v1.4h.3c.7 0 1.3.6 1.3 1.3v4.6c0 .7-.6 1.3-1.3 1.3H4.3c-.7 0-1.3-.6-1.3-1.3V7.7c0-.7.6-1.3 1.3-1.3h.3Zm1.5 0h3.8V5a1.9 1.9 0 0 0-3.8 0v1.4Z"/></svg>
+            </span>
+            <span class="smeaning"><b>Locked</b> — an app you’ve
+              <span class="pair">locked</span> yourself, marked with a
+              <strong>lock</strong>. It keeps running and is skipped by every freeze
+              action. Reads <em>“Locked&nbsp;·&nbsp;Running.”</em> Click the lock (or use
+              the right-click menu) to <span class="pair">unlock</span> it again.</span>
+          </div>
+        </div>
+        <p>Hover any row and its status dot turns into a <strong>×</strong> button for
+          quitting the app.</p>
 
         <h3>Switch, restore &amp; hide</h3>
         <p>Click any app in the list to bring it to the front. If you’d minimized its
