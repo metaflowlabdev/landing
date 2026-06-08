@@ -208,13 +208,13 @@
   .dapp .nm { font-size:11px; color:var(--text); margin-top:5px; }
   .dfold { position:absolute; width:96px; text-align:center; z-index:2; }
   .dfold .ic { font-size:56px; line-height:1; } .dfold .nm { font-size:11px; color:var(--text); margin-top:-4px; }
-  .dc1 { animation:dcur1 6s linear infinite; } .da1 { animation:dapp1 6s linear infinite; } .df1 { animation:dfold1 6s linear infinite; }
-  @keyframes dcur1 { 0%{left:270px;top:195px;opacity:0} 6%{left:270px;top:195px;opacity:1} 14%{left:108px;top:92px}
-    50%{left:430px;top:88px} 88%{left:430px;top:88px;opacity:1} 95%{opacity:0} 100%{left:430px;top:88px;opacity:0} }
-  @keyframes dapp1 { 0%{left:86px;top:58px;opacity:1} 12%{left:86px;top:58px;opacity:1} 50%{left:408px;top:54px;opacity:1}
-    88%{left:408px;top:54px;opacity:1} 95%{opacity:0} 100%{left:408px;top:54px;opacity:0} }
-  @keyframes dfold1 { 0%,46%{transform:scale(1);filter:none} 54%{transform:scale(1.1);filter:drop-shadow(0 0 12px var(--accent))}
-    66%{transform:scale(1);filter:none} 100%{filter:none} }
+  .dc1 { animation:dcur1 3.4s cubic-bezier(.45,.05,.25,1) infinite; } .da1 { animation:dapp1 3.4s cubic-bezier(.45,.05,.25,1) infinite; } .df1 { animation:dfold1 3.4s ease-in-out infinite; }
+  @keyframes dcur1 { 0%{left:270px;top:195px;opacity:0} 8%{left:270px;top:195px;opacity:1} 22%{left:108px;top:92px}
+    58%{left:430px;top:88px} 78%{left:430px;top:88px;opacity:1} 86%{opacity:0} 100%{left:430px;top:88px;opacity:0} }
+  @keyframes dapp1 { 0%{left:86px;top:58px;opacity:1} 18%{left:86px;top:58px;opacity:1} 58%{left:408px;top:54px;opacity:1}
+    78%{left:408px;top:54px;opacity:1} 86%{opacity:0} 100%{left:408px;top:54px;opacity:0} }
+  @keyframes dfold1 { 0%,54%{transform:scale(1);filter:none} 64%{transform:scale(1.12);filter:drop-shadow(0 0 12px var(--accent))}
+    76%{transform:scale(1);filter:none} 100%{filter:none} }
   /* license activation */
   .lic { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:360px;
     border:1px solid var(--line); border-radius:12px; background:var(--card); box-shadow:0 10px 28px rgba(0,0,0,.14); }
