@@ -1,29 +1,51 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Does freezing apps really save battery? — AppFreeze, measured</title>
+<link rel="icon" type="image/png" href="img/appfreeze-icon.png">
+<link rel="apple-touch-icon" href="img/appfreeze-icon.png">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <style>
-:root{--ink:#1d1d1f;--mut:#6b6b70;--line:#e6e6e6;--accent:#2e86ab}
+:root{--bg:#000;--card:#1d1d1f;--line:#2a2a2c;--text:#f5f5f7;--mut:#a1a1a6;
+  --accent:#2997ff;--accent2:#34c759;
+  --glass-border:color-mix(in srgb,#fff 14%,transparent)}
+@media (prefers-color-scheme: light){:root:not([data-theme]){
+  --bg:#f5f5f7;--card:#fff;--line:#d2d2d7;--text:#1d1d1f;--mut:#6e6e73;
+  --accent:#0071e3;--glass-border:var(--line)}}
+:root[data-theme="light"]{
+  --bg:#f5f5f7;--card:#fff;--line:#d2d2d7;--text:#1d1d1f;--mut:#6e6e73;
+  --accent:#0071e3;--glass-border:var(--line)}
 *{box-sizing:border-box}
-body{font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);max-width:880px;margin:0 auto;padding:32px 20px 80px}
+html,body{margin:0}
+body{font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);max-width:880px;margin:0 auto;padding:0 20px 80px}
 h1{font-size:30px;line-height:1.2;margin:.2em 0}
 h2{font-size:22px;margin:2em 0 .6em;padding-top:.4em;border-top:1px solid var(--line)}
 h3{font-size:17px;margin:1.4em 0 .4em}
 .lede{font-size:18px;color:var(--mut)}
-.fig{margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fafafa}
+.fig{margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 .fig .cap{font-size:13px;color:var(--mut);margin-top:8px}
+/* Charts ship with hard-coded chrome colours; remap the axes/labels per theme
+   while leaving the data series (orange/blue/purple) untouched. CSS properties
+   win over SVG presentation attributes, so no !important needed. */
+.fig svg line{stroke:var(--line)}
+.fig svg text[fill="#888"]{fill:var(--mut)}
+.fig svg text[fill="#222"]{fill:var(--text)}
 table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0}
 th,td{border:1px solid var(--line);padding:5px 8px;text-align:right}
 th:first-child,td:first-child{text-align:left}
-thead th{background:#f3f3f3}
+thead th{background:color-mix(in srgb,var(--text) 6%,transparent)}
 code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+code{background:color-mix(in srgb,var(--text) 8%,transparent);padding:1px 5px;border-radius:5px}
 pre{background:#1d1d1f;color:#eee;padding:14px;border-radius:8px;overflow:auto}
 .kpi{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0}
 .kpi div{flex:1;min-width:150px;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
 .kpi b{display:block;font-size:26px;color:var(--accent)}
-.note{background:#fff8e6;border:1px solid #f0e0a0;border-radius:8px;padding:12px 14px;font-size:14px}
-.honest{background:#eef4f8;border:1px solid #cfe0ea;border-radius:8px;padding:12px 14px;font-size:14px}
+.note{background:color-mix(in srgb,#f0c000 12%,transparent);border:1px solid color-mix(in srgb,#f0c000 38%,transparent);border-radius:8px;padding:12px 14px;font-size:14px}
+.honest{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:8px;padding:12px 14px;font-size:14px}
+a{color:var(--accent)}
 small{color:var(--mut)}
-</style></head><body>
+footer{color:var(--mut);font-size:13px;margin-top:48px;padding-top:22px;border-top:1px solid var(--line)}
+footer a{color:var(--mut)}
+</style></head><body data-product="appfreeze">
 
 <h1>Does freezing apps really save battery?</h1>
 <p class="lede">We don’t guess. We measured it. This page documents the method, shows every
@@ -55,7 +77,12 @@ heavy app on your own Mac and watch the difference for yourself.</p>
 <section id="verify"><h2>Verify it on your own Mac</h2><p>You don’t need our setup to check this. Open Activity Monitor’s Energy tab (or just watch your battery’s “time remaining”), note how much a heavy background app is costing you, then freeze it with AppFreeze and watch that number fall. A stopwatch and a couple of background apps are enough to see the effect for yourself.</p><p><small>Every figure on this page is a direct measurement on the machine above — not a marketing estimate.</small></p></section>
 
 <p><small>Direct measurements on Apple M5 · macOS 26.5.1.</small></p>
-<p><small><a href="appfreeze.html" style="color:var(--accent)">AppFreeze</a> ·
-<a href="privacy.html" style="color:var(--accent)">Privacy Policy</a> ·
-<a href="terms.html" style="color:var(--accent)">Terms of Use</a></small></p>
+
+<footer>
+<a href="appfreeze.html">AppFreeze</a> ·
+<a href="appfreeze-docs.html">Documentation</a> ·
+<a href="privacy.html">Privacy Policy</a> ·
+<a href="terms.html">Terms of Use</a>
+</footer>
+<script src="theme.js?v=3"></script>
 </body></html>
