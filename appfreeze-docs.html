@@ -70,6 +70,10 @@
   .doc-section > h2 { font-size: 23px; margin: 0 0 6px; letter-spacing: -0.01em; }
   .doc-section > .lead { color: var(--muted); margin: 0 0 22px; }
   .doc-section h3 { font-size: 17px; margin: 28px 0 8px; }
+  /* Thin rule above every sub-feature heading so each block reads as its own
+     unit. The first heading in a section gets no rule (it follows the lead). */
+  .doc-section h3 { border-top: 1px solid var(--line); padding-top: 30px; margin-top: 36px; }
+  .doc-section > .lead + h3, .doc-section > h2 + h3 { border-top: 0; padding-top: 0; margin-top: 24px; }
   .doc-section p { color: var(--muted); margin: 0 0 14px; }
   .doc-section a { color: var(--accent); text-decoration: none; }
   .doc-section a:hover { text-decoration: underline; text-underline-offset: 2px; }
@@ -162,6 +166,34 @@
   .menumock .mi.on .check { opacity: 1; }
   .menumock .mi.on { background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .menumock .mi small { color: var(--muted); margin-left: auto; padding-left: 14px; }
+
+  /* Stylised Settings rows (mirror the real toggle / stepper rows in the panel) */
+  .uirow { display: flex; align-items: center; gap: 12px; max-width: 340px;
+    margin: 6px 0 8px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px;
+    background: color-mix(in srgb, var(--card) 70%, transparent); font-size: 14px; color: var(--text); }
+  .uirow .lbl { flex: 1; line-height: 1.35; }
+  .uirow .lbl small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .uirow .tgl { width: 38px; height: 22px; border-radius: 999px; background: var(--accent2);
+    position: relative; flex: none; }
+  .uirow .tgl::after { content: ""; position: absolute; top: 2px; left: 18px; width: 18px; height: 18px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+  .uirow .tgl.off { background: color-mix(in srgb, var(--text) 20%, transparent); }
+  .uirow .tgl.off::after { left: 2px; }
+  .uirow .step { display: flex; align-items: stretch; border: 1px solid var(--line);
+    border-radius: 8px; overflow: hidden; flex: none; font-size: 13px; }
+  .uirow .step span { padding: 3px 11px; color: var(--accent); }
+  .uirow .step b { padding: 3px 12px; color: var(--text); border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line); font-weight: 600; }
+
+  /* Three-state menu-bar icon row (idle / Freeze All / Freeze Selected) */
+  .mbstates { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 14px; }
+  .mbstate { flex: 1 1 0; min-width: 150px; text-align: center; border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 12px 12px; background: color-mix(in srgb, var(--card) 60%, transparent); }
+  .mbstate .glyph { width: 30px; height: 30px; margin: 0 auto 9px; display: flex; align-items: center;
+    justify-content: center; }
+  .mbstate .glyph svg { width: 26px; height: 26px; display: block; }
+  .mbstate b { display: block; color: var(--text); font-size: 13.5px; }
+  .mbstate small { color: var(--muted); font-size: 12px; }
 
   /* Callout */
   .note {
@@ -275,6 +307,7 @@
         <li><a href="#under-the-hood">Under the hood</a></li>
         <li><a href="battery-methodology.html">Battery savings — measured ↗</a></li>
         <li><a href="#permissions">Permissions</a></li>
+        <li><a href="#extras">Small touches</a></li>
       </ul>
     </nav>
 
@@ -412,11 +445,26 @@
                  aria-label="Clicking an app in the list brings it forward; clicking again hides it"></video>
         </div>
 
+        <h3>Minimize to Dock on repeat click <span class="pro-badge">Pro</span></h3>
+        <p>By default a second click on the same app <strong>hides</strong> it. If you’d
+          rather it <strong>minimise to the Dock</strong> instead, flip
+          <strong>Minimize to Dock on repeat click</strong> in the <strong>Settings</strong>
+          section. It’s off by default — turn it on and a repeat click tucks the window
+          into the Dock; clicking the row again brings it straight back.</p>
+        <div class="uirow" role="img" aria-label="Settings row: Minimize to Dock on repeat click, toggle off">
+          <span class="lbl">Minimize to Dock on repeat click<small>Repeat click hides the app by default</small></span>
+          <span class="tgl off"></span>
+        </div>
+
         <h3>Adjust the list size</h3>
         <p>Open the <strong>Settings</strong> section and use the
           <strong>Rows&nbsp;shown: N</strong> row — tap its <strong>−</strong> and
           <strong>+</strong> stepper to choose how many apps the list shows, anywhere
           from <strong>3</strong> to <strong>15</strong>.</p>
+        <div class="uirow" role="img" aria-label="Settings row: Rows shown, stepper at 8">
+          <span class="lbl">Rows shown</span>
+          <span class="step"><span>−</span><b>8</b><span>+</span></span>
+        </div>
         <p>While Settings is open the list shrinks to make room for the controls;
           close Settings and the list springs back to the height you picked, so the
           panel never takes more space than you need.</p>
@@ -743,6 +791,47 @@
           <li><strong>Screen Recording</strong> — not used. AppFreeze never captures
             your screen.</li>
         </ul>
+      </section>
+
+      <!-- 10. Small touches -->
+      <section class="doc-section" id="extras">
+        <h2>Small touches</h2>
+        <p class="lead">A handful of smaller details that aren’t in the feature
+          comparison but make day-to-day use smoother. Most are <span class="pro-badge">Pro</span>.</p>
+
+        <h3>The menu-bar icon shows your state <span class="pro-badge">Pro</span></h3>
+        <p>The icon near the clock changes with the current freeze mode, so you can read
+          your state without opening the panel:</p>
+        <div class="mbstates">
+          <div class="mbstate">
+            <span class="glyph" style="color:var(--muted)"><span style="font-size:22px">❄︎</span></span>
+            <b>Idle</b><small>Nothing frozen</small>
+          </div>
+          <div class="mbstate">
+            <span class="glyph" style="color:var(--accent)"><span style="font-size:22px">❄︎</span></span>
+            <b>Freeze All</b><small>Everything suspended</small>
+          </div>
+          <div class="mbstate">
+            <span class="glyph" style="color:var(--accent2)"><span style="font-size:22px">❄︎</span></span>
+            <b>Freeze Selected</b><small>Smart mode armed</small>
+          </div>
+        </div>
+
+        <h3>When something can’t be frozen</h3>
+        <p>If a freeze or quit can’t go through, AppFreeze shows a brief
+          <strong>amber banner</strong> at the top of the panel explaining what happened,
+          then clears itself — nothing fails silently and nothing stays stuck.</p>
+
+        <h3>Nothing running yet</h3>
+        <p>When there are no eligible background apps to show, the list displays a calm
+          <strong>“No running apps”</strong> placeholder instead of an empty box, so you
+          always know the panel is working.</p>
+
+        <h3>About &amp; help</h3>
+        <p>The <strong>Settings</strong> section includes an <strong>About</strong> panel
+          with the version number and an <strong>“AppFreeze website →”</strong> link, plus
+          short tooltips on the controls — hover any button for a one-line reminder of what
+          it does.</p>
       </section>
 
     </main>
