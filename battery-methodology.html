@@ -45,6 +45,14 @@ a{color:var(--accent)}
 small{color:var(--mut)}
 footer{color:var(--mut);font-size:13px;margin-top:48px;padding-top:22px;border-top:1px solid var(--line)}
 footer a{color:var(--mut)}
+/* Animated load-simulation figure (Test 4 illustration) */
+.sim-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.sim-badge{font-size:11px;font-weight:700;letter-spacing:.07em;color:var(--bg);background:var(--mut);padding:2px 8px;border-radius:5px}
+.sim-sub{font-size:12px;color:var(--mut)}
+.sim-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--text)}
+.sim-legend span{display:inline-flex;align-items:center;gap:6px}
+.sim-legend i{width:12px;height:12px;border-radius:3px;flex:none}
+#loadSim{display:block;width:100%;max-width:720px}
 </style></head><body data-product="appfreeze">
 
 <h1>Does freezing apps really save battery?</h1>
@@ -70,7 +78,14 @@ heavy app on your own Mac and watch the difference for yourself.</p>
 
 <section id="curves"><h2>Test 4 — does the load <i>shape</i> matter?</h2><p>Same average load, three time-shapes (steady / bursty / chaotic). If average CPU% alone predicted power, all three would match.</p><div class="fig"><svg viewBox="0 0 720 380" width="100%" style="max-width:720px;font-family:-apple-system,Segoe UI,Roboto,sans-serif" xmlns="http://www.w3.org/2000/svg"><line x1="70" y1="320.0" x2="700" y2="320.0" stroke="#e6e6e6"/><text x="62" y="324.0" text-anchor="end" font-size="11" fill="#888">0</text><line x1="70" y1="264.0" x2="700" y2="264.0" stroke="#e6e6e6"/><text x="62" y="268.0" text-anchor="end" font-size="11" fill="#888">3090</text><line x1="70" y1="208.0" x2="700" y2="208.0" stroke="#e6e6e6"/><text x="62" y="212.0" text-anchor="end" font-size="11" fill="#888">6180</text><line x1="70" y1="152.0" x2="700" y2="152.0" stroke="#e6e6e6"/><text x="62" y="156.0" text-anchor="end" font-size="11" fill="#888">9270</text><line x1="70" y1="96.0" x2="700" y2="96.0" stroke="#e6e6e6"/><text x="62" y="100.0" text-anchor="end" font-size="11" fill="#888">12360</text><line x1="70" y1="40.0" x2="700" y2="40.0" stroke="#e6e6e6"/><text x="62" y="44.0" text-anchor="end" font-size="11" fill="#888">15450</text><text x="14" y="180" font-size="12" fill="#222" transform="rotate(-90 14 180)" text-anchor="middle">App power (mW)</text><rect x="101.5" y="70.0" width="73.5" height="250.0" fill="#e4572e" rx="2"/><text x="138.2" y="66.0" text-anchor="middle" font-size="10.5" fill="#222">13795</text><rect x="175.0" y="268.4" width="73.5" height="51.6" fill="#2e86ab" rx="2"/><text x="211.8" y="264.4" text-anchor="middle" font-size="10.5" fill="#222">2847</text><text x="175.0" y="338" text-anchor="middle" font-size="12" fill="#222">stable</text><rect x="311.5" y="163.8" width="73.5" height="156.2" fill="#e4572e" rx="2"/><text x="348.2" y="159.8" text-anchor="middle" font-size="10.5" fill="#222">8621</text><rect x="385.0" y="285.9" width="73.5" height="34.1" fill="#2e86ab" rx="2"/><text x="421.8" y="281.9" text-anchor="middle" font-size="10.5" fill="#222">1884</text><text x="385.0" y="338" text-anchor="middle" font-size="12" fill="#222">bursty</text><rect x="521.5" y="75.2" width="73.5" height="244.8" fill="#e4572e" rx="2"/><text x="558.2" y="71.2" text-anchor="middle" font-size="10.5" fill="#222">13509</text><rect x="595.0" y="269.9" width="73.5" height="50.1" fill="#2e86ab" rx="2"/><text x="631.8" y="265.9" text-anchor="middle" font-size="10.5" fill="#222">2764</text><text x="595.0" y="338" text-anchor="middle" font-size="12" fill="#222">chaotic</text><rect x="70" y="358" width="12" height="12" fill="#e4572e" rx="2"/><text x="87" y="368" font-size="11.5" fill="#222">Normal</text><rect x="142" y="358" width="12" height="12" fill="#2e86ab" rx="2"/><text x="159" y="368" font-size="11.5" fill="#222">Low Power Mode</text></svg><div class="cap">They don’t fully match — a <b>bursty</b> app at the same average draws less than a steady one. So the exact energy of a real app depends on its load <i>pattern</i>, not just its average CPU% — which is why we describe savings as approximate, not a precise figure.</div></div></section>
 
-<section id="scenario"><h2>A note on realistic mixed sessions</h2><p>We also simulated a mixed work session (pro work, browsing, video, idle, editing) with a forgotten background app, freezing it whenever it wasn’t in use. The <b>repeatable</b> finding: freezing saves energy during the phases you’re <i>not</i> using the app, and costs essentially nothing during the phases you are. The <b>magnitude</b>, though, varied run-to-run on this fanless machine (thermal coupling between back-to-back runs + short phases), so we deliberately do <b>not</b> headline a single session percentage — that would be a number you couldn’t reproduce, which is the opposite of the point. For reliable magnitudes see Tests 1–2; a rigorously averaged mixed-session measurement is future work. (Raw scenario data is still in the repo for transparency.)</p></section>
+<section id="scenario"><h2>A note on realistic mixed sessions</h2><p>We also simulated a mixed work session (pro work, browsing, video, idle, editing) with a forgotten background app, freezing it whenever it wasn’t in use. The <b>repeatable</b> finding: freezing saves energy during the phases you’re <i>not</i> using the app, and costs essentially nothing during the phases you are. The <b>magnitude</b>, though, varied run-to-run on this fanless machine (thermal coupling between back-to-back runs + short phases), so we deliberately do <b>not</b> headline a single session percentage — that would be a number you couldn’t reproduce, which is the opposite of the point. For reliable magnitudes see Tests 1–2; a rigorously averaged mixed-session measurement is future work. (Raw scenario data is still in the repo for transparency.)</p>
+<p>What does that variety actually look like? Below is an illustrative session: several background apps running at once, each with a different <i>personality</i> — a forgotten heavy app, a bursty browser, a light chat app, an idle syncer. It’s meant to build intuition for <b>how tangled real-world load is</b> — which is exactly why we report savings as a range, not a single precise number.</p>
+<div class="fig" id="sim-fig">
+<div class="sim-head"><span class="sim-badge">SIMULATION</span><span class="sim-sub">illustrative load shapes · real power scale</span></div>
+<canvas id="loadSim" width="720" height="380" role="img" aria-label="Animated chart: four simulated background apps with different load shapes, their power over a session, all collapsing to the frozen floor."></canvas>
+<div class="sim-legend" id="simLegend"></div>
+<div class="cap"><b>This is a simulation, not a measurement.</b> The activity <i>shapes</i> are synthetic — invented to show how varied background apps are. The vertical scale, though, is real: each curve’s power is derived from our <b>measured</b> Test-3 relation (≈30 mW per %CPU, capped near 15 W). The takeaway is the dashed line: whatever an app’s shape, freezing it drops it to the same <b>~0.4 W frozen floor</b> (Test 1). The heavier and more “always-on” the app, the bigger the gap freezing closes.</div>
+</div></section>
 
 <section id="limits"><h2>Limitations (read this)</h2><ul><li><b>One machine.</b> A fanless M5 Air. A fan-cooled MacBook Pro throttles differently and has a higher ceiling — the model needs per-chip-class calibration before we generalize.</li><li><b>CPU only.</b> GPU / Neural Engine / disk / network aren’t modeled yet; heavy render/AI workloads will be added as a separate axis.</li><li><b>Display brightness</b> was fixed but not logged precisely (it’s in the subtracted baseline).</li><li><b>Thermal artifact:</b> back-to-back testing heats the fanless chip, compressing absolute power; isolated cold-start runs (Tests 1–2) show true magnitudes.</li><li><b>It’s an estimate, not a promise.</b> Actual savings vary by app and workload — these are measurements of specific loads, and we never claim more precision than we measured.</li></ul></section>
 
@@ -84,5 +99,90 @@ heavy app on your own Mac and watch the difference for yourself.</p>
 <a href="privacy.html">Privacy Policy</a> ·
 <a href="terms.html">Terms of Use</a>
 </footer>
+<script>
+/* Test-4 illustration: animated multi-curve load simulation.
+   SHAPES are synthetic; the y-axis (power) is real — each CPU%(t) profile is
+   mapped through the measured Test-3 relation power ≈ min(30 mW·%CPU, ~15 W). */
+(function(){
+  var cv=document.getElementById('loadSim'); if(!cv) return;
+  var ctx=cv.getContext('2d');
+  var W=720,H=380, L=70,R=700,T=30,B=320;   // logical coords + plot box
+  var PMAX=15000, FLOOR=400, K=30;           // mW ceiling · frozen floor (Test 1) · mW per %CPU (Test 3)
+
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function noise(s){var x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+  function snoise(t,seed,freq){var p=t*freq,i=Math.floor(p),f=p-i,a=noise(i+seed),b=noise(i+1+seed),u=f*f*(3-2*f);return a+(b-a)*u;}
+  function spikes(t,c,h,w){var v=0;for(var i=0;i<c.length;i++){var d=t-c[i];v+=d>=0?h*Math.exp(-d/w):h*Math.exp(d/(w*0.18));}return v;}
+
+  var SERIES=[
+    {name:'Forgotten heavy app · steady', color:'#e4572e',
+     fn:function(t){return clamp(440+45*Math.sin(t*Math.PI*2*1.4)+(snoise(t,7,14)-0.5)*60,0,600);}},
+    {name:'Browser · bursty', color:'#2e86ab',
+     fn:function(t){return clamp(28+spikes(t,[0.06,0.2,0.34,0.5,0.63,0.8,0.93],300,0.045)+(snoise(t,3,18)-0.5)*30,0,600);}},
+    {name:'Chat / notes · light steady', color:'#34c759',
+     fn:function(t){return clamp(30+10*Math.sin(t*Math.PI*2*2.3)+(snoise(t,11,20)-0.5)*16,0,600);}},
+    {name:'Sync / media · idle + spikes', color:'#6a4c93',
+     fn:function(t){return clamp(20+spikes(t,[0.13,0.42,0.72],230,0.02)+(snoise(t,19,30)-0.5)*8,0,600);}}
+  ];
+  var N=260;
+  SERIES.forEach(function(s){s.pts=[];for(var i=0;i<N;i++){s.pts.push(Math.min(K*s.fn(i/(N-1)),PMAX));}});
+
+  var theme={line:'#e6e6e6',mut:'#888',text:'#222',bg:'#fff'};
+  function readTheme(){var cs=getComputedStyle(document.documentElement);
+    theme.line=cs.getPropertyValue('--line').trim()||theme.line;
+    theme.mut=cs.getPropertyValue('--mut').trim()||theme.mut;
+    theme.text=cs.getPropertyValue('--text').trim()||theme.text;
+    theme.bg=cs.getPropertyValue('--bg').trim()||theme.bg;}
+  readTheme();
+
+  var lg=document.getElementById('simLegend');
+  if(lg){lg.innerHTML=SERIES.map(function(s){return '<span><i style="background:'+s.color+'"></i>'+s.name+'</span>';}).join('');}
+
+  function xFor(t){return L+t*(R-L);}
+  function yFor(p){return B-(p/PMAX)*(B-T);}
+
+  var scale=1;
+  function resize(){var cssW=cv.clientWidth||720,cssH=cssW*H/W,dpr=window.devicePixelRatio||1;
+    cv.style.height=cssH+'px'; cv.width=Math.round(cssW*dpr); cv.height=Math.round(cssH*dpr); scale=(cssW/W)*dpr;}
+
+  function drawFrame(prog){
+    ctx.setTransform(scale,0,0,scale,0,0); ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1; ctx.font='11px -apple-system,Segoe UI,Roboto,sans-serif'; ctx.textBaseline='middle';
+    ctx.strokeStyle=theme.line; ctx.fillStyle=theme.mut; ctx.textAlign='end';
+    for(var w=0;w<=15;w+=3){var y=yFor(w*1000); ctx.beginPath(); ctx.moveTo(L,y); ctx.lineTo(R,y); ctx.stroke(); ctx.fillText(w+' W',L-8,y);}
+    ctx.fillStyle=theme.text; ctx.textAlign='center'; ctx.fillText('simulated session  →',(L+R)/2,B+24);
+    ctx.save(); ctx.translate(16,(T+B)/2); ctx.rotate(-Math.PI/2); ctx.fillText('App power (W)',0,0); ctx.restore();
+    var fy=yFor(FLOOR);
+    ctx.strokeStyle=theme.mut; ctx.setLineDash([5,4]); ctx.globalAlpha=.8;
+    ctx.beginPath(); ctx.moveTo(L,fy); ctx.lineTo(R,fy); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1;
+    ctx.fillStyle=theme.mut; ctx.textAlign='start'; ctx.fillText('frozen floor ≈0.4 W',L+6,fy-8);
+    var cut=Math.max(1,Math.floor(prog*(N-1)));
+    ctx.lineWidth=2.2; ctx.lineJoin='round'; ctx.lineCap='round';
+    SERIES.forEach(function(s){ctx.strokeStyle=s.color; ctx.beginPath();
+      for(var i=0;i<=cut;i++){var x=xFor(i/(N-1)),y=yFor(s.pts[i]); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);} ctx.stroke();
+      ctx.fillStyle=s.color; ctx.beginPath(); ctx.arc(xFor(cut/(N-1)),yFor(s.pts[cut]),2.6,0,Math.PI*2); ctx.fill();});
+    if(prog<1){var px=xFor(prog); ctx.strokeStyle=theme.text; ctx.globalAlpha=.22; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(px,T); ctx.lineTo(px,B); ctx.stroke(); ctx.globalAlpha=1;}
+  }
+
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DUR=7000,HOLD=1400,start=null,booted=false,running=false;
+  function loop(ts){if(start===null)start=ts; var el=ts-start,prog; if(el<DUR)prog=el/DUR; else if(el<DUR+HOLD)prog=1; else{start=ts;prog=0;} drawFrame(prog); if(running)requestAnimationFrame(loop);}
+  function startAnim(){if(reduce||running)return; running=true; start=null; requestAnimationFrame(loop);}
+  function repaint(){if(booted&&!running)drawFrame(1);}   // static full frame whenever not animating
+  function onTheme(){readTheme(); repaint();}
+
+  new MutationObserver(onTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  if(window.matchMedia){var mq=window.matchMedia('(prefers-color-scheme: dark)'); if(mq.addEventListener)mq.addEventListener('change',onTheme);}
+  var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){resize();repaint();},150);});
+
+  resize(); booted=true;
+  drawFrame(1);                                            // paint the full chart at once first — never blank (e.g. background tab / reduced motion)
+  if(!reduce){
+    if(document.visibilityState!=='hidden') startAnim();
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState!=='hidden')startAnim();});
+  }
+})();
+</script>
 <script src="theme.js?v=3"></script>
 </body></html>
