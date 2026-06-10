@@ -114,32 +114,119 @@
   }
   .readout .row { white-space: nowrap; }
   .stage-body {
-    min-height: 230px; position: relative;
-    display: flex; flex-direction: column; gap: 20px;
+    min-height: 300px; position: relative;
+    display: flex; flex-direction: column; gap: 16px;
     align-items: center; justify-content: center;
-    color: rgba(255,255,255,.85); padding: 30px 16px;
+    color: rgba(255,255,255,.85); padding: 26px 22px 28px;
   }
   :root[data-theme="light"] .stage-body, :root:not([data-theme]) .stage-body { color: rgba(0,0,0,.6); }
-  .stage-caption { text-align: center; font-size: 13px; max-width: 320px; line-height: 1.5; }
-  .stage-caption strong { display:block; font-size: 15px; color: #fff; margin-bottom: 4px; }
-  :root[data-theme="light"] .stage-caption strong, :root:not([data-theme]) .stage-caption strong { color: #1d1d1f; }
-  /* live readout: the numbers tick up and the percent recolours as it crosses
-     each threshold, while the time-to-reset stays grey — exactly like the app. */
+  .stage-caption { text-align: center; font-size: 13px; max-width: 460px; line-height: 1.5; }
+  /* shared limit-level colours, mirroring the app's thresholds */
   .lv0 { color: var(--lv-low); } .lv1 { color: var(--lv-mid); }
   .lv2 { color: var(--lv-high); } .lv3 { color: var(--lv-crit); }
-  .readout .pct, .bigread .bpct { transition: color .45s ease; }
+  .readout .pct { transition: color .45s ease; }
   .readout .rst { opacity: .55; }
-  .bigread {
-    display: grid; gap: 4px; text-align: center; letter-spacing: 1px;
-    font: 700 clamp(34px, 8vw, 52px)/1.05 ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #fff;
+
+  /* ── Claude Code window on the "desktop": an active dev session, with the
+        same limits as the menu bar shown as growing, recolouring bars in a
+        small usage panel down in the window's bottom-right corner. ── */
+  .ccwin {
+    width: 100%; max-width: 760px;
+    border-radius: 12px; overflow: hidden;
+    display: flex; flex-direction: column;
+    background: color-mix(in srgb, #0b0b0e 94%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
   }
-  .bigread .brst { color: rgba(255,255,255,.5); font-weight: 600; }
-  :root[data-theme="light"] .bigread .brst,
-  :root:not([data-theme]) .bigread .brst { color: rgba(0,0,0,.4); }
-  .bigread.tick { animation: tickpulse .5s ease; }
-  @keyframes tickpulse { 0% { transform: scale(1); } 35% { transform: scale(1.04); } 100% { transform: scale(1); } }
-  @media (prefers-reduced-motion: reduce) { .bigread.tick { animation: none; } }
+  :root[data-theme="light"] .ccwin {
+    background: #fff; border-color: var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.18);
+  }
+  .ccbar {
+    display: flex; align-items: center; height: 34px; padding: 0 12px;
+    background: color-mix(in srgb, #fff 6%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, #fff 9%, transparent);
+    font: 600 11.5px/1 -apple-system, BlinkMacSystemFont, sans-serif; color: var(--muted);
+  }
+  :root[data-theme="light"] .ccbar {
+    background: #f1f1f3; border-color: var(--line);
+  }
+  .ccbar .dots { display: inline-flex; gap: 7px; }
+  .ccbar .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .ccbar .dots i { background: color-mix(in srgb, currentColor 28%, transparent); }
+  .ccbar .title { margin: 0 auto; opacity: .85;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+  .ccmain { position: relative; flex: 1; min-height: 224px; }
+  /* divider between the chat (main message) and the /usage stats block */
+  .ccmain::after {
+    content: ""; position: absolute; top: 14px; bottom: 14px; right: 242px;
+    width: 1px; background: rgba(255,255,255,.16);
+  }
+  :root[data-theme="light"] .ccmain::after { background: rgba(0,0,0,.12); }
+  .chat {
+    padding: 14px 16px; height: 100%;
+    font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: rgba(255,255,255,.82);
+  }
+  :root[data-theme="light"] .chat { color: #2a2a2c; }
+  .chat .ln { margin: 0 0 5px; white-space: pre-wrap; }
+  .chat .u { opacity: .92; }
+  .chat .tool { opacity: .62; }
+  .chat .ok { opacity: .82; }
+  .chat .dot { opacity: .92; }
+  .chat .cur::after { content: "▋"; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* usage panel — bottom-right of the window, like Claude Code's /usage */
+  .usage {
+    position: absolute; right: 14px; bottom: 14px; width: 214px;
+    background: color-mix(in srgb, #000 52%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+    border-radius: 11px; padding: 11px 12px 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.42); color: #fff;
+  }
+  :root[data-theme="light"] .usage {
+    background: color-mix(in srgb, #fff 86%, transparent); color: #1d1d1f;
+    border-color: var(--line); box-shadow: 0 12px 28px rgba(0,0,0,.16);
+  }
+  /* Header line mimics the real /usage frame title */
+  .usage h4 {
+    margin: 0 0 9px; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0; text-transform: none; opacity: .55;
+  }
+  .usage .urow { margin-bottom: 10px; }
+  .usage .urow:last-child { margin-bottom: 0; }
+  .usage .utop {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font: 500 11px/1 -apple-system, sans-serif; margin-bottom: 4px;
+  }
+  .usage .ulbl { opacity: .72; }
+  .usage .uval { font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    transition: color .45s ease; }
+  /* monospace block-character bar — exactly like Claude Code's /usage TUI */
+  .usage .ubar {
+    font: 700 11px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: -0.5px; white-space: nowrap; overflow: hidden;
+  }
+  .usage .be { opacity: .26; }
+  .usage .bf { transition: color .45s ease; }
+  .usage .bf.lv0 { color: var(--lv-low); }  .usage .bf.lv1 { color: var(--lv-mid); }
+  .usage .bf.lv2 { color: var(--lv-high); } .usage .bf.lv3 { color: var(--lv-crit); }
+  .usage .ureset { margin-top: 3px; font: 500 10px/1 -apple-system, sans-serif; opacity: .5; }
+  /* same light tints when the page is merely following a light system (no toggle) */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .ccwin { background: #fff; border-color: var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.18); }
+    :root:not([data-theme]) .ccbar { background: #f1f1f3; border-color: var(--line); }
+    :root:not([data-theme]) .chat { color: #2a2a2c; }
+    :root:not([data-theme]) .usage { background: color-mix(in srgb, #fff 86%, transparent); color: #1d1d1f; border-color: var(--line); box-shadow: 0 12px 28px rgba(0,0,0,.16); }
+    :root:not([data-theme]) .ccmain::after { background: rgba(0,0,0,.12); }
+  }
+  @media (max-width: 560px) {
+    .usage { position: static; width: auto; margin: 0 14px 14px; }
+    .ccmain { min-height: 0; }
+    .ccmain::after { display: none; }
+    .usage { border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+  }
 
   /* ── Feature rows ── */
   .features { margin-top: 8px; }
@@ -227,14 +314,34 @@
       </span>
     </div>
     <div class="stage-body">
-      <div class="bigread" aria-hidden="true">
-        <div class="bigrow"><span class="bpct lv1" id="bg5p">63%</span> <span class="brst" id="bg5t">2h</span></div>
-        <div class="bigrow"><span class="bpct lv0" id="bg7p">41%</span> <span class="brst" id="bg7t">4d</span></div>
+      <div class="ccwin" aria-hidden="true">
+        <div class="ccbar">
+          <span class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></span>
+          <span class="title">claude — ~/project</span>
+        </div>
+        <div class="ccmain">
+          <div class="chat" id="chat"></div>
+          <div class="usage">
+            <h4>/usage</h4>
+            <div class="urow">
+              <div class="utop"><span class="ulbl">Current session</span>
+                <span class="uval lv1" id="up5">63%</span></div>
+              <div class="ubar" id="uf5"></div>
+              <div class="ureset" id="ur5">Resets in 2h</div>
+            </div>
+            <div class="urow">
+              <div class="utop"><span class="ulbl">Current week (all models)</span>
+                <span class="uval lv0" id="up7">41%</span></div>
+              <div class="ubar" id="uf7"></div>
+              <div class="ureset" id="ur7">Resets in 4d</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="stage-caption">
-        Top line: the 5-hour window. Bottom line: the week. Percent used, then time
-        until it resets. The percentage shifts blue → yellow → orange → red as you
-        approach the cap; updated automatically — you never refresh anything by hand.
+        While you work, the same limits climb up in the menu bar — and the in-window
+        usage panel fills and recolours blue → yellow → orange → red as you near the
+        cap. Top row is the 5-hour window, bottom is the week; both refresh on their own.
       </div>
     </div>
   </div>
@@ -383,44 +490,83 @@
   </footer>
 </div>
 <script>
-/* Live demo of the menu-bar readout: two windows climb toward their cap, the
-   percent recolours as it crosses each threshold (blue<50, yellow≥50,
-   orange≥75, red≥90), and the time-to-reset stays grey — like the real app.
-   Cosmetic: the pace is sped up so a visitor sees a full cycle in seconds. */
+/* The "desktop" scene: a Claude Code window runs an active dev session while the
+   same usage limits climb in two places at once — up in the menu-bar readout and
+   in the window's bottom-right usage panel, whose bars grow and recolour as they
+   cross each threshold (blue<50, yellow≥50, orange≥75, red≥90). Time-to-reset
+   stays grey. Cosmetic: the pace is sped up so a visitor sees a full cycle fast. */
 (function () {
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var w5 = { p: 22, step: 2.4, mins: 280 };   // 5-hour window
   var w7 = { p: 37, step: 0.9, hours: 150 };  // weekly window
   function lv(p){ return p < 50 ? "lv0" : p < 75 ? "lv1" : p < 90 ? "lv2" : "lv3"; }
-  function fmtMins(m){ return m >= 60 ? Math.round(m/60) + "h" : Math.max(1, Math.round(m)) + "m"; }
-  function fmtHours(h){ return h >= 24 ? Math.round(h/24) + "d" : Math.max(1, Math.round(h)) + "h"; }
+  // first line is always hours (5-hour window), second line always days (weekly)
+  function fmtMins(m){ return Math.max(1, Math.round(m/60)) + "h"; }
+  function fmtHours(h){ return Math.max(1, Math.round(h/24)) + "d"; }
   var $ = function (id) { return document.getElementById(id); };
   var el = {
     mb5p: $("mb5p"), mb5t: $("mb5t"), mb7p: $("mb7p"), mb7t: $("mb7t"),
-    bg5p: $("bg5p"), bg5t: $("bg5t"), bg7p: $("bg7p"), bg7t: $("bg7t"),
-    big: document.querySelector(".bigread")
+    up5: $("up5"), uf5: $("uf5"), ur5: $("ur5"),
+    up7: $("up7"), uf7: $("uf7"), ur7: $("ur7")
   };
-  function setPct(mb, bg, p){
-    var t = Math.round(p) + "%", c = lv(p);
-    if (mb) { mb.textContent = t; mb.className = "pct " + c; }
-    if (bg) { bg.textContent = t; bg.className = "bpct " + c; }
+  // 14-cell block-character bar, like Claude Code's /usage TUI: filled cells are
+  // coloured by threshold, the remainder stays dim.
+  function barHTML(p, c){
+    var n = 14, f = Math.max(0, Math.min(n, Math.round(p / 100 * n)));
+    return '<span class="bf ' + c + '">' + "█".repeat(f) + '</span>' +
+           '<span class="be">' + "░".repeat(n - f) + '</span>';
+  }
+  // menu-bar percent + window panel (value, block-bar, reset line), kept in sync
+  function setWindow(mbPct, mbTime, panelVal, bar, reset, p, time){
+    var pct = Math.round(p), c = lv(p);
+    if (mbPct) { mbPct.textContent = pct + "%"; mbPct.className = "pct " + c; }
+    if (mbTime) mbTime.textContent = time;
+    if (panelVal) { panelVal.textContent = pct + "%"; panelVal.className = "uval " + c; }
+    if (bar) bar.innerHTML = barHTML(p, c);
+    if (reset) reset.textContent = "Resets in " + time;
   }
   function paint(){
-    setPct(el.mb5p, el.bg5p, w5.p);
-    setPct(el.mb7p, el.bg7p, w7.p);
-    var t5 = fmtMins(w5.mins), t7 = fmtHours(w7.hours);
-    if (el.mb5t) el.mb5t.textContent = t5; if (el.bg5t) el.bg5t.textContent = t5;
-    if (el.mb7t) el.mb7t.textContent = t7; if (el.bg7t) el.bg7t.textContent = t7;
+    setWindow(el.mb5p, el.mb5t, el.up5, el.uf5, el.ur5, w5.p, fmtMins(w5.mins));
+    setWindow(el.mb7p, el.mb7t, el.up7, el.uf7, el.ur7, w7.p, fmtHours(w7.hours));
   }
   paint();
+
+  /* ── streaming dev session in the window ── */
+  var chat = $("chat");
+  var script = [
+    { c: "u",    t: "> add retry with backoff to the API client" },
+    { c: "dot",  t: "• I'll wrap the client in exponential backoff…" },
+    { c: "tool", t: "  Edit  src/api/client.ts  +18 -2" },
+    { c: "dot",  t: "• Running tests…" },
+    { c: "ok",   t: "  ✓ 24 passed" },
+    { c: "u",    t: "> wire it into the upload queue" },
+    { c: "tool", t: "  Edit  src/queue.ts  +9 -1" },
+    { c: "dot",  t: "• Tests green — want me to commit?" },
+    { c: "u",    t: "> yes, commit" },
+    { c: "ok",   t: "  ✓ feat: retry with backoff" }
+  ];
+  var line = 0;
+  function renderChat(){
+    if (!chat) return;
+    var start = Math.max(0, line - 6), html = "";
+    for (var i = start; i <= line && i < script.length; i++) {
+      var s = script[i], cur = (i === line) ? " cur" : "";
+      html += '<div class="ln ' + s.c + cur + '">' +
+        s.t.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</div>';
+    }
+    chat.innerHTML = html;
+  }
+  renderChat();
   if (reduce) return;
+
   setInterval(function () {
     w5.p += w5.step; w5.mins -= 14;
     w7.p += w7.step; w7.hours -= 5;
     if (w5.p >= 100) { w5.p = 4 + Math.random() * 8; w5.mins = 300; }
     if (w7.p >= 100) { w7.p = 8 + Math.random() * 10; w7.hours = 168; }
     paint();
-    if (el.big) { el.big.classList.remove("tick"); void el.big.offsetWidth; el.big.classList.add("tick"); }
+    line = (line + 1) % script.length;
+    renderChat();
   }, 1100);
 })();
 </script>
