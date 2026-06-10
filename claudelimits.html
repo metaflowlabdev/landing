@@ -8,12 +8,20 @@
 <link rel="icon" type="image/png" href="img/claudelimits-icon.png">
 <link rel="apple-touch-icon" href="img/claudelimits-icon.png">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #000000; --card: #1d1d1f; --line: #2a2a2c;
     --text: #f5f5f7; --muted: #a1a1a6; --accent: #e8895f; --accent2: #34c759;
     --glass-border: color-mix(in srgb, #fff 14%, transparent);
     --radius: 16px;
+    /* Claude-brand type roles: editorial serif headlines (Tiempos/Copernicus-like),
+       Styrene-like grotesque body, terminal mono for code & numbers */
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     /* limit-level colours, mirroring the app's thresholds */
     --lv-low: #2997ff; --lv-mid: #ffd60a; --lv-high: #ff9f0a; --lv-crit: #ff453a;
   }
@@ -31,7 +39,7 @@
   html, body { margin: 0; }
   body {
     background: var(--bg); color: var(--text);
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font: 16px/1.6 var(--font-sans);
     -webkit-font-smoothing: antialiased;
     display: flex; flex-direction: column; align-items: center;
     min-height: 100vh; padding: 0 20px 48px;
@@ -51,7 +59,8 @@
   .hero-brand { text-align: center; }
   .logo { width: 84px; height: 84px; border-radius: 19px;
           box-shadow: 0 8px 24px rgba(0,0,0,.28); }
-  h1 { font-size: 28px; margin: 12px 0 0; letter-spacing: -0.02em; }
+  h1 { font-family: var(--font-serif); font-weight: 500; font-size: 32px; margin: 12px 0 0; letter-spacing: -0.01em; }
+  h2, h3 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01em; }
   .lead { color: var(--muted); margin: 0 0 20px; }
   @media (max-width: 600px) {
     header.hero { grid-template-columns: 1fr; gap: 18px; text-align: center; }
@@ -106,7 +115,7 @@
   /* our two-line readout pill */
   .readout {
     display: grid; grid-auto-flow: row; gap: 1px;
-    font: 600 10.5px/1.05 ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 600 10.5px/1.05 var(--font-mono);
     text-align: right; letter-spacing: .2px;
     padding: 3px 7px; border-radius: 7px;
     background: color-mix(in srgb, #fff 12%, transparent);
@@ -145,7 +154,7 @@
     display: flex; align-items: center; height: 34px; padding: 0 12px;
     background: color-mix(in srgb, #fff 6%, transparent);
     border-bottom: 1px solid color-mix(in srgb, #fff 9%, transparent);
-    font: 600 11.5px/1 -apple-system, BlinkMacSystemFont, sans-serif; color: var(--muted);
+    font: 600 11.5px/1 var(--font-sans); color: var(--muted);
   }
   :root[data-theme="light"] .ccbar {
     background: #f1f1f3; border-color: var(--line);
@@ -154,7 +163,7 @@
   .ccbar .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
   .ccbar .dots i { background: color-mix(in srgb, currentColor 28%, transparent); }
   .ccbar .title { margin: 0 auto; opacity: .85;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+    font-family: var(--font-mono); font-size: 11px; }
   .ccmain { position: relative; flex: 1; min-height: 224px; }
   /* divider between the chat (main message) and the /usage stats block */
   .ccmain::after {
@@ -164,7 +173,7 @@
   :root[data-theme="light"] .ccmain::after { background: rgba(0,0,0,.12); }
   .chat {
     padding: 14px 16px; height: 100%;
-    font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 12.5px/1.55 var(--font-mono);
     color: rgba(255,255,255,.82);
   }
   :root[data-theme="light"] .chat { color: #2a2a2c; }
@@ -191,28 +200,28 @@
   }
   /* Header line mimics the real /usage frame title */
   .usage h4 {
-    margin: 0 0 9px; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    margin: 0 0 9px; font: 600 11px/1 var(--font-mono);
     letter-spacing: 0; text-transform: none; opacity: .55;
   }
   .usage .urow { margin-bottom: 10px; }
   .usage .urow:last-child { margin-bottom: 0; }
   .usage .utop {
     display: flex; justify-content: space-between; align-items: baseline;
-    font: 500 11px/1 -apple-system, sans-serif; margin-bottom: 4px;
+    font: 500 11px/1 var(--font-sans); margin-bottom: 4px;
   }
   .usage .ulbl { opacity: .72; }
-  .usage .uval { font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  .usage .uval { font: 700 11px/1 var(--font-mono);
     transition: color .45s ease; }
   /* monospace block-character bar — exactly like Claude Code's /usage TUI */
   .usage .ubar {
-    font: 700 11px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 700 11px/1.1 var(--font-mono);
     letter-spacing: -0.5px; white-space: nowrap; overflow: hidden;
   }
   .usage .be { opacity: .26; }
   .usage .bf { transition: color .45s ease; }
   .usage .bf.lv0 { color: var(--lv-low); }  .usage .bf.lv1 { color: var(--lv-mid); }
   .usage .bf.lv2 { color: var(--lv-high); } .usage .bf.lv3 { color: var(--lv-crit); }
-  .usage .ureset { margin-top: 3px; font: 500 10px/1 -apple-system, sans-serif; opacity: .5; }
+  .usage .ureset { margin-top: 3px; font: 500 10px/1 var(--font-sans); opacity: .5; }
   /* same light tints when the page is merely following a light system (no toggle) */
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]) .ccwin { background: #fff; border-color: var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.18); }
@@ -266,7 +275,7 @@
   }
   .how-item h3 { font-size: 16px; margin: 0 0 8px; }
   .how-item p { color: var(--muted); font-size: 14px; margin: 0; }
-  .how-item code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  .how-item code { font-family: var(--font-mono);
                    font-size: 12.5px; color: var(--text); }
 
   .docs-link { text-align:center; margin: 40px 0 0; }
@@ -355,10 +364,10 @@
         <!-- two-line readout, enlarged -->
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Enlarged readout: 63% 2h on the first line, 41% 4d on the second">
           <rect x="40" y="48" width="240" height="104" rx="16" fill="color-mix(in srgb, var(--accent) 12%, transparent)" stroke="var(--line)"/>
-          <text x="160" y="98" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="34" font-weight="700">
+          <text x="160" y="98" text-anchor="middle" font-family="'JetBrains Mono',ui-monospace,Menlo,monospace" font-size="34" font-weight="700">
             <tspan fill="var(--lv-mid)">63%</tspan><tspan fill="var(--muted)">  2h</tspan>
           </text>
-          <text x="160" y="138" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="34" font-weight="700">
+          <text x="160" y="138" text-anchor="middle" font-family="'JetBrains Mono',ui-monospace,Menlo,monospace" font-size="34" font-weight="700">
             <tspan fill="var(--lv-low)">41%</tspan><tspan fill="var(--muted)">  4d</tspan>
           </text>
         </svg>
@@ -376,7 +385,7 @@
       <div class="shot">
         <!-- straight from your account -->
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Reads the same /api/oauth/usage endpoint Claude Code does, using your Keychain token">
-          <g font-family="-apple-system,sans-serif">
+          <g font-family="'Inter',-apple-system,sans-serif">
             <rect x="34" y="44" width="116" height="112" rx="14" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
             <text x="92" y="80" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Keychain</text>
             <text x="92" y="98" text-anchor="middle" font-size="9.5" fill="var(--muted)">your token</text>
@@ -403,17 +412,17 @@
       <div class="shot">
         <!-- colour thresholds -->
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Colour thresholds: blue under 50 percent, yellow, orange, red above 90 percent">
-          <g font-family="ui-monospace,Menlo,monospace" font-size="20" font-weight="700" text-anchor="middle">
+          <g font-family="'JetBrains Mono',ui-monospace,Menlo,monospace" font-size="20" font-weight="700" text-anchor="middle">
             <text x="60"  y="70" fill="var(--lv-low)">28%</text>
-            <text x="60"  y="92" font-size="11" font-family="-apple-system,sans-serif" font-weight="500" fill="var(--muted)">&lt; 50</text>
+            <text x="60"  y="92" font-size="11" font-family="'Inter',-apple-system,sans-serif" font-weight="500" fill="var(--muted)">&lt; 50</text>
             <text x="125" y="70" fill="var(--lv-mid)">61%</text>
-            <text x="125" y="92" font-size="11" font-family="-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 50</text>
+            <text x="125" y="92" font-size="11" font-family="'Inter',-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 50</text>
             <text x="195" y="70" fill="var(--lv-high)">82%</text>
-            <text x="195" y="92" font-size="11" font-family="-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 75</text>
+            <text x="195" y="92" font-size="11" font-family="'Inter',-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 75</text>
             <text x="262" y="70" fill="var(--lv-crit)">95%</text>
-            <text x="262" y="92" font-size="11" font-family="-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 90</text>
+            <text x="262" y="92" font-size="11" font-family="'Inter',-apple-system,sans-serif" font-weight="500" fill="var(--muted)">≥ 90</text>
           </g>
-          <text x="160" y="150" text-anchor="middle" font-size="12" font-family="-apple-system,sans-serif" fill="var(--muted)">or plain black &amp; white that follows your menu bar</text>
+          <text x="160" y="150" text-anchor="middle" font-size="12" font-family="'Inter',-apple-system,sans-serif" fill="var(--muted)">or plain black &amp; white that follows your menu bar</text>
         </svg>
       </div>
       <div class="text">
@@ -431,7 +440,7 @@
         <!-- menu mockup -->
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The drop-down menu: Refresh, View, Mono, Colour, Quit">
           <rect x="64" y="28" width="192" height="144" rx="12" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
-          <g font-family="-apple-system,sans-serif" font-size="11.5" fill="var(--text)">
+          <g font-family="'Inter',-apple-system,sans-serif" font-size="11.5" fill="var(--text)">
             <text x="80" y="52">Refresh</text>
             <line x1="72" y1="64" x2="248" y2="64" stroke="var(--line)"/>
             <text x="80" y="82" fill="var(--muted)" font-size="9.5" letter-spacing=".5">VIEW</text>
