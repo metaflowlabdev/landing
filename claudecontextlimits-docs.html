@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClaudeContextLimits — Documentation</title>
+<meta name="description" content="Setup and usage guide for ClaudeContextLimits: install, the menu-bar readout, data sources (Server vs Logs), view modes, what each number means, tuning, and launch at login.">
+<link rel="icon" type="image/png" href="img/claudecontextlimits-icon.png">
+<link rel="apple-touch-icon" href="img/claudecontextlimits-icon.png">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<style>
+  :root {
+    --bg:#000; --card:#1d1d1f; --line:#2a2a2c; --text:#f5f5f7; --muted:#a1a1a6; --accent:#e8895f;
+    --lv-low:#2997ff; --lv-mid:#ffd60a; --lv-high:#ff9f0a; --lv-crit:#ff453a;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) { --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#c7542e; }
+  }
+  :root[data-theme="light"] { --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#c7542e; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased; padding: 0 20px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header.top { display:flex; align-items:center; gap:14px; padding: 32px 0 8px; }
+  header.top img { width:46px; height:46px; border-radius:11px; }
+  header.top .t { font-weight:600; font-size:18px; }
+  header.top .t small { display:block; color:var(--muted); font-weight:400; font-size:13px; }
+  header.top a.back { margin-left:auto; color:var(--accent); text-decoration:none; font-size:14px; font-weight:600; }
+  h1 { font-size: 30px; letter-spacing:-0.02em; margin: 28px 0 6px; }
+  .lead { color: var(--muted); margin: 0 0 28px; }
+  h2 { font-size: 21px; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  h2:first-of-type { border-top: 0; }
+  h3 { font-size: 16px; margin: 22px 0 6px; }
+  p, li { color: var(--text); }
+  .muted { color: var(--muted); }
+  code, kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px;
+    background: color-mix(in srgb, var(--text) 8%, transparent);
+    padding: 1px 6px; border-radius: 6px;
+  }
+  pre {
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; overflow-x: auto; font-size: 13px;
+  }
+  pre code { background: none; padding: 0; }
+  table { width:100%; border-collapse: collapse; margin: 12px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .pill { display:inline-block; font:600 12px/1 ui-monospace,Menlo,monospace; padding:3px 7px; border-radius:6px; }
+  .toc {
+    background: color-mix(in srgb, var(--card) 60%, transparent);
+    border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin: 0 0 12px;
+  }
+  .toc strong { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing:.5px; }
+  .toc ol { margin: 8px 0 0; padding-left: 20px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .note {
+    border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 14px 0;
+    color: var(--muted); font-size: 14.5px;
+  }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 64px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <img src="img/claudecontextlimits-icon.png" alt="">
+    <div class="t">ClaudeContextLimits<small>Documentation</small></div>
+    <a class="back" href="claudecontextlimits.html">← Product page</a>
+  </header>
+
+  <h1>Documentation</h1>
+  <p class="lead">Everything ClaudeContextLimits does, and how to make it yours. It's a single
+     menu-bar app — there's not much to learn, but here it all is.</p>
+
+  <div class="toc">
+    <strong>On this page</strong>
+    <ol>
+      <li><a href="#install">Install &amp; first launch</a></li>
+      <li><a href="#readout">Reading the menu-bar numbers</a></li>
+      <li><a href="#menu">The menu</a></li>
+      <li><a href="#sources">Data sources: Server vs Logs</a></li>
+      <li><a href="#view">View modes &amp; colours</a></li>
+      <li><a href="#tuning">Tuning (intervals, plan ceiling)</a></li>
+      <li><a href="#login">Launch at login</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+    </ol>
+  </div>
+
+  <h2 id="install">1 · Install &amp; first launch</h2>
+  <p>ClaudeContextLimits ships as a regular <code>.app</code>. Move it to
+     <code>/Applications</code> and open it.</p>
+  <p>It's a small indie build, so the first launch goes through Gatekeeper. If macOS says it
+     can't verify the developer, right-click the app → <strong>Open</strong> → <strong>Open</strong>,
+     or allow it from <strong>System Settings → Privacy &amp; Security</strong>.</p>
+  <p>Once open, four numbers appear in your menu bar — and that's it. There's no window and no Dock
+     icon; the app is a menu-bar agent (<code>LSUIElement</code>).</p>
+  <div class="note">It needs nothing to start in <strong>Logs</strong> mode. For exact
+     <strong>Server</strong> numbers it reads the token Claude Code already stored in your Keychain —
+     you'll just need Claude Code signed in on this Mac.</div>
+
+  <h2 id="readout">2 · Reading the menu-bar numbers</h2>
+  <p>The readout is two lines:</p>
+  <pre><code><span style="color:var(--lv-mid)">63%</span> 2h   ← 5-hour window
+<span style="color:var(--lv-low)">41%</span> 4d   ← weekly window</code></pre>
+  <p>Each line is <strong>percent used</strong> followed by <strong>time until that window
+     resets</strong>. Claude Code limits you on two clocks at once — a rolling 5-hour budget and a
+     weekly one — so the top line is the 5-hour window and the bottom line is the week.</p>
+  <table>
+    <tr><th>You see</th><th>Means</th></tr>
+    <tr><td><code>63%</code></td><td>63% of that window's budget is used up</td></tr>
+    <tr><td><code>2h</code> / <code>45m</code> / <code>4d</code></td><td>time left until it resets (hours / minutes / days)</td></tr>
+    <tr><td><code>—</code> or blank</td><td>data not available yet (still loading, or no token in Server mode)</td></tr>
+  </table>
+
+  <h2 id="menu">3 · The menu</h2>
+  <p>Click the numbers to open the menu:</p>
+  <table>
+    <tr><th>Item</th><th>What it does</th></tr>
+    <tr><td><strong>Refresh</strong></td><td>Fetch the latest numbers right now</td></tr>
+    <tr><td><strong>Data source</strong></td><td>Switch between <em>Server</em> and <em>Logs</em></td></tr>
+    <tr><td><strong>View</strong></td><td>Switch between <em>Mono</em> and <em>Colour</em></td></tr>
+    <tr><td><strong>Quit</strong></td><td>Stop the app</td></tr>
+  </table>
+  <p class="muted">All choices are remembered between launches.</p>
+
+  <h2 id="sources">4 · Data sources: Server vs Logs</h2>
+
+  <h3>Server — exact, like <code>/usage</code></h3>
+  <p>Server mode reads the numbers straight from your account, the same way Claude Code does. It takes
+     your OAuth token from the Keychain entry <code>Claude Code-credentials</code> and calls
+     <code>https://api.anthropic.com/api/oauth/usage</code>. The result matches what
+     <code>/usage</code> shows inside Claude Code, to the digit.</p>
+  <p class="muted">Polled every <strong>5 minutes</strong> by default — Anthropic rate-limits this
+     endpoint, so calling it more often risks throttling.</p>
+  <div class="note">If Server mode shows nothing, Claude Code probably isn't signed in on this Mac
+     (no token in the Keychain). Sign in to Claude Code once and hit <strong>Refresh</strong>.</div>
+
+  <h3>Logs — offline estimate</h3>
+  <p>Logs mode never touches the network. It reads your local session logs at
+     <code>~/.claude/projects/**/*.jsonl</code>, sums the token usage over the last 5 hours and
+     7 days, and compares it against your plan's ceiling. It's an <em>estimate</em>, not the
+     official figure, but it works with no token and fully offline.</p>
+  <p class="muted">Refreshed every <strong>30 seconds</strong> by default.</p>
+
+  <table>
+    <tr><th></th><th>Server</th><th>Logs</th></tr>
+    <tr><td>Accuracy</td><td>Exact (matches <code>/usage</code>)</td><td>Estimate</td></tr>
+    <tr><td>Network</td><td>One call to Anthropic's API</td><td>None — fully offline</td></tr>
+    <tr><td>Needs token</td><td>Yes (from Keychain)</td><td>No</td></tr>
+    <tr><td>Refresh</td><td>~5 min</td><td>~30 sec</td></tr>
+  </table>
+
+  <h2 id="view">5 · View modes &amp; colours</h2>
+  <p><strong>Mono</strong> renders the numbers as a normal template glyph — it follows your menu-bar
+     appearance (dark/light) like any other system icon, and stays visually quiet.</p>
+  <p><strong>Colour</strong> tints each line by how close you are to the cap, mirroring Claude's own
+     warning steps:</p>
+  <table>
+    <tr><th>Used</th><th>Colour</th></tr>
+    <tr><td>&lt; 50%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-low) 22%,transparent);color:var(--lv-low)">blue</span> — plenty left</td></tr>
+    <tr><td>≥ 50%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-mid) 22%,transparent);color:var(--lv-mid)">yellow</span> — over halfway</td></tr>
+    <tr><td>≥ 75%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-high) 22%,transparent);color:var(--lv-high)">orange</span> — getting close</td></tr>
+    <tr><td>≥ 90%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-crit) 22%,transparent);color:var(--lv-crit)">red</span> — almost out</td></tr>
+  </table>
+
+  <h2 id="tuning">6 · Tuning</h2>
+  <p>Defaults are sensible, but the app keeps its settings in standard
+     <code>UserDefaults</code> under its bundle id <code>com.kolocim.claudecontextlimits</code>.
+     You can adjust them from Terminal, then relaunch the app:</p>
+  <pre><code># refresh intervals (seconds)
+defaults write com.kolocim.claudecontextlimits serverInterval -int 300
+defaults write com.kolocim.claudecontextlimits logsInterval   -int 30
+
+# starting data source / view
+defaults write com.kolocim.claudecontextlimits source -string "server"   # or "logs"
+defaults write com.kolocim.claudecontextlimits view   -string "mono"     # or "color"</code></pre>
+  <div class="note">Keep <code>serverInterval</code> at 300 s or higher — Anthropic throttles the
+     usage endpoint, and polling it too often can get you temporarily blocked.</div>
+  <p class="muted">For Logs mode, the plan ceiling it estimates against assumes a standard plan; if
+     yours differs, the Logs percentage is a rough guide — Server mode is always exact.</p>
+
+  <h2 id="login">7 · Launch at login</h2>
+  <p>To have ClaudeContextLimits start with your Mac: <strong>System Settings → General →
+     Login Items → Open at Login → +</strong>, then pick ClaudeContextLimits. It'll quietly reappear
+     in the menu bar after every reboot.</p>
+
+  <h2 id="privacy">8 · Privacy</h2>
+  <p>No account, no sign-up, no analytics, no telemetry. Nothing about your usage ever leaves your
+     Mac, with a single exception: in <strong>Server</strong> mode the app makes one request to
+     Anthropic's own API (<code>api.anthropic.com</code>) using your existing token — the exact same
+     call Claude Code itself makes. <strong>Logs</strong> mode makes no network requests at all.</p>
+
+  <h2 id="trouble">9 · Troubleshooting</h2>
+  <h3>The numbers are blank or show <code>—</code></h3>
+  <p>In Server mode: Claude Code isn't signed in on this Mac, so there's no token in the Keychain.
+     Sign in once and press Refresh. In Logs mode: there are no log files yet under
+     <code>~/.claude/projects</code> — run a Claude Code session first.</p>
+
+  <h3>Server numbers stopped updating</h3>
+  <p>You may have been rate-limited for polling too often. Leave it a few minutes, and keep
+     <code>serverInterval</code> at 300 s or higher.</p>
+
+  <h3>“App can't be opened” on first launch</h3>
+  <p>Gatekeeper. Right-click the app → <strong>Open</strong> → <strong>Open</strong>, or allow it in
+     <strong>System Settings → Privacy &amp; Security</strong>.</p>
+
+  <footer>
+    Still stuck? <a href="mailto:metaflowlab.info@gmail.com">metaflowlab.info@gmail.com</a><br>
+    <a href="claudecontextlimits.html">Product page</a> · <a href="index.html">Metaflow Lab</a><br><br>
+    <span style="opacity:.7">Not affiliated with Anthropic. “Claude” and “Claude Code” are trademarks of Anthropic.</span>
+  </footer>
+</div>
+<script src="theme.js?v=3"></script>
+</body>
+</html>
