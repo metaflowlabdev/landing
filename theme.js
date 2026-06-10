@@ -136,17 +136,24 @@
   });
 
   /* ---- product nav links (product pages only) ------------------------- */
-  // Shown only when a page opts in via <body data-product="appfreeze">, so the
-  // studio home (index.html) stays a clean brand + theme toggle. Order in the
-  // right group: AppFreeze, Documentation, theme toggle.
-  if (document.body.getAttribute("data-product") === "appfreeze") {
-    var right = nav.querySelector(".right");
-    var here = location.pathname.split("/").pop() || "index.html";
-    var links = [
+  // Shown only when a page opts in via <body data-product="…">, so the studio
+  // home (index.html) stays a clean brand + theme toggle. Order in the right
+  // group: <Product>, Documentation, theme toggle. Add a product = one entry.
+  var PRODUCT_NAV = {
+    appfreeze: [
       { label: "AppFreeze", href: "appfreeze.html" },
       { label: "Documentation", href: "appfreeze-docs.html" }
-    ];
-    links.forEach(function (l) {
+    ],
+    claudelimits: [
+      { label: "ClaudeLimits", href: "claudelimits.html" },
+      { label: "Documentation", href: "claudelimits-docs.html" }
+    ]
+  };
+  var product = document.body.getAttribute("data-product");
+  if (PRODUCT_NAV[product]) {
+    var right = nav.querySelector(".right");
+    var here = location.pathname.split("/").pop() || "index.html";
+    PRODUCT_NAV[product].forEach(function (l) {
       var a = document.createElement("a");
       a.className = "navlink" + (here === l.href ? " is-active" : "");
       a.href = l.href;

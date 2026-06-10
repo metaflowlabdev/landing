@@ -114,19 +114,32 @@
   }
   .readout .row { white-space: nowrap; }
   .stage-body {
-    height: 230px; position: relative;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,.85);
+    min-height: 230px; position: relative;
+    display: flex; flex-direction: column; gap: 20px;
+    align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); padding: 30px 16px;
   }
   :root[data-theme="light"] .stage-body, :root:not([data-theme]) .stage-body { color: rgba(0,0,0,.6); }
   .stage-caption { text-align: center; font-size: 13px; max-width: 320px; line-height: 1.5; }
   .stage-caption strong { display:block; font-size: 15px; color: #fff; margin-bottom: 4px; }
   :root[data-theme="light"] .stage-caption strong, :root:not([data-theme]) .stage-caption strong { color: #1d1d1f; }
-  /* live tick animation: bars fill + colour pulses */
-  @keyframes fill5 { 0%,100% { width: 58%; } 50% { width: 66%; } }
-  @keyframes fill7 { 0%,100% { width: 39%; } 50% { width: 44%; } }
+  /* live readout: the numbers tick up and the percent recolours as it crosses
+     each threshold, while the time-to-reset stays grey — exactly like the app. */
   .lv0 { color: var(--lv-low); } .lv1 { color: var(--lv-mid); }
   .lv2 { color: var(--lv-high); } .lv3 { color: var(--lv-crit); }
+  .readout .pct, .bigread .bpct { transition: color .45s ease; }
+  .readout .rst { opacity: .55; }
+  .bigread {
+    display: grid; gap: 4px; text-align: center; letter-spacing: 1px;
+    font: 700 clamp(34px, 8vw, 52px)/1.05 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #fff;
+  }
+  .bigread .brst { color: rgba(255,255,255,.5); font-weight: 600; }
+  :root[data-theme="light"] .bigread .brst,
+  :root:not([data-theme]) .bigread .brst { color: rgba(0,0,0,.4); }
+  .bigread.tick { animation: tickpulse .5s ease; }
+  @keyframes tickpulse { 0% { transform: scale(1); } 35% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .bigread.tick { animation: none; } }
 
   /* ── Feature rows ── */
   .features { margin-top: 8px; }
@@ -209,15 +222,19 @@
         <svg viewBox="0 0 24 24"><path d="M2 8h16v8H2zM20 10h2v4h-2z"/></svg>
       </span>
       <span class="readout">
-        <span class="row"><span class="lv1">63%</span> <span style="opacity:.55">2h</span></span>
-        <span class="row"><span class="lv0">41%</span> <span style="opacity:.55">4d</span></span>
+        <span class="row"><span class="pct lv1" id="mb5p">63%</span> <span class="rst" id="mb5t">2h</span></span>
+        <span class="row"><span class="pct lv0" id="mb7p">41%</span> <span class="rst" id="mb7t">4d</span></span>
       </span>
     </div>
     <div class="stage-body">
+      <div class="bigread" aria-hidden="true">
+        <div class="bigrow"><span class="bpct lv1" id="bg5p">63%</span> <span class="brst" id="bg5t">2h</span></div>
+        <div class="bigrow"><span class="bpct lv0" id="bg7p">41%</span> <span class="brst" id="bg7t">4d</span></div>
+      </div>
       <div class="stage-caption">
-        <strong>63%&nbsp;2h&nbsp;·&nbsp;41%&nbsp;4d</strong>
         Top line: the 5-hour window. Bottom line: the week. Percent used, then time
-        until it resets. Updated automatically — you never refresh anything by hand.
+        until it resets. The percentage shifts blue → yellow → orange → red as you
+        approach the cap; updated automatically — you never refresh anything by hand.
       </div>
     </div>
   </div>
@@ -365,6 +382,48 @@
     <span style="opacity:.7">Not affiliated with Anthropic. “Claude” and “Claude Code” are trademarks of Anthropic. ClaudeLimits simply reads the limit data your own account already exposes.</span><br><br>
   </footer>
 </div>
-<script src="theme.js?v=3"></script>
+<script>
+/* Live demo of the menu-bar readout: two windows climb toward their cap, the
+   percent recolours as it crosses each threshold (blue<50, yellow≥50,
+   orange≥75, red≥90), and the time-to-reset stays grey — like the real app.
+   Cosmetic: the pace is sped up so a visitor sees a full cycle in seconds. */
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var w5 = { p: 22, step: 2.4, mins: 280 };   // 5-hour window
+  var w7 = { p: 37, step: 0.9, hours: 150 };  // weekly window
+  function lv(p){ return p < 50 ? "lv0" : p < 75 ? "lv1" : p < 90 ? "lv2" : "lv3"; }
+  function fmtMins(m){ return m >= 60 ? Math.round(m/60) + "h" : Math.max(1, Math.round(m)) + "m"; }
+  function fmtHours(h){ return h >= 24 ? Math.round(h/24) + "d" : Math.max(1, Math.round(h)) + "h"; }
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    mb5p: $("mb5p"), mb5t: $("mb5t"), mb7p: $("mb7p"), mb7t: $("mb7t"),
+    bg5p: $("bg5p"), bg5t: $("bg5t"), bg7p: $("bg7p"), bg7t: $("bg7t"),
+    big: document.querySelector(".bigread")
+  };
+  function setPct(mb, bg, p){
+    var t = Math.round(p) + "%", c = lv(p);
+    if (mb) { mb.textContent = t; mb.className = "pct " + c; }
+    if (bg) { bg.textContent = t; bg.className = "bpct " + c; }
+  }
+  function paint(){
+    setPct(el.mb5p, el.bg5p, w5.p);
+    setPct(el.mb7p, el.bg7p, w7.p);
+    var t5 = fmtMins(w5.mins), t7 = fmtHours(w7.hours);
+    if (el.mb5t) el.mb5t.textContent = t5; if (el.bg5t) el.bg5t.textContent = t5;
+    if (el.mb7t) el.mb7t.textContent = t7; if (el.bg7t) el.bg7t.textContent = t7;
+  }
+  paint();
+  if (reduce) return;
+  setInterval(function () {
+    w5.p += w5.step; w5.mins -= 14;
+    w7.p += w7.step; w7.hours -= 5;
+    if (w5.p >= 100) { w5.p = 4 + Math.random() * 8; w5.mins = 300; }
+    if (w7.p >= 100) { w7.p = 8 + Math.random() * 10; w7.hours = 168; }
+    paint();
+    if (el.big) { el.big.classList.remove("tick"); void el.big.offsetWidth; el.big.classList.add("tick"); }
+  }, 1100);
+})();
+</script>
+<script src="theme.js?v=4"></script>
 </body>
 </html>
