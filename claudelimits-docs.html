@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClaudeContextLimits — Documentation</title>
-<meta name="description" content="Setup and usage guide for ClaudeContextLimits: install, the menu-bar readout, data sources (Server vs Logs), view modes, what each number means, tuning, and launch at login.">
-<link rel="icon" type="image/png" href="img/claudecontextlimits-icon.png">
-<link rel="apple-touch-icon" href="img/claudecontextlimits-icon.png">
+<title>ClaudeLimits — Documentation</title>
+<meta name="description" content="Setup and usage guide for ClaudeLimits: install, the menu-bar readout, where the numbers come from, view modes, what each number means, tuning, and launch at login.">
+<link rel="icon" type="image/png" href="img/claudelimits-icon.png">
+<link rel="apple-touch-icon" href="img/claudelimits-icon.png">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <style>
   :root {
@@ -70,13 +70,13 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <img src="img/claudecontextlimits-icon.png" alt="">
-    <div class="t">ClaudeContextLimits<small>Documentation</small></div>
-    <a class="back" href="claudecontextlimits.html">← Product page</a>
+    <img src="img/claudelimits-icon.png" alt="">
+    <div class="t">ClaudeLimits<small>Documentation</small></div>
+    <a class="back" href="claudelimits.html">← Product page</a>
   </header>
 
   <h1>Documentation</h1>
-  <p class="lead">Everything ClaudeContextLimits does, and how to make it yours. It's a single
+  <p class="lead">Everything ClaudeLimits does, and how to make it yours. It's a single
      menu-bar app — there's not much to learn, but here it all is.</p>
 
   <div class="toc">
@@ -85,9 +85,9 @@
       <li><a href="#install">Install &amp; first launch</a></li>
       <li><a href="#readout">Reading the menu-bar numbers</a></li>
       <li><a href="#menu">The menu</a></li>
-      <li><a href="#sources">Data sources: Server vs Logs</a></li>
+      <li><a href="#sources">Where the numbers come from</a></li>
       <li><a href="#view">View modes &amp; colours</a></li>
-      <li><a href="#tuning">Tuning (intervals, plan ceiling)</a></li>
+      <li><a href="#tuning">Tuning</a></li>
       <li><a href="#login">Launch at login</a></li>
       <li><a href="#privacy">Privacy</a></li>
       <li><a href="#trouble">Troubleshooting</a></li>
@@ -95,16 +95,15 @@
   </div>
 
   <h2 id="install">1 · Install &amp; first launch</h2>
-  <p>ClaudeContextLimits ships as a regular <code>.app</code>. Move it to
+  <p>ClaudeLimits ships as a regular <code>.app</code>. Move it to
      <code>/Applications</code> and open it.</p>
   <p>It's a small indie build, so the first launch goes through Gatekeeper. If macOS says it
      can't verify the developer, right-click the app → <strong>Open</strong> → <strong>Open</strong>,
      or allow it from <strong>System Settings → Privacy &amp; Security</strong>.</p>
   <p>Once open, four numbers appear in your menu bar — and that's it. There's no window and no Dock
      icon; the app is a menu-bar agent (<code>LSUIElement</code>).</p>
-  <div class="note">It needs nothing to start in <strong>Logs</strong> mode. For exact
-     <strong>Server</strong> numbers it reads the token Claude Code already stored in your Keychain —
-     you'll just need Claude Code signed in on this Mac.</div>
+  <div class="note">For the numbers to appear it reads the token Claude Code already stored in your
+     Keychain — you'll just need Claude Code signed in on this Mac.</div>
 
   <h2 id="readout">2 · Reading the menu-bar numbers</h2>
   <p>The readout is two lines:</p>
@@ -117,7 +116,7 @@
     <tr><th>You see</th><th>Means</th></tr>
     <tr><td><code>63%</code></td><td>63% of that window's budget is used up</td></tr>
     <tr><td><code>2h</code> / <code>45m</code> / <code>4d</code></td><td>time left until it resets (hours / minutes / days)</td></tr>
-    <tr><td><code>—</code> or blank</td><td>data not available yet (still loading, or no token in Server mode)</td></tr>
+    <tr><td><code>—</code> or blank</td><td>data not available yet (still loading, or no token in the Keychain)</td></tr>
   </table>
 
   <h2 id="menu">3 · The menu</h2>
@@ -125,44 +124,28 @@
   <table>
     <tr><th>Item</th><th>What it does</th></tr>
     <tr><td><strong>Refresh</strong></td><td>Fetch the latest numbers right now</td></tr>
-    <tr><td><strong>Data source</strong></td><td>Switch between <em>Server</em> and <em>Logs</em></td></tr>
     <tr><td><strong>View</strong></td><td>Switch between <em>Mono</em> and <em>Colour</em></td></tr>
     <tr><td><strong>Quit</strong></td><td>Stop the app</td></tr>
   </table>
   <p class="muted">All choices are remembered between launches.</p>
 
-  <h2 id="sources">4 · Data sources: Server vs Logs</h2>
+  <h2 id="sources">4 · Where the numbers come from</h2>
 
-  <h3>Server — exact, like <code>/usage</code></h3>
-  <p>Server mode reads the numbers straight from your account, the same way Claude Code does. It takes
+  <p>ClaudeLimits reads the numbers straight from your account, the same way Claude Code does. It takes
      your OAuth token from the Keychain entry <code>Claude Code-credentials</code> and calls
      <code>https://api.anthropic.com/api/oauth/usage</code>. The result matches what
-     <code>/usage</code> shows inside Claude Code, to the digit.</p>
+     <code>/usage</code> shows inside Claude Code, to the digit — no estimates, no guesswork.</p>
   <p class="muted">Polled every <strong>5 minutes</strong> by default — Anthropic rate-limits this
      endpoint, so calling it more often risks throttling.</p>
-  <div class="note">If Server mode shows nothing, Claude Code probably isn't signed in on this Mac
+  <div class="note">If the readout shows nothing, Claude Code probably isn't signed in on this Mac
      (no token in the Keychain). Sign in to Claude Code once and hit <strong>Refresh</strong>.</div>
-
-  <h3>Logs — offline estimate</h3>
-  <p>Logs mode never touches the network. It reads your local session logs at
-     <code>~/.claude/projects/**/*.jsonl</code>, sums the token usage over the last 5 hours and
-     7 days, and compares it against your plan's ceiling. It's an <em>estimate</em>, not the
-     official figure, but it works with no token and fully offline.</p>
-  <p class="muted">Refreshed every <strong>30 seconds</strong> by default.</p>
-
-  <table>
-    <tr><th></th><th>Server</th><th>Logs</th></tr>
-    <tr><td>Accuracy</td><td>Exact (matches <code>/usage</code>)</td><td>Estimate</td></tr>
-    <tr><td>Network</td><td>One call to Anthropic's API</td><td>None — fully offline</td></tr>
-    <tr><td>Needs token</td><td>Yes (from Keychain)</td><td>No</td></tr>
-    <tr><td>Refresh</td><td>~5 min</td><td>~30 sec</td></tr>
-  </table>
 
   <h2 id="view">5 · View modes &amp; colours</h2>
   <p><strong>Mono</strong> renders the numbers as a normal template glyph — it follows your menu-bar
      appearance (dark/light) like any other system icon, and stays visually quiet.</p>
-  <p><strong>Colour</strong> tints each line by how close you are to the cap, mirroring Claude's own
-     warning steps:</p>
+  <p><strong>Colour</strong> tints the <strong>percentage</strong> by how close you are to the cap,
+     mirroring Claude's own warning steps. The time-to-reset next to it stays a calm grey — so your
+     eye lands on the number that matters, not the clock:</p>
   <table>
     <tr><th>Used</th><th>Colour</th></tr>
     <tr><td>&lt; 50%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-low) 22%,transparent);color:var(--lv-low)">blue</span> — plenty left</td></tr>
@@ -172,41 +155,36 @@
   </table>
 
   <h2 id="tuning">6 · Tuning</h2>
-  <p>Defaults are sensible, but the app keeps its settings in standard
-     <code>UserDefaults</code> under its bundle id <code>com.kolocim.claudecontextlimits</code>.
+  <p>There's almost nothing to tune — the app keeps its handful of settings in standard
+     <code>UserDefaults</code> under its bundle id <code>com.kolocim.claudelimits</code>.
      You can adjust them from Terminal, then relaunch the app:</p>
-  <pre><code># refresh intervals (seconds)
-defaults write com.kolocim.claudecontextlimits serverInterval -int 300
-defaults write com.kolocim.claudecontextlimits logsInterval   -int 30
+  <pre><code># view: "mono" or "color"
+defaults write com.kolocim.claudelimits color_mode -bool true
 
-# starting data source / view
-defaults write com.kolocim.claudecontextlimits source -string "server"   # or "logs"
-defaults write com.kolocim.claudecontextlimits view   -string "mono"     # or "color"</code></pre>
-  <div class="note">Keep <code>serverInterval</code> at 300 s or higher — Anthropic throttles the
-     usage endpoint, and polling it too often can get you temporarily blocked.</div>
-  <p class="muted">For Logs mode, the plan ceiling it estimates against assumes a standard plan; if
-     yours differs, the Logs percentage is a rough guide — Server mode is always exact.</p>
+# custom User-Agent for the usage request (advanced)
+defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</code></pre>
+  <div class="note">The usage endpoint is polled every 5 minutes — Anthropic throttles it, and polling
+     too often can get you temporarily blocked, so the interval is fixed at a safe value.</div>
 
   <h2 id="login">7 · Launch at login</h2>
-  <p>To have ClaudeContextLimits start with your Mac: <strong>System Settings → General →
-     Login Items → Open at Login → +</strong>, then pick ClaudeContextLimits. It'll quietly reappear
+  <p>To have ClaudeLimits start with your Mac: <strong>System Settings → General →
+     Login Items → Open at Login → +</strong>, then pick ClaudeLimits. It'll quietly reappear
      in the menu bar after every reboot.</p>
 
   <h2 id="privacy">8 · Privacy</h2>
   <p>No account, no sign-up, no analytics, no telemetry. Nothing about your usage ever leaves your
-     Mac, with a single exception: in <strong>Server</strong> mode the app makes one request to
-     Anthropic's own API (<code>api.anthropic.com</code>) using your existing token — the exact same
-     call Claude Code itself makes. <strong>Logs</strong> mode makes no network requests at all.</p>
+     Mac, with a single exception: the app makes one request to Anthropic's own API
+     (<code>api.anthropic.com</code>) using your existing token — the exact same call Claude Code
+     itself makes. That's the only network traffic it ever produces.</p>
 
   <h2 id="trouble">9 · Troubleshooting</h2>
   <h3>The numbers are blank or show <code>—</code></h3>
-  <p>In Server mode: Claude Code isn't signed in on this Mac, so there's no token in the Keychain.
-     Sign in once and press Refresh. In Logs mode: there are no log files yet under
-     <code>~/.claude/projects</code> — run a Claude Code session first.</p>
+  <p>Claude Code isn't signed in on this Mac, so there's no token in the Keychain.
+     Sign in once and press Refresh.</p>
 
-  <h3>Server numbers stopped updating</h3>
-  <p>You may have been rate-limited for polling too often. Leave it a few minutes, and keep
-     <code>serverInterval</code> at 300 s or higher.</p>
+  <h3>The numbers stopped updating</h3>
+  <p>You may have been rate-limited for refreshing too often. Leave it a few minutes — the app polls
+     the usage endpoint at a safe 5-minute interval on its own.</p>
 
   <h3>“App can't be opened” on first launch</h3>
   <p>Gatekeeper. Right-click the app → <strong>Open</strong> → <strong>Open</strong>, or allow it in
@@ -214,7 +192,7 @@ defaults write com.kolocim.claudecontextlimits view   -string "mono"     # or "c
 
   <footer>
     Still stuck? <a href="mailto:metaflowlab.info@gmail.com">metaflowlab.info@gmail.com</a><br>
-    <a href="claudecontextlimits.html">Product page</a> · <a href="index.html">Metaflow Lab</a><br><br>
+    <a href="claudelimits.html">Product page</a> · <a href="index.html">Metaflow Lab</a><br><br>
     <span style="opacity:.7">Not affiliated with Anthropic. “Claude” and “Claude Code” are trademarks of Anthropic.</span>
   </footer>
 </div>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClaudeContextLimits — your Claude Code limits, right in the menu bar</title>
-<meta name="description" content="A tiny macOS menu-bar app that shows your Claude Code usage limits — the 5-hour and weekly windows — as four live numbers: % used and time until reset. Exact, like /usage, or an offline estimate from your logs. Free.">
-<link rel="icon" type="image/png" href="img/claudecontextlimits-icon.png">
-<link rel="apple-touch-icon" href="img/claudecontextlimits-icon.png">
+<title>ClaudeLimits — your Claude Code limits, right in the menu bar</title>
+<meta name="description" content="A tiny macOS menu-bar app that shows your Claude Code usage limits — the 5-hour and weekly windows — as four live numbers: % used and time until reset. Exact, straight from your account, like /usage. Free.">
+<link rel="icon" type="image/png" href="img/claudelimits-icon.png">
+<link rel="apple-touch-icon" href="img/claudelimits-icon.png">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <style>
   :root {
@@ -174,20 +174,20 @@
   .docs-link a:hover { text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
-<body data-product="claudecontextlimits">
+<body data-product="claudelimits">
 <div class="wrap">
   <header class="hero">
     <div class="hero-brand">
-      <img class="logo" src="img/claudecontextlimits-icon.png" alt="ClaudeContextLimits icon" width="84" height="84">
-      <h1>ClaudeContextLimits</h1>
+      <img class="logo" src="img/claudelimits-icon.png" alt="ClaudeLimits icon" width="84" height="84">
+      <h1>ClaudeLimits</h1>
     </div>
     <div class="hero-pitch">
       <p class="lead">
         Your Claude Code usage limits, always in sight. A tiny macOS menu-bar app
         that shows the <strong>5-hour</strong> and <strong>weekly</strong> windows
         as four live numbers — percent used and time until reset — and refreshes
-        itself in real time. Read the exact figures straight from your account, just
-        like <code>/usage</code>, or an offline estimate from your local logs.
+        itself in real time. The figures come straight from your account, exactly
+        like <code>/usage</code>.
       </p>
       <div class="hero-cta">
         <!-- TODO: replace with the real GitHub Releases / direct-download URL once published -->
@@ -195,22 +195,22 @@
           <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C72.7 141.2 8 184.8 8 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.6zM261.7 90.4c27.5-32.6 25-62.3 24.2-73-24.3 1.4-52.4 16.5-68.4 35.1-17.6 19.9-27.9 44.5-25.7 71.9 26.3 2 50.2-11.5 69.9-34z"/></svg>
           Download for Mac
         </a>
-        <a class="btn-ghost" href="claudecontextlimits-docs.html">Read the docs →</a>
+        <a class="btn-ghost" href="claudelimits-docs.html">Read the docs →</a>
         <p class="hero-note">Free · open source · macOS 13+ · lives in the menu bar, no Dock icon</p>
       </div>
     </div>
   </header>
 
   <!-- The "video": a live menu-bar readout that keeps ticking -->
-  <div class="stage" aria-label="A macOS menu bar with ClaudeContextLimits showing two lines of live limit numbers">
+  <div class="stage" aria-label="A macOS menu bar with ClaudeLimits showing two lines of live limit numbers">
     <div class="menubar">
       <span class="sys" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 16a7 7 0 1 1 7-7 7 7 0 0 1-7 7Zm1-11h-2v5l4 2 .7-1.6-2.7-1.3Z"/></svg>
         <svg viewBox="0 0 24 24"><path d="M2 8h16v8H2zM20 10h2v4h-2z"/></svg>
       </span>
       <span class="readout">
-        <span class="row"><span class="lv1">63%</span> 2h</span>
-        <span class="row"><span class="lv0">41%</span> 4d</span>
+        <span class="row"><span class="lv1">63%</span> <span style="opacity:.55">2h</span></span>
+        <span class="row"><span class="lv0">41%</span> <span style="opacity:.55">4d</span></span>
       </span>
     </div>
     <div class="stage-body">
@@ -242,7 +242,7 @@
       <div class="text">
         <h3>The 5-hour and weekly windows, side by side</h3>
         <p>Claude Code limits you on two clocks — a rolling 5-hour budget and a
-           weekly one. ClaudeContextLimits shows both: top line is the 5-hour window,
+           weekly one. ClaudeLimits shows both: top line is the 5-hour window,
            bottom line is the week. Each reads <em>percent used</em> and <em>time to
            reset</em> (<code>m</code> minutes, <code>h</code> hours, <code>d</code> days).</p>
       </div>
@@ -250,30 +250,28 @@
 
     <div class="feature">
       <div class="shot">
-        <!-- two sources: server vs logs -->
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Two data sources: Server, exact like /usage, and Logs, offline estimate">
+        <!-- straight from your account -->
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Reads the same /api/oauth/usage endpoint Claude Code does, using your Keychain token">
           <g font-family="-apple-system,sans-serif">
-            <rect x="22" y="40" width="128" height="120" rx="14" fill="color-mix(in srgb, var(--accent) 14%, transparent)" stroke="var(--accent)"/>
-            <text x="86" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">Server</text>
-            <text x="86" y="92" text-anchor="middle" font-size="11" fill="var(--muted)">exact, like</text>
-            <text x="86" y="108" text-anchor="middle" font-size="13" font-family="ui-monospace,monospace" fill="var(--accent)">/usage</text>
-            <text x="86" y="134" text-anchor="middle" font-size="10" fill="var(--muted)">via your token</text>
-            <rect x="170" y="40" width="128" height="120" rx="14" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
-            <text x="234" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">Logs</text>
-            <text x="234" y="92" text-anchor="middle" font-size="11" fill="var(--muted)">offline estimate</text>
-            <text x="234" y="112" text-anchor="middle" font-size="10" fill="var(--muted)">no network,</text>
-            <text x="234" y="127" text-anchor="middle" font-size="10" fill="var(--muted)">no token</text>
+            <rect x="34" y="44" width="116" height="112" rx="14" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="92" y="80" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">Keychain</text>
+            <text x="92" y="98" text-anchor="middle" font-size="9.5" fill="var(--muted)">your token</text>
+            <text x="92" y="122" text-anchor="middle" font-size="22">🔑</text>
+            <path d="M150 100 H186" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr)"/>
+            <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="var(--accent)"/></marker></defs>
+            <rect x="190" y="44" width="100" height="112" rx="14" fill="color-mix(in srgb, var(--accent) 14%, transparent)" stroke="var(--accent)"/>
+            <text x="240" y="86" text-anchor="middle" font-size="11" fill="var(--muted)">Anthropic</text>
+            <text x="240" y="106" text-anchor="middle" font-size="12" font-family="ui-monospace,monospace" fill="var(--accent)">/usage</text>
+            <text x="240" y="128" text-anchor="middle" font-size="9.5" fill="var(--muted)">API</text>
           </g>
         </svg>
       </div>
       <div class="text">
-        <h3>Two sources: exact or fully offline</h3>
-        <p><strong>Server</strong> pulls the real numbers the same way Claude Code
-           does — <code>/api/oauth/usage</code>, using the token already in your
-           Keychain — so they match <code>/usage</code> to the digit.
-           <strong>Logs</strong> estimates locally from
-           <code>~/.claude/projects</code>, with no network and no token at all.
-           Switch anytime from the menu.</p>
+        <h3>Exact figures, straight from your account</h3>
+        <p>No scraping and no middle-man. ClaudeLimits reads your OAuth token from the
+           Keychain and calls the same endpoint Claude Code does —
+           <code>/api/oauth/usage</code> — so the numbers match <code>/usage</code> to
+           the digit. It refreshes on its own, every few minutes.</p>
       </div>
     </div>
 
@@ -296,36 +294,35 @@
       </div>
       <div class="text">
         <h3>Colour-coded, or quietly monochrome</h3>
-        <p>In <strong>Colour</strong> mode each line is tinted by how close you are to
-           the cap — blue under 50%, yellow at 50, orange at 75, red at 90 — exactly
-           like Claude's own warning steps. Prefer it subtle? <strong>Mono</strong>
-           mode renders as a normal template glyph that adapts to your menu-bar colour.</p>
+        <p>In <strong>Colour</strong> mode the <em>percentage</em> is tinted by how close
+           you are to the cap — blue under 50%, yellow at 50, orange at 75, red at 90 —
+           while the time-to-reset stays a calm grey, so your eye lands on the number that
+           matters. Prefer it all subtle? <strong>Mono</strong> mode renders as a normal
+           template glyph that adapts to your menu-bar colour.</p>
       </div>
     </div>
 
     <div class="feature">
       <div class="shot">
         <!-- menu mockup -->
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The drop-down menu: Refresh, Data source, View, Quit">
-          <rect x="56" y="22" width="208" height="156" rx="12" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The drop-down menu: Refresh, View, Mono, Colour, Quit">
+          <rect x="64" y="28" width="192" height="144" rx="12" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
           <g font-family="-apple-system,sans-serif" font-size="11.5" fill="var(--text)">
-            <text x="72" y="44">Refresh</text>
-            <line x1="64" y1="56" x2="256" y2="56" stroke="var(--line)"/>
-            <text x="72" y="74" fill="var(--muted)" font-size="9.5" letter-spacing=".5">DATA SOURCE</text>
-            <text x="80" y="92">✓ Server (exact, like /usage)</text>
-            <text x="80" y="110" fill="var(--muted)">Logs (offline estimate)</text>
-            <line x1="64" y1="120" x2="256" y2="120" stroke="var(--line)"/>
-            <text x="72" y="136" fill="var(--muted)" font-size="9.5" letter-spacing=".5">VIEW</text>
-            <text x="80" y="154">✓ Mono</text>
-            <text x="160" y="154" fill="var(--muted)">Colour</text>
+            <text x="80" y="52">Refresh</text>
+            <line x1="72" y1="64" x2="248" y2="64" stroke="var(--line)"/>
+            <text x="80" y="82" fill="var(--muted)" font-size="9.5" letter-spacing=".5">VIEW</text>
+            <text x="88" y="102">✓ Mono</text>
+            <text x="88" y="122" fill="var(--muted)">Colour</text>
+            <line x1="72" y1="134" x2="248" y2="134" stroke="var(--line)"/>
+            <text x="80" y="154">Quit</text>
           </g>
         </svg>
       </div>
       <div class="text">
         <h3>One click from the menu bar</h3>
-        <p>Click the numbers for a tidy menu: refresh on demand, flip the data source,
-           switch Mono ↔ Colour, or quit. Your choices stick between launches. No
-           windows, no Dock icon — it just sits up top and stays out of the way.</p>
+        <p>Click the numbers for a tidy menu: refresh on demand, switch Mono ↔ Colour,
+           or quit. Your choice sticks between launches. No windows, no Dock icon — it
+           just sits up top and stays out of the way.</p>
       </div>
     </div>
   </section>
@@ -336,24 +333,17 @@
     <div class="how-grid">
       <div class="how-item">
         <h3>Exactly like <code>/usage</code></h3>
-        <p>Server mode reads your OAuth token from the Keychain entry
+        <p>It reads your OAuth token from the Keychain entry
            <code>Claude&nbsp;Code-credentials</code> and calls
            <code>/api/oauth/usage</code> directly. Same request, same answer — the
            figures line up with <code>/usage</code>. Polled every 5&nbsp;minutes, because
            Anthropic throttles frequent calls.</p>
       </div>
       <div class="how-item">
-        <h3>Offline estimate from logs</h3>
-        <p>Logs mode sums the token counts in your local
-           <code>~/.claude/projects/**/*.jsonl</code> over the last 5&nbsp;hours and
-           7&nbsp;days — no network, no token. It's an estimate against your plan's
-           ceiling, refreshed every 30&nbsp;seconds.</p>
-      </div>
-      <div class="how-item">
         <h3>Private by default</h3>
-        <p>No account, no analytics, nothing leaves your Mac except the one request to
-           Anthropic's own API in Server mode — the very same call Claude Code makes.
-           Logs mode never touches the network at all.</p>
+        <p>No account, no sign-up, no analytics. Nothing leaves your Mac except that one
+           request to Anthropic's own API — the very same call Claude Code itself makes
+           with the token already on your machine.</p>
       </div>
       <div class="how-item">
         <h3>Tiny &amp; native</h3>
@@ -365,14 +355,14 @@
   </section>
 
   <p class="docs-link" id="download">
-    <a href="claudecontextlimits-docs.html">Full setup &amp; usage guide → install, sources, view modes, tuning</a>
+    <a href="claudelimits-docs.html">Full setup &amp; usage guide → install, the readout, view modes, tuning</a>
   </p>
 
   <footer>
-    ClaudeContextLimits — a tiny menu-bar app for macOS, free &amp; open source.<br>
+    ClaudeLimits — a tiny menu-bar app for macOS, free &amp; open source.<br>
     Support: <a href="mailto:metaflowlab.info@gmail.com">metaflowlab.info@gmail.com</a><br>
     <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a> · <a href="index.html">Metaflow Lab</a><br><br>
-    <span style="opacity:.7">Not affiliated with Anthropic. “Claude” and “Claude Code” are trademarks of Anthropic. ClaudeContextLimits simply reads the limit data your own account already exposes.</span><br><br>
+    <span style="opacity:.7">Not affiliated with Anthropic. “Claude” and “Claude Code” are trademarks of Anthropic. ClaudeLimits simply reads the limit data your own account already exposes.</span><br><br>
   </footer>
 </div>
 <script src="theme.js?v=3"></script>
