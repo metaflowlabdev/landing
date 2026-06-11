@@ -1,5 +1,5 @@
 /*
- * Shared chrome for all Metaflow Lab pages: the sticky Apple-style top nav
+ * Shared chrome for all northox pages: the sticky Apple-style top nav
  * (brand mark + wordmark, links home to the studio) and the theme toggle.
  *
  * Theme: default follows the system (prefers-color-scheme, no data-theme).
@@ -67,14 +67,11 @@
   style.textContent = css;
   document.head.appendChild(style);
 
-  /* ---- flat "metaflow" brand mark (one node branching into a flow) ------ */
+  /* ---- northox brand mark (a north / compass star) --------------------- */
   var mark =
     '<svg class="mark" viewBox="0 0 24 24" aria-hidden="true">' +
-    '<path d="M6.5 12 C 11 12, 12.5 6.5, 17.5 6.5 M6.5 12 C 11 12, 12.5 17.5, 17.5 17.5" ' +
-    'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' +
-    '<circle cx="6.5" cy="12" r="2.4" fill="currentColor"/>' +
-    '<circle cx="17.5" cy="6.5" r="2.4" fill="currentColor"/>' +
-    '<circle cx="17.5" cy="17.5" r="2.4" fill="currentColor"/>' +
+    '<path d="M12 2 L13.56 10.44 L22 12 L13.56 13.56 L12 22 ' +
+    'L10.44 13.56 L2 12 L10.44 10.44 Z" fill="currentColor"/>' +
     "</svg>";
 
   /* ---- nav bar --------------------------------------------------------- */
@@ -82,8 +79,8 @@
   nav.className = "site-nav";
   nav.innerHTML =
     '<div class="inner">' +
-    '<a class="brand" href="index.html" aria-label="Metaflow Lab — home">' +
-    mark + "<span>Metaflow Lab</span></a>" +
+    '<a class="brand" href="index.html" aria-label="northox — home">' +
+    mark + "<span>northox</span></a>" +
     '<div class="right"></div>' +
     "</div>";
 
@@ -167,14 +164,14 @@
 
   /* ---- shared footer tail (brand mark + copyright) -------------------- */
   // Every page keeps its own page-specific footer content; here we append the
-  // common Metaflow Lab brand mark + copyright so it stays in sync everywhere.
+  // common northox brand mark + copyright so it stays in sync everywhere.
   var foot = document.querySelector("footer");
   if (foot) {
     foot.insertAdjacentHTML(
       "beforeend",
-      '<a class="foot-brand" href="index.html" aria-label="Metaflow Lab — home">' +
-        mark + "<span>Metaflow Lab</span></a><br>" +
-        "© " + new Date().getFullYear() + " Metaflow Lab. All rights reserved."
+      '<a class="foot-brand" href="index.html" aria-label="northox — home">' +
+        mark + "<span>northox</span></a><br>" +
+        "© " + new Date().getFullYear() + " northox. All rights reserved."
     );
   }
 })();
