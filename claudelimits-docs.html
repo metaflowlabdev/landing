@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ClaudeLimits — Documentation</title>
-<meta name="description" content="Setup and usage guide for ClaudeLimits: install, the menu-bar readout, where the numbers come from, view modes, what each number means, tuning, and launch at login.">
+<meta name="description" content="Setup and usage guide for ClaudeLimits: install, the menu-bar readout, the usage panel, where the numbers come from, view modes, what each number means, tuning, and launch at login.">
 <link rel="icon" type="image/png" href="img/claudelimits-icon.png">
 <link rel="apple-touch-icon" href="img/claudelimits-icon.png">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
@@ -175,14 +175,76 @@
   }
   .modes-cap { color: var(--muted); font-size: 13px; margin: 4px 0 0; text-align: center; }
 
+  /* ── Usage-panel reveal animation (§3) ── */
+  .up {
+    background: color-mix(in srgb, var(--card) 60%, transparent);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; margin: 18px 0 6px;
+    max-width: 320px;
+  }
+  .up .uphd {
+    display: flex; align-items: baseline; gap: 8px; margin: 0 0 12px;
+  }
+  .up .uptitle { font: 600 13px/1.2 var(--font, inherit); }
+  .up .uparrow {
+    margin-left: auto; color: var(--accent); font-size: 15px; line-height: 1;
+    opacity: 0; animation: uparrowin 6s ease-in-out infinite;
+  }
+  .uprow {
+    opacity: 0; transform: translateY(4px);
+    animation: uprowin 6s ease-out infinite;
+    margin: 0 0 11px;
+  }
+  .uprow:nth-of-type(1) { animation-delay: 0s; }
+  .uprow:nth-of-type(2) { animation-delay: .35s; }
+  .uprow:nth-of-type(3) { animation-delay: .7s; }
+  .uprow .uplabel {
+    display: flex; justify-content: space-between;
+    font: 600 11.5px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+    margin: 0 0 4px;
+  }
+  .uprow .uplabel .g { color: var(--muted); font-weight: 600; }
+  .uptrack {
+    height: 6px; border-radius: 4px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    overflow: hidden;
+  }
+  .upbar {
+    height: 100%; width: 0; border-radius: 4px;
+    animation: upbargrow 6s ease-out infinite;
+  }
+  .upbar.b1 { background: var(--lv-mid);  --w: 63%; animation-delay: .15s; }
+  .upbar.b2 { background: var(--lv-low);  --w: 41%; animation-delay: .5s; }
+  .upbar.b3 { background: var(--lv-high); --w: 78%; animation-delay: .85s; }
+  @keyframes uprowin {
+    0%        { opacity: 0; transform: translateY(4px); }
+    14%, 88%  { opacity: 1; transform: translateY(0); }
+    98%, 100% { opacity: 0; transform: translateY(4px); }
+  }
+  @keyframes upbargrow {
+    0%, 6%    { width: 0; }
+    34%, 88%  { width: var(--w); }
+    98%, 100% { width: 0; }
+  }
+  @keyframes uparrowin {
+    0%, 22%   { opacity: 0; }
+    40%, 88%  { opacity: 1; }
+    98%, 100% { opacity: 0; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .clk::before, .clk::after, .fetch .arrow,
-    .pop .cursor, .pop .panel, .pop .panel .num { animation: none; }
+    .pop .cursor, .pop .panel, .pop .panel .num,
+    .up .uparrow, .uprow, .upbar { animation: none; }
     /* static frame: left shows the fetch arrow visible, right shows the panel open */
     .fetch .arrow { opacity: 1; transform: translateY(-50%); }
     .pop .cursor { opacity: 0; }
     .pop .panel { max-height: 60px; opacity: 1; }
     .pop .panel .num { opacity: 1; }
+    /* static frame: usage panel fully revealed */
+    .up .uparrow { opacity: 1; }
+    .uprow { opacity: 1; transform: none; }
+    .upbar { width: var(--w); }
   }
 </style>
 </head>
@@ -203,6 +265,7 @@
     <ol>
       <li><a href="#install">Install &amp; first launch</a></li>
       <li><a href="#readout">Reading the menu-bar numbers</a></li>
+      <li><a href="#panel">The usage panel</a></li>
       <li><a href="#menu">The menu</a></li>
       <li><a href="#sources">Where the numbers come from</a></li>
       <li><a href="#cadence">Refresh cadence &amp; rate limits</a></li>
@@ -239,18 +302,71 @@
     <tr><td><code>—</code> or blank</td><td>data not available yet (still loading, or no token in the Keychain)</td></tr>
   </table>
 
-  <h2 id="menu">3 · The menu</h2>
-  <p>Click the numbers to open the menu:</p>
+  <h2 id="panel">3 · The usage panel</h2>
+  <p><strong>Left-click</strong> the menu-bar icon and a small panel drops open — laid out
+     just like <code>/usage</code> inside Claude Code. It opens <strong>instantly</strong>, with no
+     fade or delay, and while it's open it <strong>updates live</strong>: the moment a fresh reply
+     lands from the server, the numbers and bars move on their own.</p>
+  <p>It's headed <strong>Plan usage</strong>, with an arrow <strong>→</strong> on the right that
+     takes you to <code>claude.ai/settings/usage</code> for the full picture. Below the heading are
+     three rows, each one a label, the percent used, the time until that window resets, and a
+     progress bar:</p>
+
+  <!-- animated usage-panel reveal -->
+  <div class="up" aria-hidden="true">
+    <div class="uphd"><span class="uptitle">Plan usage</span><span class="uparrow">→</span></div>
+    <div class="uprow">
+      <div class="uplabel"><span>5-hour limit</span><span class="g">63% · 2h</span></div>
+      <div class="uptrack"><div class="upbar b1"></div></div>
+    </div>
+    <div class="uprow">
+      <div class="uplabel"><span>Weekly · all models</span><span class="g">41% · 4d</span></div>
+      <div class="uptrack"><div class="upbar b2"></div></div>
+    </div>
+    <div class="uprow">
+      <div class="uplabel"><span>Opus only</span><span class="g">78% · 4d</span></div>
+      <div class="uptrack"><div class="upbar b3"></div></div>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Row</th><th>Means</th></tr>
+    <tr><td><strong>5-hour limit</strong></td><td>The rolling 5-hour budget — the same short window as the top menu-bar line.</td></tr>
+    <tr><td><strong>Weekly · all models</strong></td><td>The weekly budget across every model combined.</td></tr>
+    <tr><td><strong>Opus only</strong> / <strong>Sonnet only</strong></td><td>The weekly per-model budget. Which one you see depends on your plan (see below).</td></tr>
+  </table>
+
+  <p>Each progress bar is <strong>tinted by load</strong>, so a glance tells you how much room is
+     left: it stays neutral while you're comfortable, then shifts yellow, orange, and red as you fill
+     up — the same 50 / 75 / 90% steps as the <a href="#view" style="color:var(--accent)">colour
+     readout</a>.</p>
+
+  <p>The third row is <strong>per-model</strong>, and it reads <strong>Opus only</strong> or
+     <strong>Sonnet only</strong> depending on your plan — it surfaces whichever model your plan
+     meters separately, so you won't see both at once.</p>
+
+  <div class="note">If the endpoint is throttling (a <code>429</code>), the panel doesn't go blank.
+     It keeps the last good numbers on screen and shows a small <code>retry in ~Nm</code> until it's
+     allowed to fetch again. See <a href="#cadence" style="color:var(--accent)">Refresh cadence
+     &amp; rate limits</a>.</div>
+
+  <h2 id="menu">4 · The menu</h2>
+  <p><strong>Right-click</strong> (or ctrl-click) the menu-bar icon to open the menu. (A plain
+     left-click opens the <a href="#panel" style="color:var(--accent)">usage panel</a> instead.)</p>
   <table>
     <tr><th>Item</th><th>What it does</th></tr>
     <tr><td><strong>Refresh</strong></td><td>Fetch the latest numbers right now</td></tr>
-    <tr><td><strong>View</strong></td><td>Switch between <em>Mono</em> and <em>Colour</em></td></tr>
-    <tr><td><strong>Settings</strong></td><td><em>Launch at login</em> and <em>Refresh on open only</em> — see <a href="#login" style="color:var(--accent)">below</a></td></tr>
+    <tr><td><strong>View</strong></td><td>Switch between <em>Mono</em> and <em>Colour</em> — a tick marks the active one</td></tr>
+    <tr><td><strong>Settings</strong></td><td>Section heading for the two toggles below — <em>Launch at login</em> and <em>Refresh on open only</em> (see <a href="#login" style="color:var(--accent)">Settings</a>)</td></tr>
+    <tr><td>· Launch at login</td><td>Start ClaudeLimits automatically with your Mac</td></tr>
+    <tr><td>· Refresh on open only</td><td>Stop background polling; refresh only when you open the panel (see <a href="#cadence" style="color:var(--accent)">Refresh cadence</a>)</td></tr>
+    <tr><td><strong>Product page ↗</strong></td><td>Open the ClaudeLimits product page in your browser</td></tr>
+    <tr><td><strong>Restart</strong></td><td>Relaunch the app</td></tr>
     <tr><td><strong>Quit</strong></td><td>Stop the app</td></tr>
   </table>
   <p class="muted">All choices are remembered between launches.</p>
 
-  <h2 id="sources">4 · Where the numbers come from</h2>
+  <h2 id="sources">5 · Where the numbers come from</h2>
 
   <p>ClaudeLimits reads the numbers straight from your account, the same way Claude Code does. It takes
      your OAuth token from the Keychain entry <code>Claude Code-credentials</code> and calls
@@ -261,7 +377,7 @@
   <div class="note">If the readout shows nothing, Claude Code probably isn't signed in on this Mac
      (no token in the Keychain). Sign in to Claude Code once and hit <strong>Refresh</strong>.</div>
 
-  <h2 id="cadence">5 · Refresh cadence &amp; rate limits</h2>
+  <h2 id="cadence">6 · Refresh cadence &amp; rate limits</h2>
   <p>ClaudeLimits refreshes on its own every <strong>10 minutes</strong>, not continuously. That's
      a deliberate choice, and it's worth explaining why — because the same endpoint that makes the
      numbers exact is also the one Anthropic guards most closely.</p>
@@ -347,7 +463,7 @@
      that the numbers are only as fresh as the last time you opened the panel; if that's how you
      glance at them anyway, you lose nothing.</div>
 
-  <h2 id="view">6 · View modes &amp; colours</h2>
+  <h2 id="view">7 · View modes &amp; colours</h2>
   <p><strong>Mono</strong> renders the numbers as a normal template glyph — it follows your menu-bar
      appearance (dark/light) like any other system icon, and stays visually quiet.</p>
   <p><strong>Colour</strong> tints the <strong>percentage</strong> by how close you are to the cap,
@@ -361,7 +477,7 @@
     <tr><td>≥ 90%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-crit) 22%,transparent);color:var(--lv-crit)">red</span> — almost out</td></tr>
   </table>
 
-  <h2 id="tuning">7 · Tuning</h2>
+  <h2 id="tuning">8 · Tuning</h2>
   <p>There's almost nothing to tune — the app keeps its handful of settings in standard
      <code>UserDefaults</code> under its bundle id <code>com.kolocim.claudelimits</code>.
      You can adjust them from Terminal, then relaunch the app:</p>
@@ -374,7 +490,7 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
      too often can get you temporarily blocked, so the interval is fixed at a safe value. See
      <a href="#cadence" style="color:var(--accent)">Refresh cadence &amp; rate limits</a> for the details.</div>
 
-  <h2 id="login">8 · Settings</h2>
+  <h2 id="login">9 · Settings</h2>
   <p>The menu's <strong>Settings</strong> section holds two toggles:</p>
   <table>
     <tr><th>Toggle</th><th>What it does</th></tr>
@@ -384,13 +500,13 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
   <p class="muted">Both are toggled straight from the menu — no system dialogs, and your choice is
      remembered between launches.</p>
 
-  <h2 id="privacy">9 · Privacy</h2>
+  <h2 id="privacy">10 · Privacy</h2>
   <p>No account, no sign-up, no analytics, no telemetry. Nothing about your usage ever leaves your
      Mac, with a single exception: the app makes one request to Anthropic's own API
      (<code>api.anthropic.com</code>) using your existing token — the exact same call Claude Code
      itself makes. That's the only network traffic it ever produces.</p>
 
-  <h2 id="trouble">10 · Troubleshooting</h2>
+  <h2 id="trouble">11 · Troubleshooting</h2>
   <h3>The numbers are blank or show <code>—</code></h3>
   <p>Claude Code isn't signed in on this Mac, so there's no token in the Keychain.
      Sign in once and press Refresh.</p>

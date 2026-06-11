@@ -260,6 +260,105 @@
     .feature:nth-child(even) .shot { order: 0; }
   }
 
+  /* ── Our app's usage panel (the left-click popover) — animated demo ──
+        Distinct from the hero's Claude-Code /usage frame: this is OUR panel,
+        with a "Plan usage" title, a → link, three rows, and growing bars. */
+  .panel {
+    width: 232px; max-width: 100%;
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    border: 1px solid var(--glass-border);
+    border-radius: 13px; padding: 13px 14px 14px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.34);
+    color: var(--text);
+    /* the popover opens instantly — no fade — then the bars fill */
+    transform-origin: top center;
+  }
+  .panel .phead {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 0 0 11px;
+  }
+  .panel .ptitle { font: 600 12px/1 var(--font-sans); letter-spacing: -0.01em; }
+  .panel .parrow {
+    font: 700 13px/1 var(--font-mono); color: var(--accent);
+    text-decoration: none;
+    opacity: 0; animation: panel-arrow 2.8s ease-in-out infinite;
+  }
+  .panel .prow { margin-bottom: 11px; }
+  .panel .prow:last-child { margin-bottom: 0; }
+  .panel .ptop {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font: 500 10.5px/1 var(--font-sans); margin-bottom: 5px;
+  }
+  .panel .plbl { color: var(--muted); }
+  .panel .pval { font: 700 10.5px/1 var(--font-mono); }
+  /* the tinted track + fill bar */
+  .panel .ptrack {
+    height: 6px; border-radius: 4px;
+    background: color-mix(in srgb, var(--muted) 24%, transparent);
+    overflow: hidden;
+  }
+  .panel .pfill {
+    height: 100%; width: 0; border-radius: 4px;
+    background: var(--lv-low);
+  }
+  .panel .preset {
+    margin-top: 5px; font: 500 9.5px/1 var(--font-sans);
+    color: var(--muted); opacity: .8;
+  }
+  /* each bar grows and recolours across thresholds over the cycle */
+  .panel .p1 .pfill { animation: fill-5h 3.2s ease-in-out infinite; }
+  .panel .p2 .pfill { animation: fill-wk 3.2s ease-in-out infinite; }
+  .panel .p3 .pfill { animation: fill-md 3.2s ease-in-out infinite; }
+  .panel .p1 .pval { animation: val-5h 3.2s steps(1) infinite; }
+  .panel .p2 .pval { animation: val-wk 3.2s steps(1) infinite; }
+  .panel .p3 .pval { animation: val-md 3.2s steps(1) infinite; }
+  @keyframes panel-arrow {
+    0%, 18% { opacity: 0; transform: translateX(-3px); }
+    34%, 100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fill-5h {
+    0%, 10% { width: 0; background: var(--lv-low); }
+    55%     { width: 63%; background: var(--lv-mid); }
+    85%,100%{ width: 78%; background: var(--lv-high); }
+  }
+  @keyframes val-5h {
+    0%, 10% { color: var(--lv-low); }
+    55%     { color: var(--lv-mid); }
+    85%,100%{ color: var(--lv-high); }
+  }
+  @keyframes fill-wk {
+    0%, 10% { width: 0; background: var(--lv-low); }
+    55%,100%{ width: 41%; background: var(--lv-low); }
+  }
+  @keyframes val-wk { 0%,100% { color: var(--lv-low); } }
+  @keyframes fill-md {
+    0%, 10% { width: 0; background: var(--lv-low); }
+    55%     { width: 72%; background: var(--lv-mid); }
+    85%,100%{ width: 93%; background: var(--lv-crit); }
+  }
+  @keyframes val-md {
+    0%, 10% { color: var(--lv-low); }
+    55%     { color: var(--lv-mid); }
+    85%,100%{ color: var(--lv-crit); }
+  }
+  /* a faint cursor/click hint above the panel */
+  .panel-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .panel-hint {
+    font: 500 10px/1 var(--font-sans); color: var(--muted);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .panel-hint svg { width: 13px; height: 13px; fill: var(--muted); }
+  @media (prefers-reduced-motion: reduce) {
+    /* static, fully-opened frame: bars at their settled values, arrow shown */
+    .panel .parrow { opacity: 1; animation: none; }
+    .panel .p1 .pfill { animation: none; width: 78%; background: var(--lv-high); }
+    .panel .p2 .pfill { animation: none; width: 41%; background: var(--lv-low); }
+    .panel .p3 .pfill { animation: none; width: 93%; background: var(--lv-crit); }
+    .panel .p1 .pval { animation: none; color: var(--lv-high); }
+    .panel .p2 .pval { animation: none; color: var(--lv-low); }
+    .panel .p3 .pval { animation: none; color: var(--lv-crit); }
+  }
+
   /* ── Under the hood ── */
   .how { margin: 64px 0 8px; }
   .how > h2 { font-size: 22px; text-align: center; margin: 0 0 4px; }
@@ -277,6 +376,10 @@
   .how-item p { color: var(--muted); font-size: 14px; margin: 0; }
   .how-item code { font-family: var(--font-mono);
                    font-size: 12.5px; color: var(--text); }
+  /* the lone 5th card spans both columns so the 3+2 grid stays even */
+  .how-wide { grid-column: 1 / -1; }
+  .how-check { color: var(--accent2); font-weight: 700; }
+  @media (max-width: 600px) { .how-wide { grid-column: auto; } }
 
   .docs-link { text-align:center; margin: 40px 0 0; }
   .docs-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
@@ -437,25 +540,78 @@
 
     <div class="feature">
       <div class="shot">
-        <!-- menu mockup -->
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The drop-down menu: Refresh, View, Mono, Colour, Quit">
-          <rect x="64" y="28" width="192" height="144" rx="12" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
-          <g font-family="'Inter',-apple-system,sans-serif" font-size="11.5" fill="var(--text)">
-            <text x="80" y="52">Refresh</text>
-            <line x1="72" y1="64" x2="248" y2="64" stroke="var(--line)"/>
-            <text x="80" y="82" fill="var(--muted)" font-size="9.5" letter-spacing=".5">VIEW</text>
-            <text x="88" y="102">✓ Mono</text>
-            <text x="88" y="122" fill="var(--muted)">Colour</text>
-            <line x1="72" y1="134" x2="248" y2="134" stroke="var(--line)"/>
-            <text x="80" y="154">Quit</text>
+        <!-- menu mockup — the full right-click menu -->
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The right-click menu: Refresh, View (Mono / Color), Settings with Launch at login and Refresh on open only, Product page, Restart, Quit">
+          <rect x="44" y="12" width="232" height="184" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+          <g font-family="'Inter',-apple-system,sans-serif" font-size="10.5" fill="var(--text)">
+            <text x="60" y="32">Refresh</text>
+            <line x1="52" y1="42" x2="268" y2="42" stroke="var(--line)"/>
+            <text x="60" y="58" fill="var(--muted)" font-size="8.5" letter-spacing=".6">VIEW</text>
+            <text x="68" y="74">✓ Mono</text>
+            <text x="68" y="90" fill="var(--muted)">Color</text>
+            <line x1="52" y1="100" x2="268" y2="100" stroke="var(--line)"/>
+            <text x="60" y="116" fill="var(--muted)" font-size="8.5" letter-spacing=".6">SETTINGS</text>
+            <text x="68" y="132">Launch at login</text>
+            <text x="252" y="132" text-anchor="end" font-size="11" fill="var(--accent2)">⌁</text>
+            <text x="68" y="148">Refresh on open only</text>
+            <text x="252" y="148" text-anchor="end" font-size="11" fill="var(--muted)">⌁</text>
+            <line x1="52" y1="158" x2="268" y2="158" stroke="var(--line)"/>
+            <text x="60" y="174" fill="var(--lv-low)">Product page ↗</text>
+            <line x1="52" y1="182" x2="268" y2="182" stroke="var(--line)"/>
+            <text x="60" y="195">Restart</text>
+            <text x="200" y="195">Quit</text>
           </g>
         </svg>
       </div>
       <div class="text">
         <h3>One click from the menu bar</h3>
-        <p>Click the numbers for a tidy menu: refresh on demand, switch Mono ↔ Colour,
-           or quit. Your choice sticks between launches. No windows, no Dock icon — it
-           just sits up top and stays out of the way.</p>
+        <p>Right-click for the full menu: refresh on demand, switch Mono ↔ Color, open
+           <strong>Settings</strong> — launch at login, refresh on open only — jump to the
+           product page, or restart and quit. Your choices stick between launches. No
+           windows, no Dock icon — it just sits up top and stays out of the way.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="shot">
+        <!-- our left-click popover panel, animated: bars grow & recolour, → appears -->
+        <div class="panel-wrap" aria-label="The left-click panel: a Plan usage popover with three rows — 5-hour limit, Weekly all models, and a per-model row — each with a percent, a progress bar that recolours toward red, and a reset time, plus an arrow link to claude.ai">
+          <span class="panel-hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 2l14 8-6 1.5L16 18l-3 1.5-3-6.5L5 16z"/></svg>
+            left-click
+          </span>
+          <div class="panel" role="img">
+            <div class="phead">
+              <span class="ptitle">Plan usage</span>
+              <a class="parrow" href="#" aria-hidden="true" tabindex="-1">→</a>
+            </div>
+            <div class="prow p1">
+              <div class="ptop"><span class="plbl">5-hour limit</span><span class="pval">78%</span></div>
+              <div class="ptrack"><div class="pfill"></div></div>
+              <div class="preset">Resets in 2h</div>
+            </div>
+            <div class="prow p2">
+              <div class="ptop"><span class="plbl">Weekly · all models</span><span class="pval">41%</span></div>
+              <div class="ptrack"><div class="pfill"></div></div>
+              <div class="preset">Resets in 4d</div>
+            </div>
+            <div class="prow p3">
+              <div class="ptop"><span class="plbl">Opus only</span><span class="pval">93%</span></div>
+              <div class="ptrack"><div class="pfill"></div></div>
+              <div class="preset">Resets in 4d</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text">
+        <h3>One click for the full panel</h3>
+        <p>Left-click the icon and the panel opens <strong>instantly</strong> — no fade,
+           no wait. Inside are the same three windows Claude Code shows for
+           <code>/usage</code>, plus an extra row for your plan's model —
+           <em>Opus only</em> or <em>Sonnet only</em>. Each line carries a percent, a
+           progress bar tinted by load (blue → yellow → orange → red), a time-to-reset,
+           and a <strong>→</strong> straight to claude.ai. Leave it open and it
+           <strong>updates live</strong> the moment fresh numbers arrive.</p>
       </div>
     </div>
   </section>
@@ -493,6 +649,14 @@
            you throttled. Prefer zero background traffic? Flip on
            <strong>Refresh on open only</strong> and it fetches just when you open it.
            <a href="claudelimits-docs.html#cadence">More on refresh cadence →</a></p>
+      </div>
+      <div class="how-item how-wide">
+        <h3>Always there</h3>
+        <p><span class="how-check" aria-hidden="true">✓</span> <strong>Launch at login</strong> —
+           flip it once and ClaudeLimits brings itself back after every reboot, quietly
+           taking its place in the menu bar. It's a proper login item
+           (<code>SMAppService</code>), so it survives restarts without a single window
+           ever popping up.</p>
       </div>
     </div>
   </section>
