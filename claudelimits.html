@@ -294,9 +294,9 @@
       <p class="lead">
         Your Claude Code usage limits, always in sight. A tiny macOS menu-bar app
         that shows the <strong>5-hour</strong> and <strong>weekly</strong> windows
-        as four live numbers — percent used and time until reset — and refreshes
-        itself in real time. The figures come straight from your account, exactly
-        like <code>/usage</code>.
+        as four live numbers — percent used and time until reset — and keeps
+        itself up to date on its own. The figures come straight from your account,
+        exactly like <code>/usage</code>.
       </p>
       <div class="hero-cta">
         <!-- TODO: replace with the real GitHub Releases / direct-download URL once published -->
@@ -469,8 +469,8 @@
         <p>It reads your OAuth token from the Keychain entry
            <code>Claude&nbsp;Code-credentials</code> and calls
            <code>/api/oauth/usage</code> directly. Same request, same answer — the
-           figures line up with <code>/usage</code>. Polled every 5&nbsp;minutes, because
-           Anthropic throttles frequent calls.</p>
+           figures line up with <code>/usage</code>. Polled every 10&nbsp;minutes, with
+           a polite backoff whenever Anthropic asks it to slow down.</p>
       </div>
       <div class="how-item">
         <h3>Private by default</h3>
@@ -483,6 +483,14 @@
         <p>One Swift file, plain AppKit, no dependencies. It runs as a menu-bar agent
            (<code>LSUIElement</code>) — no Dock icon, no window — and sips almost no
            resources while it keeps your numbers fresh.</p>
+      </div>
+      <div class="how-item">
+        <h3>Gentle on your account</h3>
+        <p>Anthropic rate-limits the usage endpoint, so ClaudeLimits checks once every
+           10&nbsp;minutes — your limits drift slowly, so that's plenty fresh. If the
+           server ever asks it to wait, it backs off for exactly as long as it's told and
+           keeps the last numbers on screen meanwhile. It never hammers, so it never gets
+           you throttled. <a href="claudelimits-docs.html#cadence">More on refresh cadence →</a></p>
       </div>
     </div>
   </section>

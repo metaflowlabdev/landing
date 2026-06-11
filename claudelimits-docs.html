@@ -86,6 +86,7 @@
       <li><a href="#readout">Reading the menu-bar numbers</a></li>
       <li><a href="#menu">The menu</a></li>
       <li><a href="#sources">Where the numbers come from</a></li>
+      <li><a href="#cadence">Refresh cadence &amp; rate limits</a></li>
       <li><a href="#view">View modes &amp; colours</a></li>
       <li><a href="#tuning">Tuning</a></li>
       <li><a href="#login">Launch at login</a></li>
@@ -135,12 +136,46 @@
      your OAuth token from the Keychain entry <code>Claude Code-credentials</code> and calls
      <code>https://api.anthropic.com/api/oauth/usage</code>. The result matches what
      <code>/usage</code> shows inside Claude Code, to the digit — no estimates, no guesswork.</p>
-  <p class="muted">Polled every <strong>5 minutes</strong> by default — Anthropic rate-limits this
-     endpoint, so calling it more often risks throttling.</p>
+  <p class="muted">Polled every <strong>10 minutes</strong>, because Anthropic rate-limits this
+     endpoint — see <a href="#cadence" style="color:var(--accent)">Refresh cadence &amp; rate limits</a> below.</p>
   <div class="note">If the readout shows nothing, Claude Code probably isn't signed in on this Mac
      (no token in the Keychain). Sign in to Claude Code once and hit <strong>Refresh</strong>.</div>
 
-  <h2 id="view">5 · View modes &amp; colours</h2>
+  <h2 id="cadence">5 · Refresh cadence &amp; rate limits</h2>
+  <p>ClaudeLimits refreshes on its own every <strong>10 minutes</strong>, not continuously. That's
+     a deliberate choice, and it's worth explaining why — because the same endpoint that makes the
+     numbers exact is also the one Anthropic guards most closely.</p>
+
+  <h3>Why it isn't instant</h3>
+  <p>The figures come from <code>/api/oauth/usage</code> — the very endpoint Claude Code's own
+     <code>/usage</code> reads. Anthropic <strong>strictly rate-limits</strong> that endpoint. This is
+     not an account ban or anything to worry about: Claude Code and everything else keep working
+     normally. It's only this one endpoint that gets temporarily throttled if it's polled too eagerly.</p>
+  <p>We measured it directly. Polling once every 60&nbsp;seconds, the server reliably starts replying
+     <code>HTTP 429</code> (<code>rate_limit_error</code>) — its way of saying <em>too often, slow
+     down</em>. When it does, it also returns a <code>Retry-After</code> header of roughly
+     <strong>50–60 minutes</strong>: the window you're expected to stay quiet for.</p>
+  <div class="note">Anthropic doesn't publish the exact budget — how many calls per hour are allowed
+     — so 10 minutes isn't a computed limit, just a comfortably safe margin well under the threshold.
+     Your usage figures change slowly anyway (only as you spend), so a 10-minute cadence never leaves
+     the numbers meaningfully stale.</div>
+
+  <h3>How it backs off</h3>
+  <p>If the server ever does return a <code>429</code>, ClaudeLimits does the polite thing rather than
+     keep knocking — because knocking only extends the penalty. Specifically, it:</p>
+  <ul>
+    <li><strong>Honours <code>Retry-After</code> exactly</strong> — it pauses for precisely the window
+       the server asked for, then resumes polling on its own.</li>
+    <li><strong>Keeps your last good numbers on screen</strong> — instead of flashing an error, it
+       holds the most recent figures and shows a small <code>retry in ~Nm</code> until it's allowed
+       back, so the readout never goes blank on you.</li>
+    <li><strong>Recovers automatically</strong> — once the window passes, normal 10-minute polling
+       picks up again with no action from you.</li>
+  </ul>
+  <p class="muted">For comparison, Claude Code's own <code>/usage</code> feels live for the same reason:
+     it caches the last answer rather than hitting the endpoint every second.</p>
+
+  <h2 id="view">6 · View modes &amp; colours</h2>
   <p><strong>Mono</strong> renders the numbers as a normal template glyph — it follows your menu-bar
      appearance (dark/light) like any other system icon, and stays visually quiet.</p>
   <p><strong>Colour</strong> tints the <strong>percentage</strong> by how close you are to the cap,
@@ -154,7 +189,7 @@
     <tr><td>≥ 90%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-crit) 22%,transparent);color:var(--lv-crit)">red</span> — almost out</td></tr>
   </table>
 
-  <h2 id="tuning">6 · Tuning</h2>
+  <h2 id="tuning">7 · Tuning</h2>
   <p>There's almost nothing to tune — the app keeps its handful of settings in standard
      <code>UserDefaults</code> under its bundle id <code>com.kolocim.claudelimits</code>.
      You can adjust them from Terminal, then relaunch the app:</p>
@@ -163,28 +198,31 @@ defaults write com.kolocim.claudelimits color_mode -bool true
 
 # custom User-Agent for the usage request (advanced)
 defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</code></pre>
-  <div class="note">The usage endpoint is polled every 5 minutes — Anthropic throttles it, and polling
-     too often can get you temporarily blocked, so the interval is fixed at a safe value.</div>
+  <div class="note">The usage endpoint is polled every 10 minutes — Anthropic throttles it, and polling
+     too often can get you temporarily blocked, so the interval is fixed at a safe value. See
+     <a href="#cadence" style="color:var(--accent)">Refresh cadence &amp; rate limits</a> for the details.</div>
 
-  <h2 id="login">7 · Launch at login</h2>
+  <h2 id="login">8 · Launch at login</h2>
   <p>To have ClaudeLimits start with your Mac: <strong>System Settings → General →
      Login Items → Open at Login → +</strong>, then pick ClaudeLimits. It'll quietly reappear
      in the menu bar after every reboot.</p>
 
-  <h2 id="privacy">8 · Privacy</h2>
+  <h2 id="privacy">9 · Privacy</h2>
   <p>No account, no sign-up, no analytics, no telemetry. Nothing about your usage ever leaves your
      Mac, with a single exception: the app makes one request to Anthropic's own API
      (<code>api.anthropic.com</code>) using your existing token — the exact same call Claude Code
      itself makes. That's the only network traffic it ever produces.</p>
 
-  <h2 id="trouble">9 · Troubleshooting</h2>
+  <h2 id="trouble">10 · Troubleshooting</h2>
   <h3>The numbers are blank or show <code>—</code></h3>
   <p>Claude Code isn't signed in on this Mac, so there's no token in the Keychain.
      Sign in once and press Refresh.</p>
 
   <h3>The numbers stopped updating</h3>
-  <p>You may have been rate-limited for refreshing too often. Leave it a few minutes — the app polls
-     the usage endpoint at a safe 5-minute interval on its own.</p>
+  <p>You may have been rate-limited for refreshing too often. The app handles this on its own: it
+     waits out the window Anthropic asks for, keeps your last numbers on screen, and resumes its
+     safe 10-minute polling automatically. See <a href="#cadence" style="color:var(--accent)">Refresh
+     cadence &amp; rate limits</a>.</p>
 
   <h3>“App can't be opened” on first launch</h3>
   <p>Gatekeeper. Right-click the app → <strong>Open</strong> → <strong>Open</strong>, or allow it in
