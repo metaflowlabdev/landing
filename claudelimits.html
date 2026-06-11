@@ -60,6 +60,11 @@
   .logo { width: 84px; height: 84px; border-radius: 19px;
           box-shadow: 0 8px 24px rgba(0,0,0,.28); }
   h1 { font-family: var(--font-serif); font-weight: 500; font-size: 32px; margin: 12px 0 0; letter-spacing: -0.01em; }
+  .free-pill { display: inline-block; vertical-align: middle; margin-left: 8px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--accent2); background: color-mix(in srgb, var(--accent2) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent2) 40%, transparent);
+    border-radius: 999px; padding: 3px 10px; }
   h2, h3 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01em; }
   .lead { color: var(--muted); margin: 0 0 20px; }
   @media (max-width: 600px) {
@@ -391,7 +396,7 @@
   <header class="hero">
     <div class="hero-brand">
       <img class="logo" src="img/claudelimits-icon.png" alt="ClaudeLimits icon" width="84" height="84">
-      <h1>ClaudeLimits</h1>
+      <h1>ClaudeLimits <span class="free-pill">Free</span></h1>
     </div>
     <div class="hero-pitch">
       <p class="lead">
