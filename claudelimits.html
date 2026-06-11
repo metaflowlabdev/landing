@@ -541,34 +541,40 @@
     <div class="feature">
       <div class="shot">
         <!-- menu mockup — the full right-click menu -->
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The right-click menu: Refresh, View (Mono / Color), Settings with Launch at login and Refresh on open only, Product page, Restart, Quit">
-          <rect x="44" y="12" width="232" height="184" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+        <svg viewBox="0 0 330 254" xmlns="http://www.w3.org/2000/svg" aria-label="The right-click menu: Refresh, View (Mono / Color), Settings with Launch at login, Refresh on open only and an Auto-refresh status line, About & Permissions, Product page, Restart, Quit">
+          <rect x="44" y="12" width="240" height="232" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
           <g font-family="'Inter',-apple-system,sans-serif" font-size="10.5" fill="var(--text)">
             <text x="60" y="32">Refresh</text>
-            <line x1="52" y1="42" x2="268" y2="42" stroke="var(--line)"/>
+            <text x="276" y="32" text-anchor="end" font-size="9" fill="var(--muted)">⌘R</text>
+            <line x1="52" y1="42" x2="276" y2="42" stroke="var(--line)"/>
             <text x="60" y="58" fill="var(--muted)" font-size="8.5" letter-spacing=".6">VIEW</text>
             <text x="68" y="74">✓ Mono</text>
             <text x="68" y="90" fill="var(--muted)">Color</text>
-            <line x1="52" y1="100" x2="268" y2="100" stroke="var(--line)"/>
+            <line x1="52" y1="100" x2="276" y2="100" stroke="var(--line)"/>
             <text x="60" y="116" fill="var(--muted)" font-size="8.5" letter-spacing=".6">SETTINGS</text>
             <text x="68" y="132">Launch at login</text>
-            <text x="252" y="132" text-anchor="end" font-size="11" fill="var(--accent2)">⌁</text>
+            <text x="276" y="132" text-anchor="end" font-size="11" fill="var(--accent2)">⌁</text>
             <text x="68" y="148">Refresh on open only</text>
-            <text x="252" y="148" text-anchor="end" font-size="11" fill="var(--muted)">⌁</text>
-            <line x1="52" y1="158" x2="268" y2="158" stroke="var(--line)"/>
-            <text x="60" y="174" fill="var(--lv-low)">Product page ↗</text>
-            <line x1="52" y1="182" x2="268" y2="182" stroke="var(--line)"/>
-            <text x="60" y="195">Restart</text>
-            <text x="200" y="195">Quit</text>
+            <text x="276" y="148" text-anchor="end" font-size="11" fill="var(--muted)">⌁</text>
+            <text x="68" y="164" fill="var(--muted)">Auto-refresh in ~4h</text>
+            <line x1="52" y1="174" x2="276" y2="174" stroke="var(--line)"/>
+            <text x="60" y="190">About &amp; Permissions…</text>
+            <text x="60" y="206" fill="var(--lv-low)">Product page ↗</text>
+            <line x1="52" y1="216" x2="276" y2="216" stroke="var(--line)"/>
+            <text x="60" y="232">Restart</text>
+            <text x="160" y="232">Quit</text>
+            <text x="276" y="232" text-anchor="end" font-size="9" fill="var(--muted)">⌘Q</text>
           </g>
         </svg>
       </div>
       <div class="text">
         <h3>One click from the menu bar</h3>
         <p>Right-click for the full menu: refresh on demand, switch Mono ↔ Color, open
-           <strong>Settings</strong> — launch at login, refresh on open only — jump to the
-           product page, or restart and quit. Your choices stick between launches. No
-           windows, no Dock icon — it just sits up top and stays out of the way.</p>
+           <strong>Settings</strong> — launch at login, refresh on open only, and a live
+           <strong>Auto-refresh</strong> countdown — open <strong>About &amp; Permissions</strong>
+           to see exactly what it touches, jump to the product page, or restart and quit. Your
+           choices stick between launches. No windows, no Dock icon — it just sits up top and
+           stays out of the way.</p>
       </div>
     </div>
 
