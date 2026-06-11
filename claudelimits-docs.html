@@ -283,6 +283,47 @@
   <p>It's a small indie build, so the first launch goes through Gatekeeper. If macOS says it
      can't verify the developer, right-click the app → <strong>Open</strong> → <strong>Open</strong>,
      or allow it from <strong>System Settings → Privacy &amp; Security</strong>.</p>
+
+  <div style="max-width:560px;margin:1.25rem 0;">
+    <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" aria-label="Install steps: drag the app into Applications, the Gatekeeper warning, and right-click Open to allow it">
+      <g font-family="'Inter',-apple-system,sans-serif">
+        <!-- step a: drag to /Applications -->
+        <rect x="8" y="20" width="160" height="150" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+        <text x="88" y="40" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">1 · DRAG TO /APPLICATIONS</text>
+        <rect x="32" y="58" width="40" height="40" rx="9" fill="color-mix(in srgb, var(--accent) 22%, transparent)" stroke="var(--accent)"/>
+        <text x="52" y="83" text-anchor="middle" font-size="9" fill="var(--accent)">.app</text>
+        <text x="92" y="83" text-anchor="middle" font-size="16" fill="var(--muted)">→</text>
+        <rect x="108" y="58" width="40" height="40" rx="9" fill="color-mix(in srgb, var(--text) 8%, transparent)" stroke="var(--line)"/>
+        <text x="128" y="74" text-anchor="middle" font-size="14" fill="var(--muted)">📁</text>
+        <text x="128" y="113" text-anchor="middle" font-size="8.5" fill="var(--muted)">Applications</text>
+        <text x="52" y="113" text-anchor="middle" font-size="8.5" fill="var(--muted)">ClaudeLimits</text>
+
+        <!-- step b: Gatekeeper warning -->
+        <rect x="184" y="20" width="190" height="150" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+        <text x="279" y="40" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">2 · GATEKEEPER</text>
+        <circle cx="279" cy="64" r="14" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+        <text x="279" y="69" text-anchor="middle" font-size="16" fill="var(--muted)">!</text>
+        <text x="279" y="96" text-anchor="middle" font-size="9" fill="var(--text)">“ClaudeLimits” can't be</text>
+        <text x="279" y="108" text-anchor="middle" font-size="9" fill="var(--text)">opened because Apple</text>
+        <text x="279" y="120" text-anchor="middle" font-size="9" fill="var(--text)">cannot check it…</text>
+        <rect x="214" y="136" width="55" height="20" rx="6" fill="color-mix(in srgb, var(--text) 8%, transparent)" stroke="var(--line)"/>
+        <text x="241.5" y="150" text-anchor="middle" font-size="9" fill="var(--text)">Cancel</text>
+        <rect x="289" y="136" width="55" height="20" rx="6" fill="color-mix(in srgb, var(--text) 8%, transparent)" stroke="var(--line)"/>
+        <text x="316.5" y="150" text-anchor="middle" font-size="9" fill="var(--muted)">Move to Bin</text>
+
+        <!-- step c: right-click Open -->
+        <rect x="390" y="20" width="162" height="150" rx="11" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+        <text x="471" y="40" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">3 · RIGHT-CLICK → OPEN</text>
+        <rect x="414" y="54" width="124" height="100" rx="8" fill="color-mix(in srgb, var(--card) 96%, transparent)" stroke="var(--line)"/>
+        <text x="426" y="74" font-size="10" fill="var(--accent)" font-weight="600">Open</text>
+        <line x1="422" y1="84" x2="530" y2="84" stroke="var(--line)"/>
+        <text x="426" y="100" font-size="10" fill="var(--muted)">Move to Bin</text>
+        <text x="426" y="118" font-size="10" fill="var(--muted)">Get Info</text>
+        <text x="426" y="136" font-size="10" fill="var(--muted)">Rename</text>
+      </g>
+    </svg>
+    <p class="modes-cap">Drag in, hit the warning on first launch, then right-click → Open to let it through — once only.</p>
+  </div>
   <p>Once open, four numbers appear in your menu bar — and that's it. There's no window and no Dock
      icon; the app is a menu-bar agent (<code>LSUIElement</code>).</p>
   <div class="note">For the numbers to appear it reads the token Claude Code already stored in your
@@ -301,6 +342,35 @@
     <tr><td><code>2h</code> / <code>45m</code> / <code>4d</code></td><td>time left until it resets (hours / minutes / days)</td></tr>
     <tr><td><code>—</code> or blank</td><td>data not available yet (still loading, or no token in the Keychain)</td></tr>
   </table>
+
+  <p>Sometimes the readout shows something other than numbers. Here's what each state looks like:</p>
+  <div style="max-width:560px;margin:1.25rem 0;">
+    <svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg" aria-label="Menu-bar error states: loading dots, no token shown as lim and exclamation in red, and throttled showing cached numbers with a retry note">
+      <g font-family="'Inter',-apple-system,sans-serif">
+        <!-- a: loading -->
+        <text x="93" y="22" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">LOADING</text>
+        <rect x="34" y="34" width="118" height="46" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="138" y="53" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="13" fill="var(--muted)">…</text>
+        <text x="138" y="71" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="13" fill="var(--muted)">…</text>
+        <text x="93" y="100" text-anchor="middle" font-size="9" fill="var(--muted)">still fetching</text>
+
+        <!-- b: no token -->
+        <text x="280" y="22" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">NO TOKEN</text>
+        <rect x="221" y="34" width="118" height="46" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="325" y="53" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="var(--lv-crit)">lim</text>
+        <text x="325" y="71" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="13" fill="var(--lv-crit)">!</text>
+        <text x="280" y="100" text-anchor="middle" font-size="9" fill="var(--muted)">sign in to Claude Code</text>
+
+        <!-- c: throttled -->
+        <text x="467" y="22" text-anchor="middle" font-size="9" fill="var(--muted)" letter-spacing=".5">THROTTLED (429)</text>
+        <rect x="408" y="34" width="118" height="46" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="512" y="51" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="12"><tspan fill="var(--lv-mid)">63%</tspan><tspan fill="var(--muted)"> 2h</tspan></text>
+        <text x="512" y="67" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="12"><tspan fill="var(--lv-low)">41%</tspan><tspan fill="var(--muted)"> 4d</tspan></text>
+        <text x="467" y="100" text-anchor="middle" font-size="9" fill="var(--muted)">cached · retry in ~Nm</text>
+      </g>
+    </svg>
+    <p class="modes-cap">Loading shows dots; no token shows <code>lim</code>/<code>!</code> in red; a 429 keeps the last good numbers and quietly retries.</p>
+  </div>
 
   <h2 id="panel">3 · The usage panel</h2>
   <p><strong>Left-click</strong> the menu-bar icon and a small panel drops open — laid out
@@ -380,6 +450,17 @@
       </g>
     </svg>
   </div>
+  <p>The <strong>Auto-refresh in …</strong> line is read-only — a greyed-out countdown, not a button.
+     It shows when the OAuth token will be silently refreshed in the background:</p>
+  <div style="max-width:300px;margin:1.25rem 0;">
+    <svg viewBox="0 0 300 56" xmlns="http://www.w3.org/2000/svg" aria-label="Close-up of the disabled, read-only Auto-refresh countdown menu line">
+      <rect x="6" y="8" width="288" height="40" rx="9" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="var(--line)"/>
+      <text x="22" y="33" font-family="'Inter',-apple-system,sans-serif" font-size="12" fill="var(--muted)">Auto-refresh in ~4h 3m</text>
+      <text x="278" y="33" text-anchor="end" font-family="'Inter',-apple-system,sans-serif" font-size="9" fill="var(--muted)">read-only</text>
+    </svg>
+    <p class="modes-cap">Greyed out and unclickable — purely informational. No action needed.</p>
+  </div>
+
   <table>
     <tr><th>Item</th><th>What it does</th></tr>
     <tr><td><strong>Refresh</strong></td><td>Fetch the latest numbers right now</td></tr>
@@ -394,6 +475,37 @@
     <tr><td><strong>Quit</strong></td><td>Stop the app</td></tr>
   </table>
   <p class="muted">All choices are remembered between launches.</p>
+
+  <p><strong>About &amp; Permissions…</strong> opens a small panel that spells out exactly what the
+     app touches on your Mac — and, just as importantly, what it never touches:</p>
+  <div style="max-width:360px;margin:1.25rem 0;">
+    <svg viewBox="0 0 360 296" xmlns="http://www.w3.org/2000/svg" aria-label="About & Permissions window: app icon and title ClaudeLimits, what it uses (Keychain, network to api and console anthropic.com, login item) and what it never touches (Accessibility, Screen Recording, Full Disk Access, camera, microphone), with OK and Product page buttons">
+      <rect x="40" y="8" width="280" height="280" rx="13" fill="color-mix(in srgb, var(--card) 95%, transparent)" stroke="var(--line)"/>
+      <rect x="160" y="22" width="40" height="40" rx="9" fill="color-mix(in srgb, var(--accent) 22%, transparent)" stroke="var(--accent)"/>
+      <text x="180" y="47" text-anchor="middle" font-size="16">📊</text>
+      <g font-family="'Inter',-apple-system,sans-serif">
+        <text x="180" y="80" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">ClaudeLimits</text>
+        <text x="180" y="95" text-anchor="middle" font-size="9" fill="var(--muted)">What this app accesses</text>
+
+        <text x="62" y="120" font-size="9" fill="var(--muted)" letter-spacing=".5">USES</text>
+        <text x="62" y="138" font-size="10" fill="var(--text)"><tspan fill="var(--lv-low)">•</tspan> Keychain (your Claude Code token)</text>
+        <text x="62" y="155" font-size="10" fill="var(--text)"><tspan fill="var(--lv-low)">•</tspan> Network: api.anthropic.com,</text>
+        <text x="74" y="169" font-size="10" fill="var(--text)">console.anthropic.com</text>
+        <text x="62" y="186" font-size="10" fill="var(--text)"><tspan fill="var(--lv-low)">•</tspan> Login item (if you enable it)</text>
+
+        <line x1="62" y1="198" x2="298" y2="198" stroke="var(--line)"/>
+        <text x="62" y="216" font-size="9" fill="var(--muted)" letter-spacing=".5">NEVER TOUCHES</text>
+        <text x="62" y="234" font-size="10" fill="var(--muted)">Accessibility · Screen Recording ·</text>
+        <text x="62" y="248" font-size="10" fill="var(--muted)">Full Disk Access · camera · microphone</text>
+
+        <rect x="62" y="262" width="100" height="20" rx="6" fill="color-mix(in srgb, var(--text) 8%, transparent)" stroke="var(--line)"/>
+        <text x="112" y="276" text-anchor="middle" font-size="10" fill="var(--accent)">Product page ↗</text>
+        <rect x="248" y="262" width="50" height="20" rx="6" fill="color-mix(in srgb, var(--accent) 22%, transparent)" stroke="var(--accent)"/>
+        <text x="273" y="276" text-anchor="middle" font-size="10" fill="var(--accent)">OK</text>
+      </g>
+    </svg>
+    <p class="modes-cap">It uses only the Keychain, two Anthropic hosts, and an optional login item — and never asks for Accessibility, Screen Recording, Full Disk Access, the camera, or the microphone.</p>
+  </div>
 
   <h2 id="sources">5 · Where the numbers come from</h2>
 
@@ -495,6 +607,14 @@
   <h2 id="view">7 · View modes &amp; colours</h2>
   <p><strong>Mono</strong> renders the numbers as a normal template glyph — it follows your menu-bar
      appearance (dark/light) like any other system icon, and stays visually quiet.</p>
+  <div style="max-width:200px;margin:1.25rem 0;">
+    <svg viewBox="0 0 200 86" xmlns="http://www.w3.org/2000/svg" aria-label="Mono view: both readout lines rendered as a single neutral template glyph that follows the menu-bar theme">
+      <rect x="6" y="8" width="188" height="70" rx="9" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+      <text x="176" y="38" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="15" fill="var(--text)">63% · 2h</text>
+      <text x="176" y="62" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="15" fill="var(--text)">41% · 4d</text>
+    </svg>
+    <p class="modes-cap">One neutral colour for everything — it inherits the menu-bar theme (dark or light) like any template icon.</p>
+  </div>
   <p><strong>Colour</strong> tints the <strong>percentage</strong> by how close you are to the cap,
      mirroring Claude's own warning steps. The time-to-reset next to it stays a calm grey — so your
      eye lands on the number that matters, not the clock:</p>
@@ -505,6 +625,34 @@
     <tr><td>≥ 75%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-high) 22%,transparent);color:var(--lv-high)">orange</span> — getting close</td></tr>
     <tr><td>≥ 90%</td><td><span class="pill" style="background:color-mix(in srgb,var(--lv-crit) 22%,transparent);color:var(--lv-crit)">red</span> — almost out</td></tr>
   </table>
+
+  <p>The four steps side by side, the way the percentage actually shifts colour as the window fills:</p>
+  <div style="max-width:560px;margin:1.25rem 0;">
+    <svg viewBox="0 0 560 110" xmlns="http://www.w3.org/2000/svg" aria-label="Colour view thresholds: 34% blue, 58% yellow, 81% orange, 93% red">
+      <g font-family="ui-monospace,Menlo,monospace">
+        <rect x="8" y="14" width="124" height="44" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="120" y="42" text-anchor="end" font-size="17"><tspan fill="var(--lv-low)">34%</tspan><tspan fill="var(--muted)"> · 3h</tspan></text>
+        <text x="70" y="80" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="9.5" fill="var(--lv-low)">blue · &lt; 50%</text>
+        <text x="70" y="93" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="8.5" fill="var(--muted)">plenty left</text>
+
+        <rect x="148" y="14" width="124" height="44" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="260" y="42" text-anchor="end" font-size="17"><tspan fill="var(--lv-mid)">58%</tspan><tspan fill="var(--muted)"> · 2h</tspan></text>
+        <text x="210" y="80" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="9.5" fill="var(--lv-mid)">yellow · ≥ 50%</text>
+        <text x="210" y="93" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="8.5" fill="var(--muted)">over halfway</text>
+
+        <rect x="288" y="14" width="124" height="44" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="400" y="42" text-anchor="end" font-size="17"><tspan fill="var(--lv-high)">81%</tspan><tspan fill="var(--muted)"> · 1h</tspan></text>
+        <text x="350" y="80" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="9.5" fill="var(--lv-high)">orange · ≥ 75%</text>
+        <text x="350" y="93" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="8.5" fill="var(--muted)">getting close</text>
+
+        <rect x="428" y="14" width="124" height="44" rx="8" fill="color-mix(in srgb, var(--text) 9%, transparent)" stroke="var(--line)"/>
+        <text x="540" y="42" text-anchor="end" font-size="17"><tspan fill="var(--lv-crit)">93%</tspan><tspan fill="var(--muted)"> · 18m</tspan></text>
+        <text x="490" y="80" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="9.5" fill="var(--lv-crit)">red · ≥ 90%</text>
+        <text x="490" y="93" text-anchor="middle" font-family="'Inter',-apple-system,sans-serif" font-size="8.5" fill="var(--muted)">almost out</text>
+      </g>
+    </svg>
+    <p class="modes-cap">Only the percentage takes the colour; the time-to-reset stays a calm grey.</p>
+  </div>
 
   <h2 id="tuning">8 · Tuning</h2>
   <p>There's almost nothing to tune — the app keeps its handful of settings in standard
