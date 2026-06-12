@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorer — a Windows 11–style file manager for macOS</title>
+<meta name="description" content="A native macOS file manager built for Windows 11 muscle memory: browser-style tabs, eight view modes, Win11 keyboard shortcuts with dual Ctrl/⌘ bindings, QuickLook previews, and a clickable breadcrumb address bar.">
+<link rel="icon" type="image/svg+xml" href="img/explorer-icon.svg">
+<link rel="apple-touch-icon" href="img/explorer-icon.svg">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000; --card: #1d1d1f; --line: #2a2a2c;
+    --text: #f5f5f7; --muted: #a1a1a6; --accent: #4ca3ff; --accent2: #34c759;
+    --glass-border: color-mix(in srgb, #fff 14%, transparent);
+    --radius: 16px;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0067d6;
+      --glass-border: var(--line);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0067d6;
+    --glass-border: var(--line);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.6 var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 0 20px 48px;
+    position: relative; overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(60rem 60rem at 50% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%);
+  }
+  .wrap { width: 100%; max-width: 760px; }
+
+  header.hero {
+    display: grid; grid-template-columns: auto 1fr; gap: 36px;
+    align-items: center; text-align: left; margin-bottom: 40px;
+  }
+  .hero-brand { text-align: center; }
+  .logo { width: 84px; height: 84px; border-radius: 19px;
+          box-shadow: 0 8px 24px rgba(0,0,0,.28); }
+  h1 { font-family: var(--font-serif); font-weight: 500; font-size: 32px; margin: 12px 0 0; letter-spacing: -0.01em; }
+  .free-pill { display: inline-block; vertical-align: middle; margin-left: 8px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: 999px; padding: 3px 10px; }
+  h2, h3 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01em; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+  @media (max-width: 600px) {
+    header.hero { grid-template-columns: 1fr; gap: 18px; text-align: center; }
+    .lead { max-width: 540px; margin: 0 auto 20px; }
+  }
+
+  .hero-cta { margin-top: 22px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  @media (max-width: 600px) { .hero-cta { justify-content: center; } }
+  .btn-dl {
+    display: inline-flex; align-items: center; gap: 11px;
+    background: var(--accent); color: #fff; text-decoration: none;
+    padding: 12px 22px; border-radius: 12px; font-weight: 600;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 40%, transparent);
+    transition: opacity .15s, transform .15s; cursor: default;
+  }
+  .btn-dl:hover { opacity: .92; transform: translateY(-1px); }
+  .btn-dl svg { width: 18px; height: 18px; fill: #fff; flex: none; }
+  .btn-ghost { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .btn-ghost:hover { color: var(--text); }
+  .hero-note { color: var(--muted); font-size: 12px; margin: 10px 0 0; width: 100%; }
+
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 56px; }
+  footer a { color: var(--muted); }
+
+  /* ── The "video": an Explorer window with tabs, address bar, sidebar, and a
+        view mode that animates between grid and list ── */
+  .stage {
+    max-width: 880px; margin: 8px auto 56px;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--line); box-shadow: 0 20px 55px rgba(0,0,0,.4);
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 26%, #14161c),
+        color-mix(in srgb, var(--accent) 6%, #0c0d10));
+    padding: 22px;
+  }
+  :root[data-theme="light"] .stage, :root:not([data-theme]) .stage {
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 20%, #eef0f4),
+        color-mix(in srgb, var(--accent) 4%, #e6e7eb));
+  }
+
+  /* The window chrome */
+  .win {
+    border-radius: 12px; overflow: hidden;
+    display: flex; flex-direction: column;
+    background: color-mix(in srgb, #0b0c10 95%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  :root[data-theme="light"] .win, :root:not([data-theme]) .win {
+    background: #fff; border-color: var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.18);
+  }
+  /* title / traffic-light bar with tab strip */
+  .titlebar {
+    display: flex; align-items: center; gap: 10px;
+    height: 38px; padding: 0 12px;
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  }
+  :root[data-theme="light"] .titlebar, :root:not([data-theme]) .titlebar {
+    background: #f1f1f3; border-color: var(--line);
+  }
+  .lights { display: inline-flex; gap: 7px; flex: none; }
+  .lights i { width: 11px; height: 11px; border-radius: 50%; display: block;
+    background: color-mix(in srgb, currentColor 26%, transparent); color: var(--muted); }
+  .tabs { display: flex; gap: 6px; align-items: flex-end; overflow: hidden; flex: 1; }
+  .tab {
+    display: inline-flex; align-items: center; gap: 7px;
+    font: 500 11.5px/1 var(--font-sans); color: var(--muted);
+    padding: 7px 11px; border-radius: 8px 8px 0 0; white-space: nowrap;
+    background: transparent; max-width: 150px;
+  }
+  .tab .ti { width: 12px; height: 12px; flex: none; fill: currentColor; opacity: .85; }
+  .tab .tn { overflow: hidden; text-overflow: ellipsis; }
+  .tab .tx { opacity: .5; font-size: 13px; margin-left: 2px; }
+  .tab.active {
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .tab.add { color: var(--muted); font-size: 15px; padding: 6px 9px; }
+
+  /* toolbar: nav buttons + breadcrumb address bar + search */
+  .toolbar {
+    display: flex; align-items: center; gap: 9px;
+    height: 40px; padding: 0 12px;
+    border-bottom: 1px solid color-mix(in srgb, #fff 8%, transparent);
+    font: 500 11.5px/1 var(--font-sans);
+  }
+  :root[data-theme="light"] .toolbar, :root:not([data-theme]) .toolbar { border-color: var(--line); }
+  .navbtns { display: inline-flex; gap: 4px; color: var(--muted); flex: none; }
+  .navbtns svg { width: 15px; height: 15px; fill: currentColor; }
+  .navbtns .off { opacity: .35; }
+  .crumbs {
+    flex: 1; display: flex; align-items: center; gap: 5px; overflow: hidden;
+    background: color-mix(in srgb, #fff 7%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    border-radius: 7px; padding: 6px 10px; color: var(--text);
+  }
+  :root[data-theme="light"] .crumbs, :root:not([data-theme]) .crumbs {
+    background: #f5f5f7; border-color: var(--line);
+  }
+  .crumbs .seg { white-space: nowrap; }
+  .crumbs .sep { opacity: .4; }
+  .crumbs .seg:last-child { font-weight: 600; }
+  .toolsearch {
+    flex: none; width: 120px; color: var(--muted);
+    background: color-mix(in srgb, #fff 7%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    border-radius: 7px; padding: 6px 10px; display: flex; align-items: center; gap: 6px;
+  }
+  :root[data-theme="light"] .toolsearch, :root:not([data-theme]) .toolsearch {
+    background: #f5f5f7; border-color: var(--line);
+  }
+  .toolsearch svg { width: 12px; height: 12px; fill: currentColor; flex: none; }
+  @media (max-width: 560px) { .toolsearch { display: none; } }
+
+  /* body: sidebar + file area */
+  .winbody { display: flex; min-height: 248px; }
+  .sidebar {
+    width: 168px; flex: none; padding: 10px 8px;
+    border-right: 1px solid color-mix(in srgb, #fff 8%, transparent);
+    font: 500 11.5px/1 var(--font-sans); color: var(--muted);
+  }
+  :root[data-theme="light"] .sidebar, :root:not([data-theme]) .sidebar { border-color: var(--line); }
+  @media (max-width: 560px) { .sidebar { display: none; } }
+  .sb-group { margin-bottom: 12px; }
+  .sb-h { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; opacity: .55; padding: 4px 8px; }
+  .sb-i { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; }
+  .sb-i svg { width: 13px; height: 13px; fill: currentColor; opacity: .8; flex: none; }
+  .sb-i.on { color: var(--text); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+
+  .filearea { flex: 1; position: relative; padding: 14px; overflow: hidden; }
+  /* grid of files; cells morph from large icons → list rows via the JS toggle */
+  .grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    transition: gap .5s ease;
+  }
+  .cell {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 8px 4px; border-radius: 9px; text-align: center;
+    transition: all .5s ease;
+  }
+  .cell .ic { width: 40px; height: 40px; transition: width .5s ease, height .5s ease; }
+  .cell .nm { font: 500 10.5px/1.2 var(--font-sans); color: var(--text);
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cell .meta { display: none; font: 500 10px/1 var(--font-mono); color: var(--muted); }
+  /* list mode */
+  .grid.list { grid-template-columns: 1fr; gap: 2px; }
+  .grid.list .cell { flex-direction: row; align-items: center; gap: 10px; padding: 5px 8px; text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent); }
+  .grid.list .cell .ic { width: 18px; height: 18px; }
+  .grid.list .cell .nm { flex: 1; }
+  .grid.list .cell .meta { display: block; }
+  .filebar {
+    position: absolute; left: 14px; right: 14px; bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    font: 500 10px/1 var(--font-sans); color: var(--muted); opacity: .8;
+    padding-top: 8px;
+  }
+  /* the little view-mode pill that toggles, top-right of file area */
+  .viewmode {
+    position: absolute; right: 14px; top: -2px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 5px;
+    font: 600 9.5px/1 var(--font-sans); color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    border-radius: 999px; padding: 4px 9px;
+  }
+  .viewmode svg { width: 11px; height: 11px; fill: currentColor; }
+  .stage-caption { text-align: center; font-size: 13px; color: rgba(255,255,255,.82);
+    max-width: 520px; margin: 16px auto 0; line-height: 1.5; }
+  :root[data-theme="light"] .stage-caption, :root:not([data-theme]) .stage-caption { color: rgba(0,0,0,.6); }
+
+  /* ── Feature rows ── */
+  .features { margin-top: 8px; }
+  .features > h2 { text-align: center; font-size: 22px; margin: 0 0 6px; }
+  .features > .sub { text-align: center; color: var(--muted); margin: 0 0 40px; }
+  .feature {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    align-items: center; margin-bottom: 56px;
+  }
+  .feature:nth-child(even) .shot { order: 2; }
+  .feature h3 { font-size: 18px; margin: 0 0 8px; }
+  .feature p { color: var(--muted); margin: 0; }
+  .shot {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: color-mix(in srgb, var(--card) 70%, transparent);
+    box-shadow: 0 10px 30px rgba(0,0,0,.22);
+    aspect-ratio: 16 / 11; display: flex; align-items: center; justify-content: center; padding: 18px;
+  }
+  .shot svg { width: 100%; height: 100%; }
+  @media (max-width: 600px) {
+    .feature { grid-template-columns: 1fr; gap: 16px; }
+    .feature:nth-child(even) .shot { order: 0; }
+    .features > h2, .features { margin-top: 0; }
+  }
+
+  .docs-link { text-align:center; margin: 40px 0 0; }
+  .docs-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .docs-link a:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>
+</head>
+<body data-product="explorer">
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-brand">
+      <img class="logo" src="img/explorer-icon.svg" alt="Explorer icon" width="84" height="84">
+      <h1>Explorer <span class="free-pill">Paid</span></h1>
+    </div>
+    <div class="hero-pitch">
+      <p class="lead">
+        A native macOS file manager built for <strong>Windows 11</strong> muscle memory.
+        Browser-style <strong>tabs</strong>, <strong>eight view modes</strong>, the Win11
+        keyboard shortcuts you already know (with both <code>Ctrl</code> and <code>⌘</code>
+        bound), instant <strong>QuickLook</strong> previews, and a clickable
+        <strong>breadcrumb address bar</strong> — all in a fast, Mica-styled window.
+      </p>
+      <div class="hero-cta">
+        <a class="btn-dl" href="#" aria-disabled="true" onclick="return false;">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 11h-2V7h2Zm0 4h-2v-2h2Z"/></svg>
+          Coming soon · alpha
+        </a>
+        <a class="btn-ghost" href="explorer-docs.html">Read the docs →</a>
+        <p class="hero-note">Version 0.1.0 alpha · early access · macOS · not yet publicly distributed</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- The "video": a live Explorer window with tabs, breadcrumb, sidebar, and a
+       view that switches between large-icon grid and detailed list -->
+  <div class="stage" aria-label="An Explorer window on macOS with browser-style tabs, a breadcrumb address bar, a sidebar, and a file area switching between icon and list views">
+    <div class="win" aria-hidden="true">
+      <div class="titlebar">
+        <span class="lights"><i></i><i></i><i></i></span>
+        <span class="tabs">
+          <span class="tab active">
+            <svg class="ti" viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8Z"/></svg>
+            <span class="tn">Documents</span><span class="tx">×</span>
+          </span>
+          <span class="tab">
+            <svg class="ti" viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8Z"/></svg>
+            <span class="tn">Downloads</span><span class="tx">×</span>
+          </span>
+          <span class="tab">
+            <svg class="ti" viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8Z"/></svg>
+            <span class="tn">Projects</span><span class="tx">×</span>
+          </span>
+          <span class="tab add">+</span>
+        </span>
+      </div>
+      <div class="toolbar">
+        <span class="navbtns">
+          <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6V6z"/></svg>
+          <svg class="off" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6V6z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 4l-7 7h4v7h6v-7h4z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19 13h-2a6 6 0 1 1-1.78-4.22L13 11h7V4z"/></svg>
+        </span>
+        <span class="crumbs">
+          <span class="seg">This PC</span><span class="sep">›</span>
+          <span class="seg">Andrei</span><span class="sep">›</span>
+          <span class="seg" id="crumb-leaf">Documents</span>
+        </span>
+        <span class="toolsearch">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5 1.5-1.5-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+          Search
+        </span>
+      </div>
+      <div class="winbody">
+        <div class="sidebar">
+          <div class="sb-group">
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3Z"/></svg>Home</div>
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M4 5h16v4H4Zm0 6h16v8H4Z"/></svg>Gallery</div>
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M19 13a5 5 0 0 0-4.9-4 6 6 0 0 0-11.4 2A4 4 0 0 0 4 19h14a4 4 0 0 0 1-6Z"/></svg>iCloud Drive</div>
+          </div>
+          <div class="sb-group">
+            <div class="sb-h">This PC</div>
+            <div class="sb-i on"><svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8Z"/></svg>Documents</div>
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5Zm7-16-5 5h3v6h4V9h3Z" transform="rotate(180 12 12)"/></svg>Downloads</div>
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M21 11H3a1 1 0 0 0-1 1v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6a1 1 0 0 0-1-1ZM4 9h16l-2-5H6Z"/></svg>Local Disk (C:)</div>
+          </div>
+          <div class="sb-group">
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 8 8H4Z"/></svg>Network</div>
+            <div class="sb-i"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7ZM9 4h6v2H9Z"/></svg>Recycle Bin</div>
+          </div>
+        </div>
+        <div class="filearea">
+          <span class="viewmode" id="vm">
+            <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3Zm10 0h8v8h-8ZM3 13h8v8H3Zm10 0h8v8h-8Z"/></svg>
+            <span id="vm-label">Large icons</span>
+          </span>
+          <div class="grid" id="grid"></div>
+          <div class="filebar">
+            <span id="fb-count">12 items</span>
+            <span>3 selected · 4.2 MB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="stage-caption">
+      Tabs across the top, a clickable breadcrumb path, the familiar sidebar — and the
+      view flips through Explorer's eight modes, here from large icons to a detailed list.
+      Everything where a Windows hand expects it.
+    </p>
+  </div>
+
+  <section class="features">
+    <h2>Windows 11 habits, native on the Mac</h2>
+    <p class="sub">The shortcuts and layout you already have in your fingers — running as a real macOS app.</p>
+
+    <!-- 1. Tabs -->
+    <div class="feature">
+      <div class="shot">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="A row of browser-style tabs with one active, plus a new-tab button">
+          <g font-family="'Inter',-apple-system,sans-serif">
+            <rect x="20" y="44" width="280" height="118" rx="12" fill="color-mix(in srgb, var(--card) 80%, transparent)" stroke="var(--line)"/>
+            <rect x="32" y="44" width="92" height="30" rx="8" fill="color-mix(in srgb, var(--accent) 18%, transparent)" stroke="color-mix(in srgb, var(--accent) 40%, transparent)"/>
+            <text x="50" y="63" font-size="11" font-weight="600" fill="var(--text)">Documents</text>
+            <text x="136" y="63" font-size="11" font-weight="500" fill="var(--muted)">Downloads</text>
+            <text x="222" y="63" font-size="11" font-weight="500" fill="var(--muted)">Projects</text>
+            <text x="288" y="63" font-size="15" fill="var(--muted)">+</text>
+            <line x1="32" y1="80" x2="288" y2="80" stroke="var(--line)"/>
+            <text x="40" y="106" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--accent)">⌘T</text>
+            <text x="74" y="106" font-size="11" fill="var(--muted)">new tab</text>
+            <text x="40" y="128" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--accent)">⌘W</text>
+            <text x="74" y="128" font-size="11" fill="var(--muted)">close</text>
+            <text x="40" y="150" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--accent)">Ctrl+Tab</text>
+            <text x="120" y="150" font-size="11" fill="var(--muted)">switch</text>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <h3>Browser-style tabs</h3>
+        <p>Open as many folders as you like in one window. New tab with <code>⌘T</code>,
+           close with <code>⌘W</code> or the middle mouse button, switch with
+           <code>Ctrl+Tab</code> or <code>⌘1</code>–<code>9</code>. Drag tabs to
+           reorder, tear one out into its own window, or pick from the Chrome-style
+           dropdown of all open tabs. They come back when you relaunch.</p>
+      </div>
+    </div>
+
+    <!-- 2. Eight view modes -->
+    <div class="feature">
+      <div class="shot">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="The eight view modes: extra large, large, medium and small icons, list, details, tiles, content">
+          <g font-family="'Inter',-apple-system,sans-serif" font-size="9.5" fill="var(--muted)" text-anchor="middle">
+            <rect x="24"  y="34" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--accent) 16%, transparent)" stroke="color-mix(in srgb, var(--accent) 38%, transparent)"/>
+            <text x="54" y="60" font-size="13" font-weight="700" fill="var(--accent)">▦</text>
+            <text x="54" y="92">Extra large</text>
+            <rect x="92"  y="34" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="122" y="60" font-size="11" font-weight="700" fill="var(--text)">▦</text>
+            <text x="122" y="92">Large</text>
+            <rect x="160" y="34" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="190" y="60" font-size="9" font-weight="700" fill="var(--text)">▦</text>
+            <text x="190" y="92">Medium</text>
+            <rect x="228" y="34" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="258" y="60" font-size="7" font-weight="700" fill="var(--text)">▦</text>
+            <text x="258" y="92">Small</text>
+            <rect x="24"  y="110" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="54" y="135" font-weight="700" fill="var(--text)">☰</text>
+            <text x="54" y="168">List</text>
+            <rect x="92"  y="110" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="122" y="135" font-weight="700" fill="var(--text)">≣</text>
+            <text x="122" y="168">Details</text>
+            <rect x="160" y="110" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="190" y="135" font-weight="700" fill="var(--text)">▤</text>
+            <text x="190" y="168">Tiles</text>
+            <rect x="228" y="110" width="60" height="44" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="258" y="135" font-weight="700" fill="var(--text)">▥</text>
+            <text x="258" y="168">Content</text>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <h3>All eight view modes</h3>
+        <p>Extra-large, large, medium and small icons, List, Details, Tiles and Content —
+           the full Win11 set, switchable from the View menu, the folder's right-click
+           menu, or by holding <code>Ctrl</code>/<code>⌘</code> and scrolling the wheel.
+           A compact-spacing toggle tightens the rows when you want more on screen.</p>
+      </div>
+    </div>
+
+    <!-- 3. Win11 hotkeys with dual bindings -->
+    <div class="feature">
+      <div class="shot">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="Hotkeys bound on both Ctrl and Command: copy, cut, paste, undo, select all, rename, new folder">
+          <g font-family="'Inter',-apple-system,sans-serif">
+            <text x="160" y="30" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">Both layouts work — pick the hand you have</text>
+            <g font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">
+              <rect x="28" y="44" width="120" height="22" rx="6" fill="color-mix(in srgb, var(--accent) 13%, transparent)"/>
+              <text x="40" y="59" fill="var(--accent)">Ctrl+C</text><text x="92" y="59" fill="var(--muted)">/ ⌘C</text>
+              <rect x="172" y="44" width="120" height="22" rx="6" fill="color-mix(in srgb, var(--accent) 13%, transparent)"/>
+              <text x="184" y="59" fill="var(--accent)">Ctrl+V</text><text x="236" y="59" fill="var(--muted)">/ ⌘V</text>
+              <rect x="28" y="74" width="120" height="22" rx="6" fill="color-mix(in srgb, var(--accent) 13%, transparent)"/>
+              <text x="40" y="89" fill="var(--accent)">Ctrl+Z</text><text x="92" y="89" fill="var(--muted)">/ ⌘Z</text>
+              <rect x="172" y="74" width="120" height="22" rx="6" fill="color-mix(in srgb, var(--accent) 13%, transparent)"/>
+              <text x="184" y="89" fill="var(--accent)">Ctrl+A</text><text x="236" y="89" fill="var(--muted)">/ ⌘A</text>
+              <rect x="28" y="104" width="264" height="22" rx="6" fill="color-mix(in srgb, var(--text) 5%, transparent)"/>
+              <text x="40" y="119" fill="var(--text)">Ctrl+Shift+N</text><text x="148" y="119" font-family="'Inter',sans-serif" font-weight="500" fill="var(--muted)">new folder</text>
+              <rect x="28" y="134" width="128" height="22" rx="6" fill="color-mix(in srgb, var(--text) 5%, transparent)"/>
+              <text x="40" y="149" fill="var(--text)">F2</text><text x="70" y="149" font-family="'Inter',sans-serif" font-weight="500" fill="var(--muted)">rename</text>
+              <rect x="172" y="134" width="120" height="22" rx="6" fill="color-mix(in srgb, var(--text) 5%, transparent)"/>
+              <text x="184" y="149" fill="var(--text)">F5</text><text x="214" y="149" font-family="'Inter',sans-serif" font-weight="500" fill="var(--muted)">refresh</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <h3>Win11 shortcuts, dual-bound</h3>
+        <p>Copy, cut, paste, undo/redo, select-all, rename, new folder — every file
+           shortcut answers to <strong>both</strong> the <code>Ctrl</code> combo from
+           Windows and the <code>⌘</code> combo a Mac expects. <code>F2</code> renames,
+           <code>F5</code> refreshes, <code>Del</code> sends to the Recycle Bin,
+           <code>Shift+Del</code> skips it. Keep your muscle memory; the key bindings adapt.</p>
+      </div>
+    </div>
+
+    <!-- 4. QuickLook previews -->
+    <div class="feature">
+      <div class="shot">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="A file selected with the spacebar showing a QuickLook preview thumbnail">
+          <g font-family="'Inter',-apple-system,sans-serif">
+            <rect x="28" y="36" width="80" height="100" rx="10" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <rect x="44" y="52" width="48" height="36" rx="4" fill="color-mix(in srgb, var(--accent) 30%, transparent)"/>
+            <circle cx="58" cy="64" r="4" fill="var(--accent2)"/>
+            <path d="M48 84 L62 70 L74 84 Z" fill="color-mix(in srgb, var(--accent) 60%, transparent)"/>
+            <text x="68" y="106" text-anchor="middle" font-size="9.5" fill="var(--text)">trip.jpg</text>
+            <text x="68" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="700" fill="var(--accent)">Space</text>
+            <path d="M112 86 H140" stroke="var(--accent)" stroke-width="2" marker-end="url(#qa)"/>
+            <defs><marker id="qa" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="var(--accent)"/></marker></defs>
+            <rect x="148" y="28" width="144" height="120" rx="12" fill="color-mix(in srgb, var(--card) 90%, transparent)" stroke="color-mix(in srgb, var(--accent) 40%, transparent)"/>
+            <rect x="162" y="42" width="116" height="78" rx="6" fill="color-mix(in srgb, var(--accent) 22%, transparent)"/>
+            <circle cx="184" cy="66" r="8" fill="var(--accent2)"/>
+            <path d="M166 116 L204 78 L232 106 L250 90 L274 116 Z" fill="color-mix(in srgb, var(--accent) 55%, transparent)"/>
+            <text x="220" y="138" text-anchor="middle" font-size="9.5" fill="var(--muted)">QuickLook preview</text>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <h3>Real QuickLook previews</h3>
+        <p>Thumbnails come from macOS's own QuickLook engine — true previews of images,
+           video and PDFs in the larger icon modes, generated lazily only for what's on
+           screen and cached so scrolling stays smooth. The familiar look of Windows,
+           with the Mac's native preview quality underneath.</p>
+      </div>
+    </div>
+
+    <!-- 5. Address bar / breadcrumbs -->
+    <div class="feature">
+      <div class="shot">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="A breadcrumb address bar; clicking the empty space turns it into an editable path">
+          <g font-family="'Inter',-apple-system,sans-serif">
+            <rect x="24" y="50" width="272" height="30" rx="8" fill="color-mix(in srgb, var(--text) 5%, transparent)" stroke="var(--line)"/>
+            <text x="38" y="69" font-size="11" fill="var(--text)">This PC</text>
+            <text x="92" y="69" font-size="11" fill="var(--muted)">›</text>
+            <text x="104" y="69" font-size="11" fill="var(--text)">Andrei</text>
+            <text x="150" y="69" font-size="11" fill="var(--muted)">›</text>
+            <text x="162" y="69" font-size="11" font-weight="700" fill="var(--accent)">Documents</text>
+            <rect x="24" y="104" width="272" height="30" rx="8" fill="color-mix(in srgb, var(--card) 92%, transparent)" stroke="color-mix(in srgb, var(--accent) 45%, transparent)"/>
+            <text x="38" y="123" font-family="'JetBrains Mono',monospace" font-size="11" fill="var(--text)">~/Documents/</text>
+            <rect x="126" y="111" width="1.5" height="16" fill="var(--accent)"/>
+            <text x="160" y="158" text-anchor="middle" font-size="10.5" fill="var(--muted)">click empty space → type a path, with ~ and autocomplete</text>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <h3>A breadcrumb address bar</h3>
+        <p>Every segment of the path is clickable, and each has a dropdown of its siblings
+           for one-hop jumps. Click the empty space and it turns into an editable path
+           field — type an absolute path or <code>~</code> with autocomplete, or pull from
+           history. Back, Forward, Up and <code>Backspace</code> all behave the Windows way.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="docs-link">
+    <a href="explorer-docs.html">Full feature guide → tabs, views, shortcuts, search &amp; file operations</a>
+  </p>
+
+  <footer>
+    Explorer — a Windows 11–style file manager for macOS · version 0.1.0 alpha.<br>
+    Support: <a href="mailto:northox.app@proton.me">northox.app@proton.me</a><br>
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a> · <a href="index.html">northox</a><br><br>
+    <span style="opacity:.7">Not affiliated with Microsoft. “Windows” and “File Explorer” are trademarks of Microsoft. Explorer is an independent macOS app that brings familiar Windows 11 conventions to the Mac.</span><br><br>
+  </footer>
+</div>
+<script>
+/* The "video" window: the file area cycles through view modes — large icons →
+   list (details) and back — and the breadcrumb leaf + view-mode pill update in
+   step, so a visitor sees tabs, the address bar and the 8-mode switch at work.
+   Honours prefers-reduced-motion by showing one settled frame. */
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var grid = document.getElementById("grid");
+  if (!grid) return;
+  // simple inline icon glyphs (folder / image / doc / pdf) as tiny SVGs
+  var folder = '<svg class="ic" viewBox="0 0 48 48"><path d="M6 12a3 3 0 0 1 3-3h11l4 4h15a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3Z" fill="#4ca3ff"/><path d="M6 18h36v15a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3Z" fill="#7bc0ff"/></svg>';
+  var img = '<svg class="ic" viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="30" rx="4" fill="#34c759" opacity="0.9"/><circle cx="17" cy="19" r="4" fill="#fff"/><path d="M11 36 L22 24 L31 33 L37 28 L41 36 Z" fill="#1f7a3a"/></svg>';
+  var doc = '<svg class="ic" viewBox="0 0 48 48"><path d="M12 5h17l9 9v29a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" fill="#cfe6ff"/><path d="M29 5l9 9h-9Z" fill="#8fbff0"/><g stroke="#4178b8" stroke-width="2"><path d="M16 22h16M16 28h16M16 34h11"/></g></svg>';
+  var pdf = '<svg class="ic" viewBox="0 0 48 48"><path d="M12 5h17l9 9v29a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" fill="#ffd9d4"/><path d="M29 5l9 9h-9Z" fill="#f3a59b"/><text x="24" y="36" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#d4453a">PDF</text></svg>';
+  var files = [
+    { n: "Invoices", t: folder, m: "Folder · —" },
+    { n: "Trips", t: folder, m: "Folder · —" },
+    { n: "report.docx", t: doc, m: "Document · 84 KB" },
+    { n: "budget.xlsx", t: doc, m: "Document · 51 KB" },
+    { n: "sunset.jpg", t: img, m: "JPEG · 2.4 MB" },
+    { n: "lake.jpg", t: img, m: "JPEG · 1.8 MB" },
+    { n: "contract.pdf", t: pdf, m: "PDF · 220 KB" },
+    { n: "notes.txt", t: doc, m: "Text · 3 KB" },
+    { n: "Archive", t: folder, m: "Folder · —" },
+    { n: "diagram.png", t: img, m: "PNG · 640 KB" },
+    { n: "slides.pdf", t: pdf, m: "PDF · 4.1 MB" },
+    { n: "readme.md", t: doc, m: "Markdown · 6 KB" }
+  ];
+  grid.innerHTML = files.map(function (f) {
+    return '<div class="cell">' + f.t +
+      '<span class="nm">' + f.n + '</span>' +
+      '<span class="meta">' + f.m + '</span></div>';
+  }).join("");
+  document.getElementById("fb-count").textContent = files.length + " items";
+
+  if (reduce) return;
+
+  var vmLabel = document.getElementById("vm-label");
+  var leaf = document.getElementById("crumb-leaf");
+  var states = [
+    { list: false, label: "Large icons", folder: "Documents" },
+    { list: false, label: "Large icons", folder: "Documents" },
+    { list: true,  label: "Details",     folder: "Projects" },
+    { list: true,  label: "Details",     folder: "Projects" }
+  ];
+  var i = 0;
+  setInterval(function () {
+    i = (i + 1) % states.length;
+    var s = states[i];
+    grid.classList.toggle("list", s.list);
+    vmLabel.textContent = s.label;
+    leaf.textContent = s.folder;
+  }, 2200);
+})();
+</script>
+<script src="theme.js?v=4"></script>
+</body>
+</html>

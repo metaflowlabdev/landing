@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Explorer icon">
+  <defs>
+    <linearGradient id="sq" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3f47"/>
+      <stop offset="1" stop-color="#1c1f24"/>
+    </linearGradient>
+    <linearGradient id="fld" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5ab0ff"/>
+      <stop offset="1" stop-color="#2680e8"/>
+    </linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd0ff"/>
+      <stop offset="1" stop-color="#69b4ff"/>
+    </linearGradient>
+  </defs>
+  <!-- app squircle -->
+  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#sq)"/>
+  <rect x="6.5" y="6.5" width="115" height="115" rx="27.5" fill="none" stroke="#ffffff" stroke-opacity="0.10"/>
+  <!-- folder -->
+  <path d="M26 50 h26 l8 9 h42 a6 6 0 0 1 6 6 v32 a6 6 0 0 1 -6 6 H26 a6 6 0 0 1 -6 -6 V56 a6 6 0 0 1 6 -6 Z" fill="url(#fld)"/>
+  <path d="M26 50 h26 l8 9 H20 v-3 a6 6 0 0 1 6 -6 Z" fill="url(#flap)"/>
+  <!-- northox compass star, centered in folder -->
+  <path d="M71 60 L73 75 L88 77 L73 79 L71 94 L69 79 L54 77 L69 75 Z" fill="#ffffff" fill-opacity="0.95"/>
+</svg>

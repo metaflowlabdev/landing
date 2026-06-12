@@ -144,6 +144,10 @@
     claudelimits: [
       { label: "ClaudeLimits", href: "claudelimits.html" },
       { label: "Documentation", href: "claudelimits-docs.html" }
+    ],
+    explorer: [
+      { label: "Explorer", href: "explorer.html" },
+      { label: "Documentation", href: "explorer-docs.html" }
     ]
   };
   var product = document.body.getAttribute("data-product");
