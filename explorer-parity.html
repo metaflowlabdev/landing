@@ -221,9 +221,52 @@
     .progress .pdone, .progress .ppart { width: var(--w, auto); }
   }
 
+  /* ───── left sticky stage-nav sidebar ───── */
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+  .stagenav { position: sticky; top: 24px; max-height: calc(100vh - 40px); overflow-y: auto; padding-right: 4px; }
+  .stagenav .sn-title { font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--muted); margin: 0 0 8px 10px; }
+  .stagenav ul { list-style: none; margin: 0; padding: 0; }
+  .stagenav li { margin: 0; }
+  .stagenav a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 8px;
+    color: var(--muted); text-decoration: none; font-size: 13px;
+    border-left: 2px solid transparent; transition: color .15s, background .15s;
+  }
+  .stagenav a:hover { color: var(--text); background: color-mix(in srgb, var(--text) 6%, transparent); text-decoration: none; }
+  .stagenav a.is-active { color: var(--accent); border-left-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .stagenav .sn-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto;
+    background: color-mix(in srgb, var(--muted) 40%, transparent); }
+  .stagenav .sn-dot.ok { background: var(--accent2); }
+  .stagenav .sn-dot.part { background: var(--soon); }
+  .stagenav .sn-dot.plan { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .stagenav .sn-lbl { flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stagenav .sn-tag { font: 600 10px/1 ui-monospace, Menlo, monospace; color: var(--muted); opacity: .8; flex: 0 0 auto; }
+  .stagenav a.is-active .sn-tag { color: var(--accent); opacity: 1; }
+
   @media (max-width: 620px) {
     .summary { grid-template-columns: 1fr; }
     .head h1 { font-size: 26px; }
+  }
+  /* Mobile: sidebar collapses into a horizontal scroll strip above content */
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 14px; }
+    .stagenav {
+      position: sticky; top: 0; z-index: 30; max-height: none;
+      margin: 0 -20px; padding: 10px 16px; padding-right: 16px;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--glass-border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap;
+    }
+    .stagenav .sn-title { display: none; }
+    .stagenav ul { display: inline-flex; gap: 6px; }
+    .stagenav a { border-left: 0; padding: 6px 11px; }
+    .stagenav a.is-active { border-left: 0; }
+    .stagenav .sn-lbl { display: none; }
+    .stagenav .sn-tag { font-size: 12px; }
   }
 </style>
 </head>
@@ -254,6 +297,27 @@
     </div>
     <p class="muted" style="font-size:13px; margin-top:10px">Подсчёт по чекбоксам <code>PARITY.md</code> (значимые фичи; <kbd>[x]</kbd> = готово, <kbd>[~]</kbd> = частично, <kbd>[ ]</kbd> = запланировано). Числа отражают объём паритета, а не «процент готовности продукта».</p>
   </div>
+
+  <div class="layout">
+    <!-- ───────────── left stage-nav sidebar ───────────── -->
+    <nav class="stagenav" id="stagenav" aria-label="Этапы паритета">
+      <div class="sn-title">Этапы паритета</div>
+      <ul>
+        <li><a href="#e1"><span class="sn-dot ok"></span><span class="sn-tag">E1</span><span class="sn-lbl">Каркас и навигация</span></a></li>
+        <li><a href="#e2"><span class="sn-dot ok"></span><span class="sn-tag">E2</span><span class="sn-lbl">Выделение и хоткеи</span></a></li>
+        <li><a href="#e3"><span class="sn-dot part"></span><span class="sn-tag">E3</span><span class="sn-lbl">Файловые операции</span></a></li>
+        <li><a href="#e4"><span class="sn-dot part"></span><span class="sn-tag">E4</span><span class="sn-lbl">Представления, сортировка</span></a></li>
+        <li><a href="#e5"><span class="sn-dot part"></span><span class="sn-tag">E5</span><span class="sn-lbl">Меню и свойства</span></a></li>
+        <li><a href="#e6"><span class="sn-dot ok"></span><span class="sn-tag">E6</span><span class="sn-lbl">Поиск и фильтрация</span></a></li>
+        <li><a href="#e7"><span class="sn-dot plan"></span><span class="sn-tag">E7</span><span class="sn-lbl">Корзина, архивы, сеть</span></a></li>
+        <li><a href="#e8"><span class="sn-dot plan"></span><span class="sn-tag">E8</span><span class="sn-lbl">Галерея, облако, полировка</span></a></li>
+        <li><a href="#e9"><span class="sn-dot plan"></span><span class="sn-tag">E9</span><span class="sn-lbl">Продукт</span></a></li>
+        <li><a href="#oos"><span class="sn-dot plan"></span><span class="sn-tag">—</span><span class="sn-lbl">Вне скоупа</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- ───────────── stages content ───────────── -->
+    <div class="stages">
 
   <!-- ════════════ E1 ════════════ -->
   <section class="cat" id="e1">
@@ -754,6 +818,9 @@
     <div class="note"><p><strong>Реестр живой.</strong> «100% функционала» = всё из канон-документа <code>PARITY.md</code>. Если при работе находится фича Проводника, которой здесь нет, — она добавляется в реестр, и эта страница обновляется вслед.</p></div>
   </section>
 
+    </div><!-- /.stages -->
+  </div><!-- /.layout -->
+
   <footer>
     Explorer · <a href="explorer.html">обзор продукта</a> · <a href="explorer-docs.html">документация</a><br>
     Support: <a href="mailto:northox.app@proton.me">northox.app@proton.me</a><br>
@@ -766,6 +833,50 @@
 <script>
   var yr = document.getElementById('yr');
   if (yr) { yr.textContent = new Date().getFullYear(); }
+
+  /* active stage highlight in the left sidebar via IntersectionObserver */
+  (function () {
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.stages > section.cat'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('#stagenav a'));
+    if (!sections.length || !links.length || !('IntersectionObserver' in window)) return;
+
+    var linkById = {};
+    links.forEach(function (l) {
+      linkById[l.getAttribute('href').slice(1)] = l;
+    });
+    var visible = {};
+
+    function setActive(id) {
+      links.forEach(function (l) {
+        var on = l.getAttribute('href') === '#' + id;
+        l.classList.toggle('is-active', on);
+      });
+      var active = linkById[id];
+      if (active && active.scrollIntoView) {
+        // keep active link in view on the mobile horizontal strip
+        if (window.matchMedia('(max-width: 860px)').matches) {
+          active.scrollIntoView({ block: 'nearest', inline: 'center' });
+        }
+      }
+    }
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) visible[e.target.id] = e.intersectionRatio;
+        else delete visible[e.target.id];
+      });
+      // pick the topmost section currently in view
+      var best = null;
+      sections.forEach(function (s) {
+        if (visible[s.id] != null) {
+          if (best === null || s.getBoundingClientRect().top < best.getBoundingClientRect().top) best = s;
+        }
+      });
+      if (best) setActive(best.id);
+    }, { rootMargin: '-72px 0px -55% 0px', threshold: [0, 0.1, 0.5, 1] });
+
+    sections.forEach(function (s) { obs.observe(s); });
+  })();
 </script>
 </body>
 </html>
