@@ -147,7 +147,8 @@
     ],
     explorer: [
       { label: "Explorer", href: "explorer.html" },
-      { label: "Documentation", href: "explorer-docs.html" }
+      { label: "Documentation", href: "explorer-docs.html" },
+      { label: "Parity", href: "explorer-parity.html" }
     ]
   };
   var product = document.body.getAttribute("data-product");
