@@ -257,6 +257,217 @@
     .uprow { opacity: 1; transform: none; }
     .upbar { width: var(--w); }
   }
+
+  /* ── Keychain fix step-by-step guide ─────────────────────────────── */
+  .kc-steps {
+    list-style: none; padding: 0; margin: 18px 0 14px;
+    display: grid; gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .kc-steps { grid-template-columns: 1fr 1fr; }
+  }
+  .kc-step {
+    background: color-mix(in srgb, var(--card) 60%, transparent);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 16px 16px 18px;
+    display: flex; flex-direction: column; gap: 12px;
+    overflow: hidden;
+  }
+  .kc-step .kc-head { display: flex; align-items: baseline; gap: 10px; }
+  .kc-step .kc-num {
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff;
+    background: var(--accent);
+    align-self: flex-start;
+  }
+  .kc-step .kc-text { color: var(--muted); font-size: 14px; margin: 0; }
+  .kc-step .kc-text strong { color: var(--text); }
+  /* shared stage for each scene */
+  .kc-stage {
+    position: relative; height: 132px; border-radius: 12px;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    overflow: hidden;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+  }
+
+  /* Scene 1 — full right-click menu with cursor click on the Fix item */
+  .kc-stage.kc-scene-menu { height: 292px; }
+  .kc-menu {
+    position: absolute; top: 12px; left: 14px; right: 14px;
+    background: var(--card);
+    border: 1px solid var(--glass-border); border-radius: 10px;
+    padding: 5px; box-shadow: 0 8px 24px rgba(0,0,0,.28);
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .kc-menu .kc-mi {
+    padding: 3px 9px; border-radius: 5px; color: var(--text);
+    font-size: 10px; line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; justify-content: space-between; gap: 8px;
+  }
+  .kc-menu .kc-mi .kc-key { color: var(--muted); font-size: 9px; }
+  .kc-menu .kc-mi.kc-dim { color: var(--muted); }
+  .kc-menu .kc-hdr {
+    padding: 4px 9px 1px; font-size: 7.5px; letter-spacing: .5px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .kc-menu .kc-sep { height: 1px; margin: 3px 6px; background: var(--line); }
+  .kc-menu .kc-mi.kc-target {
+    position: relative; color: #fff;
+    animation: kc-hl 4s ease-in-out infinite;
+  }
+  .kc-cursor {
+    position: absolute; left: 46%; top: 202px;
+    width: 16px; height: 16px; pointer-events: none;
+    animation: kc-cursor-move 4s ease-in-out infinite;
+  }
+  .kc-cursor svg { display: block; width: 16px; height: 16px;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
+  @keyframes kc-hl {
+    0%, 38%   { background: transparent; }
+    46%, 70%  { background: var(--accent); }
+    72%, 100% { background: transparent; }
+  }
+  @keyframes kc-cursor-move {
+    0%   { left: 70%; top: 250px; }
+    40%  { left: 46%; top: 204px; }
+    46%  { left: 45%; top: 204px; transform: scale(.85); }
+    52%  { left: 46%; top: 204px; transform: scale(1); }
+    100% { left: 46%; top: 204px; }
+  }
+
+  /* Scene 2 — terminal opens, command types out */
+  .kc-term {
+    position: absolute; inset: 14px;
+    background: #1b1b1d; border: 1px solid #333; border-radius: 8px;
+    color: #e6e6e6; overflow: hidden;
+    transform-origin: 50% 30%;
+    animation: kc-term-open 4s ease-in-out infinite;
+  }
+  .kc-term .kc-bar {
+    height: 18px; background: #2a2a2c; display: flex; align-items: center;
+    gap: 5px; padding: 0 7px;
+  }
+  .kc-term .kc-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; }
+  .kc-term .kc-dot.r { background: #ff5f57; }
+  .kc-term .kc-dot.y { background: #febc2e; }
+  .kc-term .kc-dot.g { background: #28c840; }
+  .kc-term .kc-body { padding: 8px 9px; font-size: 11px; line-height: 1.5; }
+  .kc-term .kc-prompt { color: #34c759; }
+  .kc-type {
+    display: inline-block; white-space: nowrap; overflow: hidden;
+    vertical-align: bottom; color: #e6e6e6;
+    border-right: 1.5px solid #e6e6e6;
+    width: 0;
+    animation: kc-typing 4s steps(38) infinite, kc-caret .7s step-end infinite;
+  }
+  @keyframes kc-term-open {
+    0%   { transform: scale(.7); opacity: 0; }
+    14%  { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes kc-typing {
+    0%, 16% { width: 0; }
+    72%, 100% { width: 21ch; }
+  }
+  @keyframes kc-caret { 50% { border-color: transparent; } }
+
+  /* Scene 3 — password prompt, hidden dots appear, Return */
+  .kc-pw { position: absolute; inset: 14px; padding: 10px 12px; color: #e6e6e6;
+    background: #1b1b1d; border: 1px solid #333; border-radius: 8px;
+    line-height: 1.7; }
+  .kc-pw .kc-ask { color: var(--muted); }
+  .kc-dots { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 4px; }
+  .kc-dots i {
+    width: 6px; height: 6px; border-radius: 50%; background: #e6e6e6;
+    opacity: 0; transform: scale(.4);
+    animation: kc-dot-in 4s ease-in-out infinite;
+  }
+  .kc-dots i:nth-child(1) { animation-delay: .3s; }
+  .kc-dots i:nth-child(2) { animation-delay: .6s; }
+  .kc-dots i:nth-child(3) { animation-delay: .9s; }
+  .kc-dots i:nth-child(4) { animation-delay: 1.2s; }
+  .kc-dots i:nth-child(5) { animation-delay: 1.5s; }
+  .kc-dots i:nth-child(6) { animation-delay: 1.8s; }
+  .kc-return {
+    display: inline-block; margin-top: 8px; padding: 2px 8px;
+    border: 1px solid var(--line); border-radius: 5px;
+    color: var(--text); font-size: 11px;
+    opacity: 0; animation: kc-return-in 4s ease-in-out infinite;
+  }
+  @keyframes kc-dot-in {
+    0%, 5%    { opacity: 0; transform: scale(.4); }
+    14%, 58%  { opacity: 1; transform: scale(1); }
+    66%, 100% { opacity: 0; transform: scale(.4); }
+  }
+  @keyframes kc-return-in {
+    0%, 56%   { opacity: 0; transform: translateY(3px); }
+    64%, 88%  { opacity: 1; transform: translateY(0); }
+    96%, 100% { opacity: 0; transform: translateY(3px); }
+  }
+
+  /* Scene 4 — Done + clean new session */
+  .kc-done { position: absolute; inset: 14px; padding: 12px;
+    background: #1b1b1d; border: 1px solid #333; border-radius: 8px;
+    color: #e6e6e6; display: flex; flex-direction: column; gap: 12px;
+    justify-content: center; }
+  .kc-done .kc-ok {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 13px;
+    opacity: 0; animation: kc-pop .9s ease-out forwards;
+    animation-delay: .2s;
+  }
+  .kc-done .kc-check {
+    width: 18px; height: 18px; border-radius: 50%; flex: none;
+    background: var(--accent2); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .kc-newsess {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: -apple-system, system-ui, sans-serif; font-size: 12px;
+    color: var(--muted);
+    opacity: 0; animation: kc-pop .9s ease-out forwards; animation-delay: 1.4s;
+  }
+  .kc-newsess .kc-nop {
+    color: var(--accent2); border: 1px solid var(--accent2);
+    border-radius: 5px; padding: 1px 6px; font-size: 10px; font-weight: 600;
+  }
+  @keyframes kc-pop {
+    0%   { opacity: 0; transform: scale(.85); }
+    60%  { transform: scale(1.04); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  /* infinite gentle re-pop so scene stays lively */
+  .kc-step .kc-stage:hover .kc-ok,
+  .kc-step .kc-stage:hover .kc-newsess { animation-play-state: running; }
+
+  .kc-fallback { margin-top: 6px; }
+  .kc-fallback summary {
+    cursor: pointer; color: var(--accent); font-size: 14px;
+    font-weight: 600; list-style: none;
+  }
+  .kc-fallback summary::-webkit-details-marker { display: none; }
+  .kc-fallback summary::before { content: "▸ "; }
+  .kc-fallback[open] summary::before { content: "▾ "; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kc-menu .kc-mi.kc-target, .kc-cursor, .kc-term,
+    .kc-type, .kc-dots i, .kc-return,
+    .kc-done .kc-ok, .kc-newsess { animation: none !important; }
+    /* show the final/representative frame */
+    .kc-menu .kc-mi.kc-target { background: var(--accent); color: #fff; }
+    .kc-cursor { left: 38%; top: 60px; }
+    .kc-term { transform: none; opacity: 1; }
+    .kc-type { width: 21ch; border-right-color: transparent; }
+    .kc-dots i { opacity: 1; transform: scale(1); }
+    .kc-return { opacity: 1; transform: none; }
+    .kc-done .kc-ok, .kc-newsess { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body data-product="claudelimits">
@@ -731,21 +942,109 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
 
         <h3>macOS keeps asking for my Keychain password</h3>
         <p>A dialog saying <em>"<strong>security</strong> wants to access key
-           <strong>Claude&nbsp;Code-credentials</strong>"</em> pops up — often at the start of every
-           new Claude&nbsp;Code session — and clicking <strong>Always Allow</strong> doesn't make it
-           stop. This is <strong>not</strong> ClaudeLimits: the requester is the
+           <strong>Claude&nbsp;Code-credentials</strong>"</em> pops up — often at the start of almost
+           every new Claude&nbsp;Code session — and clicking <strong>Always Allow</strong> doesn't make
+           it stop. This is <strong>not</strong> ClaudeLimits: the requester is the
            <code>security</code> command-line tool, which Claude&nbsp;Code uses to read its own token.
            The prompt repeats because the Keychain entry has no <em>partition list</em> authorising
            command-line tools, so every <code>security</code> read asks for a password afresh.</p>
-        <p>Authorise command-line tools for that one entry once — run this in Terminal (it will ask for
-           your Keychain password a single time, then go quiet):</p>
-        <pre><code>security set-generic-password-partition-list \
+
+        <p><strong>ClaudeLimits can fix this for you.</strong> Four steps:</p>
+
+        <ol class="kc-steps">
+          <li class="kc-step">
+            <div class="kc-head">
+              <span class="kc-num">1</span>
+              <p class="kc-text">In the ClaudeLimits menu (the menu-bar icon), choose
+                 <strong>Fix Keychain password prompts…</strong></p>
+            </div>
+            <div class="kc-stage kc-scene-menu" aria-hidden="true">
+              <div class="kc-menu">
+                <div class="kc-mi kc-dim"><span>Refresh</span><span class="kc-key">⌘R</span></div>
+                <div class="kc-sep"></div>
+                <div class="kc-hdr">View</div>
+                <div class="kc-mi kc-dim"><span>✓ Mono</span></div>
+                <div class="kc-mi kc-dim"><span>Color</span></div>
+                <div class="kc-sep"></div>
+                <div class="kc-hdr">Settings</div>
+                <div class="kc-mi kc-dim"><span>Launch at login</span></div>
+                <div class="kc-mi kc-dim"><span>Refresh on open only</span></div>
+                <div class="kc-mi kc-dim"><span>Auto-refresh in ~4h</span></div>
+                <div class="kc-sep"></div>
+                <div class="kc-mi kc-dim"><span>About &amp; Permissions…</span></div>
+                <div class="kc-mi kc-target"><span>Fix Keychain password prompts…</span></div>
+                <div class="kc-mi kc-dim"><span>Product page ↗</span></div>
+                <div class="kc-sep"></div>
+                <div class="kc-mi kc-dim"><span>Restart</span></div>
+                <div class="kc-mi kc-dim"><span>Quit</span><span class="kc-key">⌘Q</span></div>
+              </div>
+              <div class="kc-cursor">
+                <svg viewBox="0 0 16 16"><path d="M1 1l5 13 2-5 5-2z" fill="#fff" stroke="#000" stroke-width="1"/></svg>
+              </div>
+            </div>
+          </li>
+
+          <li class="kc-step">
+            <div class="kc-head">
+              <span class="kc-num">2</span>
+              <p class="kc-text">A <strong>Terminal</strong> window opens with the command already
+                 filled in.</p>
+            </div>
+            <div class="kc-stage" aria-hidden="true">
+              <div class="kc-term">
+                <div class="kc-bar"><span class="kc-dot r"></span><span class="kc-dot y"></span><span class="kc-dot g"></span></div>
+                <div class="kc-body">
+                  <span class="kc-prompt">$ </span><span class="kc-type">security set-generic-password-partition-list</span>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="kc-step">
+            <div class="kc-head">
+              <span class="kc-num">3</span>
+              <p class="kc-text">Type your <strong>Keychain password</strong> (your Mac login password)
+                 once when Terminal asks, then press Return. The password goes only to macOS — the app
+                 never sees it.</p>
+            </div>
+            <div class="kc-stage" aria-hidden="true">
+              <div class="kc-pw">
+                <div><span class="kc-ask">password to unlock default:</span>
+                  <span class="kc-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+                <span class="kc-return">⏎ Return</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="kc-step">
+            <div class="kc-head">
+              <span class="kc-num">4</span>
+              <p class="kc-text">You'll see <strong>✅ Done</strong>. Start a new Claude&nbsp;Code
+                 session — no more password prompt.</p>
+            </div>
+            <div class="kc-stage" aria-hidden="true">
+              <div class="kc-done">
+                <span class="kc-ok"><span class="kc-check">✓</span> Done</span>
+                <span class="kc-newsess">new Claude Code session <span class="kc-nop">no prompt</span></span>
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="note"><p>Safe by design: the app does <strong>not</strong> show its own password
+           dialog and does <strong>not</strong> collect your password. It just opens Terminal, where the
+           password is entered the normal way (Terminal has a TTY) — so only macOS ever handles it.
+           ClaudeLimits itself also never triggers the original prompt: it reads the token in-process via
+           the Security framework, so a single <strong>Always Allow</strong> for the app sticks.</p></div>
+
+        <details class="kc-fallback">
+          <summary>Prefer to do it by hand?</summary>
+          <p>Run this once in Terminal — it asks for your Keychain password a single time, then goes
+             quiet:</p>
+          <pre><code>security set-generic-password-partition-list \
   -S "apple-tool:,apple:" \
   -s "Claude Code-credentials" -a "$USER"</code></pre>
-        <div class="note"><p>ClaudeLimits itself never triggers this prompt — it reads the token
-           in-process via the Security framework, not by shelling out to <code>security</code>, so a
-           single <strong>Always Allow</strong> for the app sticks. The command above fixes the
-           <em>other</em> requester (the CLI tool).</p></div>
+        </details>
       </section>
 
     </main>
