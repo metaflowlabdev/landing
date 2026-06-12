@@ -728,6 +728,24 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
         <h3>"App can't be opened" on first launch</h3>
         <p>Gatekeeper. Right-click the app → <strong>Open</strong> → <strong>Open</strong>, or allow it in
            <strong>System Settings → Privacy &amp; Security</strong>.</p>
+
+        <h3>macOS keeps asking for my Keychain password</h3>
+        <p>A dialog saying <em>"<strong>security</strong> wants to access key
+           <strong>Claude&nbsp;Code-credentials</strong>"</em> pops up — often at the start of every
+           new Claude&nbsp;Code session — and clicking <strong>Always Allow</strong> doesn't make it
+           stop. This is <strong>not</strong> ClaudeLimits: the requester is the
+           <code>security</code> command-line tool, which Claude&nbsp;Code uses to read its own token.
+           The prompt repeats because the Keychain entry has no <em>partition list</em> authorising
+           command-line tools, so every <code>security</code> read asks for a password afresh.</p>
+        <p>Authorise command-line tools for that one entry once — run this in Terminal (it will ask for
+           your Keychain password a single time, then go quiet):</p>
+        <pre><code>security set-generic-password-partition-list \
+  -S "apple-tool:,apple:" \
+  -s "Claude Code-credentials" -a "$USER"</code></pre>
+        <div class="note"><p>ClaudeLimits itself never triggers this prompt — it reads the token
+           in-process via the Security framework, not by shelling out to <code>security</code>, so a
+           single <strong>Always Allow</strong> for the app sticks. The command above fixes the
+           <em>other</em> requester (the CLI tool).</p></div>
       </section>
 
     </main>
