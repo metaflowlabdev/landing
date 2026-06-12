@@ -106,6 +106,24 @@
   .note a { color: var(--accent); }
   .note strong { font-weight: 600; }
   .muted { color: var(--muted); }
+  /* First-launch onboarding callout: mini alert + explanation */
+  .kc-onboard { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .kc-onboard .kc-onboard-text { flex: 1 1 250px; }
+  .kc-alert {
+    flex: none; width: 234px;
+    background: var(--card); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 12px 13px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.32);
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .kc-alert .kc-a-title { font-weight: 600; color: var(--text); font-size: 12px; margin-bottom: 5px; }
+  .kc-alert .kc-a-body { color: var(--muted); font-size: 10.5px; line-height: 1.45; margin-bottom: 9px; }
+  .kc-alert .kc-a-btns { display: flex; justify-content: flex-end; gap: 7px; }
+  .kc-alert .kc-a-btn {
+    padding: 3px 11px; border-radius: 6px; font-size: 10.5px;
+    border: 1px solid var(--glass-border); color: var(--text);
+  }
+  .kc-alert .kc-a-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 48px; }
   footer a { color: var(--muted); }
@@ -559,6 +577,22 @@
            icon; the app is a menu-bar agent (<code>LSUIElement</code>).</p>
         <div class="note"><p>For the numbers to appear it reads the token Claude Code already stored in your
            Keychain — you'll just need Claude Code signed in on this Mac.</p></div>
+
+        <div class="note kc-onboard">
+          <div class="kc-alert" aria-hidden="true">
+            <div class="kc-a-title">Stop the repeated Keychain password prompt?</div>
+            <div class="kc-a-body">ClaudeLimits will open Terminal with the command ready — just enter your Keychain password once.</div>
+            <div class="kc-a-btns">
+              <span class="kc-a-btn">Not now</span>
+              <span class="kc-a-btn primary">Fix it</span>
+            </div>
+          </div>
+          <p class="kc-onboard-text"><strong>On first launch you may see this offer.</strong> Claude&nbsp;Code asks
+             for your Keychain password at the start of almost every session, and “Always Allow” doesn't make it
+             stop — ClaudeLimits can fix that. Click <strong>Fix it</strong> and a Terminal window opens; type your
+             password once and you're done. It's optional, reversible, and the password only ever goes to macOS.
+             <a href="#keychain-fix">See the full step-by-step →</a></p>
+        </div>
       </section>
 
       <!-- 2. Readout -->
@@ -940,7 +974,7 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
         <p>Gatekeeper. Right-click the app → <strong>Open</strong> → <strong>Open</strong>, or allow it in
            <strong>System Settings → Privacy &amp; Security</strong>.</p>
 
-        <h3>macOS keeps asking for my Keychain password</h3>
+        <h3 id="keychain-fix">macOS keeps asking for my Keychain password</h3>
         <p>A dialog saying <em>"<strong>security</strong> wants to access key
            <strong>Claude&nbsp;Code-credentials</strong>"</em> pops up — often at the start of almost
            every new Claude&nbsp;Code session — and clicking <strong>Always Allow</strong> doesn't make
