@@ -573,9 +573,10 @@
            weekly one. ClaudeLimits shows both: top line is the 5-hour window,
            bottom line is the week. Each reads <em>percent used</em> and <em>time to
            reset</em> (<code>m</code> minutes, <code>h</code> hours, <code>d</code> days).
-           Show it like Claude Code — floored — or flip on <strong>Honest</strong> rounding
-           so it shows two units and rounds up the finer one (<code>1d&nbsp;3h</code>,
-           <code>1h&nbsp;50m</code>) — never understating the time you have left.</p>
+           Show it like Claude Code — floored — or flip on <strong>Honest</strong> rounding,
+           which rounds to the nearest unit both ways (<code>1d&nbsp;3h&nbsp;→&nbsp;1d</code>,
+           <code>1h&nbsp;50m&nbsp;→&nbsp;2h</code>) — never understated, never inflated. Prefer
+           detail? Turn on <strong>Two&nbsp;units</strong> for <code>1d&nbsp;3h</code>.</p>
       </div>
     </div>
 
@@ -721,9 +722,10 @@
            <code>/usage</code>, plus an extra row for your plan's model —
            <em>Opus only</em> or <em>Sonnet only</em>. Each line carries a percent, a
            progress bar tinted by load (blue → yellow → orange → red), a time-to-reset,
-           and a <strong>→</strong> straight to claude.ai. The panel always spells out the
-           <strong>exact</strong> time left — <code>1h&nbsp;50m</code>, <code>5d&nbsp;23h</code>,
-           never rounded — whatever rounding you picked for the menu bar. Leave it open and it
+           and a <strong>→</strong> straight to claude.ai. The panel is always
+           <strong>honest</strong> — one unit rounded to the nearest by default, or the
+           <strong>exact</strong> two-rank time (<code>1h&nbsp;50m</code>, <code>5d&nbsp;23h</code>)
+           if you turn on <strong>Two&nbsp;units</strong>. Leave it open and it
            <strong>updates live</strong> the moment fresh numbers arrive.</p>
       </div>
     </div>
