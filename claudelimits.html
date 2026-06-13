@@ -286,8 +286,15 @@
     border-radius: 13px; padding: 13px 14px 14px;
     box-shadow: 0 14px 34px rgba(0,0,0,.34);
     color: var(--text);
-    /* the popover opens instantly — no fade — then the bars fill */
     transform-origin: top center;
+    /* the popover springs open from the menu-bar click, then the bars fill */
+    animation: panel-open 6.5s ease-in-out infinite;
+  }
+  @keyframes panel-open {
+    0%, 18%  { opacity: 0; transform: scale(.9) translateY(-10px); }
+    20%      { opacity: .4; transform: scale(.94) translateY(-6px); }
+    28%      { opacity: 1; transform: scale(1.015) translateY(0); }
+    33%,100% { opacity: 1; transform: scale(1) translateY(0); }
   }
   .panel .phead {
     display: flex; align-items: baseline; justify-content: space-between;
@@ -297,7 +304,7 @@
   .panel .parrow {
     font: 700 13px/1 var(--font-mono); color: var(--accent);
     text-decoration: none;
-    opacity: 0; animation: panel-arrow 2.8s ease-in-out infinite;
+    opacity: 0; animation: panel-arrow 6.5s ease-in-out infinite;
   }
   .panel .prow { margin-bottom: 11px; }
   .panel .prow:last-child { margin-bottom: 0; }
@@ -322,57 +329,122 @@
     color: var(--muted); opacity: .8;
   }
   /* each bar grows and recolours across thresholds over the cycle */
-  .panel .p1 .pfill { animation: fill-5h 3.2s ease-in-out infinite; }
-  .panel .p2 .pfill { animation: fill-wk 3.2s ease-in-out infinite; }
-  .panel .p3 .pfill { animation: fill-md 3.2s ease-in-out infinite; }
-  .panel .p1 .pval { animation: val-5h 3.2s steps(1) infinite; }
-  .panel .p2 .pval { animation: val-wk 3.2s steps(1) infinite; }
-  .panel .p3 .pval { animation: val-md 3.2s steps(1) infinite; }
+  .panel .p1 .pfill { animation: fill-5h 6.5s ease-in-out infinite; }
+  .panel .p2 .pfill { animation: fill-wk 6.5s ease-in-out infinite; }
+  .panel .p3 .pfill { animation: fill-md 6.5s ease-in-out infinite; }
+  .panel .p1 .pval { animation: val-5h 6.5s steps(1) infinite; }
+  .panel .p2 .pval { animation: val-wk 6.5s steps(1) infinite; }
+  .panel .p3 .pval { animation: val-md 6.5s steps(1) infinite; }
   @keyframes panel-arrow {
-    0%, 18% { opacity: 0; transform: translateX(-3px); }
-    34%, 100% { opacity: 1; transform: translateX(0); }
+    0%, 30% { opacity: 0; transform: translateX(-3px); }
+    40%, 100% { opacity: 1; transform: translateX(0); }
   }
+  /* bars hold at 0 until the panel has opened (~30%), then grow, recolour,
+     and finally tick up once — the "updates live" moment */
   @keyframes fill-5h {
-    0%, 10% { width: 0; background: var(--lv-low); }
-    55%     { width: 63%; background: var(--lv-mid); }
-    85%,100%{ width: 78%; background: var(--lv-high); }
+    0%, 30% { width: 0;   background: var(--lv-low); }
+    52%     { width: 63%; background: var(--lv-mid); }
+    66%     { width: 78%; background: var(--lv-high); }
+    80%     { width: 78%; background: var(--lv-high); }
+    88%,100%{ width: 81%; background: var(--lv-high); }
   }
   @keyframes val-5h {
-    0%, 10% { color: var(--lv-low); }
-    55%     { color: var(--lv-mid); }
-    85%,100%{ color: var(--lv-high); }
+    0%, 30% { color: var(--lv-low); }
+    52%     { color: var(--lv-mid); }
+    66%,100%{ color: var(--lv-high); }
   }
   @keyframes fill-wk {
-    0%, 10% { width: 0; background: var(--lv-low); }
-    55%,100%{ width: 41%; background: var(--lv-low); }
+    0%, 30% { width: 0;   background: var(--lv-low); }
+    52%,100%{ width: 41%; background: var(--lv-low); }
   }
   @keyframes val-wk { 0%,100% { color: var(--lv-low); } }
   @keyframes fill-md {
-    0%, 10% { width: 0; background: var(--lv-low); }
-    55%     { width: 72%; background: var(--lv-mid); }
-    85%,100%{ width: 93%; background: var(--lv-crit); }
+    0%, 30% { width: 0;   background: var(--lv-low); }
+    52%     { width: 72%; background: var(--lv-mid); }
+    66%,100%{ width: 93%; background: var(--lv-crit); }
   }
   @keyframes val-md {
-    0%, 10% { color: var(--lv-low); }
-    55%     { color: var(--lv-mid); }
-    85%,100%{ color: var(--lv-crit); }
+    0%, 30% { color: var(--lv-low); }
+    52%     { color: var(--lv-mid); }
+    66%,100%{ color: var(--lv-crit); }
   }
-  /* a faint cursor/click hint above the panel */
-  .panel-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .panel-hint {
-    font: 500 10px/1 var(--font-sans); color: var(--muted);
-    display: inline-flex; align-items: center; gap: 6px;
+  /* the 5-hour value crossfades 78% → 81% at the live-update beat */
+  .panel .p5val { position: relative; display: inline-block; }
+  .panel .p5val .vto { position: absolute; right: 0; top: 0; opacity: 0; }
+  .panel .p5val .vfrom { animation: v5from 6.5s ease infinite; }
+  .panel .p5val .vto   { animation: v5to 6.5s ease infinite; }
+  @keyframes v5from { 0%,80% { opacity: 1; } 86%,100% { opacity: 0; } }
+  @keyframes v5to   { 0%,80% { opacity: 0; } 86%,100% { opacity: 1; } }
+  /* a faux macOS menu-bar strip above the panel: our status item gets clicked */
+  .panel-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .clickbar {
+    position: relative; box-sizing: border-box;
+    width: 232px; max-width: 100%; height: 26px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 11px;
+    padding: 0 11px; border-radius: 8px;
+    background: color-mix(in srgb, var(--card) 90%, transparent);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 5px 14px rgba(0,0,0,.16);
   }
-  .panel-hint svg { width: 13px; height: 13px; fill: var(--muted); }
+  .clickbar .mb-sys {
+    width: 12px; height: 4px; border-radius: 3px;
+    background: color-mix(in srgb, var(--muted) 32%, transparent);
+  }
+  .clickbar .mb-claude {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 700 10px/1 var(--font-mono); color: var(--text);
+    padding: 3px 6px; border-radius: 6px;
+    animation: mb-highlight 6.5s ease-in-out infinite;
+  }
+  .clickbar .mb-glyph { width: 11px; height: 11px; fill: var(--accent); }
+  .clickbar .mb-cursor {
+    position: absolute; right: 14px; top: 6px; width: 15px; height: 15px;
+    animation: mb-cursor 6.5s ease-in-out infinite;
+  }
+  .clickbar .mb-cursor svg {
+    width: 100%; height: 100%; fill: var(--text);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  }
+  .clickbar .mb-ring {
+    position: absolute; right: 26px; top: 50%; margin: -8px 0 0 0;
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--accent); opacity: 0;
+    animation: mb-ring 6.5s ease-in-out infinite;
+  }
+  @keyframes mb-cursor {
+    0%      { transform: translate(16px,16px); opacity: 0; }
+    8%      { opacity: 1; }
+    16%     { transform: translate(0,0); opacity: 1; }
+    19%     { transform: translate(0,2px); opacity: 1; }
+    23%     { transform: translate(0,0); opacity: 1; }
+    36%     { transform: translate(-2px,-4px); opacity: 1; }
+    46%,100%{ transform: translate(-8px,-12px); opacity: 0; }
+  }
+  @keyframes mb-ring {
+    0%, 16% { opacity: 0; transform: scale(.4); }
+    20%     { opacity: .85; transform: scale(.6); }
+    32%     { opacity: 0; transform: scale(1.7); }
+    100%    { opacity: 0; }
+  }
+  @keyframes mb-highlight {
+    0%, 16% { background: transparent; }
+    22%     { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+    40%,100%{ background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  }
   @media (prefers-reduced-motion: reduce) {
-    /* static, fully-opened frame: bars at their settled values, arrow shown */
+    /* static, fully-opened frame: panel shown, bars settled, no cursor motion */
+    .panel { animation: none; opacity: 1; transform: none; }
     .panel .parrow { opacity: 1; animation: none; }
-    .panel .p1 .pfill { animation: none; width: 78%; background: var(--lv-high); }
+    .panel .p1 .pfill { animation: none; width: 81%; background: var(--lv-high); }
     .panel .p2 .pfill { animation: none; width: 41%; background: var(--lv-low); }
     .panel .p3 .pfill { animation: none; width: 93%; background: var(--lv-crit); }
     .panel .p1 .pval { animation: none; color: var(--lv-high); }
     .panel .p2 .pval { animation: none; color: var(--lv-low); }
     .panel .p3 .pval { animation: none; color: var(--lv-crit); }
+    .panel .p5val .vfrom { display: none; }
+    .panel .p5val .vto { position: static; opacity: 1; animation: none; }
+    .clickbar .mb-cursor, .clickbar .mb-ring { animation: none; opacity: 0; }
+    .clickbar .mb-claude { animation: none; background: color-mix(in srgb, var(--accent) 12%, transparent); }
   }
 
   /* ── Under the hood ── */
@@ -600,17 +672,22 @@
       <div class="shot">
         <!-- our left-click popover panel, animated: bars grow & recolour, → appears -->
         <div class="panel-wrap" aria-label="The left-click panel: a Plan usage popover with three rows — 5-hour limit, Weekly all models, and a per-model row — each with a percent, a progress bar that recolours toward red, and a reset time, plus an arrow link to claude.ai">
-          <span class="panel-hint" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M5 2l14 8-6 1.5L16 18l-3 1.5-3-6.5L5 16z"/></svg>
-            left-click
-          </span>
+          <div class="clickbar" aria-hidden="true">
+            <span class="mb-sys"></span>
+            <span class="mb-sys"></span>
+            <span class="mb-claude"><svg class="mb-glyph" viewBox="0 0 24 24"><path d="M3 13h3v6H3z M10 8h3v11h-3z M17 4h3v15h-3z"/></svg>78%</span>
+            <span class="mb-ring"></span>
+            <span class="mb-cursor">
+              <svg viewBox="0 0 24 24"><path d="M5 2l14 8-6 1.5L16 18l-3 1.5-3-6.5L5 16z"/></svg>
+            </span>
+          </div>
           <div class="panel" role="img">
             <div class="phead">
               <span class="ptitle">Plan usage</span>
               <a class="parrow" href="#" aria-hidden="true" tabindex="-1">→</a>
             </div>
             <div class="prow p1">
-              <div class="ptop"><span class="plbl">5-hour limit</span><span class="pval">78%</span></div>
+              <div class="ptop"><span class="plbl">5-hour limit</span><span class="pval p5val"><span class="vfrom">78%</span><span class="vto">81%</span></span></div>
               <div class="ptrack"><div class="pfill"></div></div>
               <div class="preset">Resets in 2h</div>
             </div>
