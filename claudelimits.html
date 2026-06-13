@@ -523,7 +523,7 @@
         <p>No scraping and no middle-man. ClaudeLimits reads your OAuth token from the
            Keychain and calls the same endpoint Claude Code does —
            <code>/api/oauth/usage</code> — so the numbers match <code>/usage</code> to
-           the digit. It refreshes on its own, every few minutes.</p>
+           the digit. It refreshes on its own, every 10 minutes.</p>
       </div>
     </div>
 
@@ -589,7 +589,8 @@
         <p>Right-click for the full menu: refresh on demand, switch Mono ↔ Color, open
            <strong>Settings</strong> — launch at login, refresh on open only, and a live
            <strong>Auto-refresh</strong> countdown — open <strong>About &amp; Permissions</strong>
-           to see exactly what it touches, jump to the product page, or restart and quit. Your
+           to see exactly what it touches, run <strong>Fix Keychain password prompts…</strong>,
+           jump to the product page, or restart and quit. Your
            choices stick between launches. No windows, no Dock icon — it just sits up top and
            stays out of the way.</p>
       </div>
@@ -655,7 +656,10 @@
         <h3>Private by default</h3>
         <p>No account, no sign-up, no analytics. Nothing leaves your Mac except that one
            request to Anthropic's own API — the very same call Claude Code itself makes
-           with the token already on your machine.</p>
+           with the token already on your machine. It's <strong>read-only</strong> toward the
+           Keychain: it reads the <code>Claude&nbsp;Code-credentials</code> token but never writes
+           it back — any refreshed token lives only in memory, and Claude&nbsp;Code stays the sole
+           writer of that entry.</p>
       </div>
       <div class="how-item">
         <h3>Tiny &amp; native</h3>
