@@ -620,7 +620,7 @@
         <table>
           <tr><th>Mode</th><th>What it does</th></tr>
           <tr><td><strong>Like Claude Code</strong> <span class="g">(default)</span></td><td>Floors to the whole unit, exactly like <code>/usage</code> — <code>1h&nbsp;50m</code> left shows as <code>1h</code>.</td></tr>
-          <tr><td><strong>Honest (round up)</strong></td><td>Rounds up to the next hour so it never understates the time left — <code>1h&nbsp;50m</code> shows as <code>2h</code>.</td></tr>
+          <tr><td><strong>Honest (round up)</strong></td><td>Shows two units and rounds up the finer one, so it never understates the time left — days counted in hours (<code>1d&nbsp;3h</code>, <code>1d&nbsp;4h</code>), hours in minutes (<code>1h&nbsp;50m</code>).</td></tr>
         </table>
         <p>This affects the menu bar only. The <a href="#panel">usage panel</a> always shows the
            <strong>exact</strong> time, unrounded (<code>1h&nbsp;50m</code>, <code>5d&nbsp;23h</code>).</p>
@@ -755,7 +755,7 @@
           <tr><td><strong>View</strong></td><td>Switch between <em>Mono</em> and <em>Colour</em> — a tick marks the active one</td></tr>
           <tr><td>· Launch at login</td><td>Start ClaudeLimits automatically with your Mac</td></tr>
           <tr><td>· Refresh on open only</td><td>Stop background polling; refresh only when you open the panel (see <a href="#cadence">Refresh cadence</a>)</td></tr>
-          <tr><td>· Reset time</td><td>How the menu-bar time rounds — <em>Like Claude Code</em> (floor) or <em>Honest</em> (round up). The panel always shows the exact time (see <a href="#readout">How the time is rounded</a>)</td></tr>
+          <tr><td>· Reset time</td><td>How the menu-bar time rounds — <em>Like Claude Code</em> (floor) or <em>Honest</em> (two units, round up the finer one). The panel always shows the exact time (see <a href="#readout">How the time is rounded</a>)</td></tr>
           <tr><td>· Auto-refresh in …</td><td>Read-only countdown showing when the OAuth token will be silently refreshed — no action needed</td></tr>
           <tr><td><strong>About &amp; Permissions…</strong></td><td>Shows exactly what the app accesses — Keychain, network, login item — and what it never touches</td></tr>
           <tr><td><strong>Fix Keychain password prompts…</strong></td><td>Stops Claude Code's repeated Keychain password prompt — fixes every Claude Code key at once via Terminal (see <a href="#keychain-fix">the step-by-step</a>)</td></tr>
@@ -972,7 +972,7 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
           <tr><th>Control</th><th>What it does</th></tr>
           <tr><td><strong>Launch at login</strong></td><td>Start ClaudeLimits automatically with your Mac, so it quietly reappears in the menu bar after every reboot. Off by default.</td></tr>
           <tr><td><strong>Refresh on open only</strong></td><td>Stop background polling entirely and refresh the numbers only when you open the panel — the most account-friendly mode, with zero background traffic. See <a href="#cadence">Refresh cadence &amp; rate limits</a> for the full picture. Off by default.</td></tr>
-          <tr><td><strong>Reset time</strong></td><td>How the menu-bar countdown rounds: <em>Like Claude Code</em> (floor, matches <code>/usage</code>) or <em>Honest</em> (round up to the next hour, never understates the time left). The usage panel always shows the exact time regardless. Defaults to <em>Like Claude Code</em>.</td></tr>
+          <tr><td><strong>Reset time</strong></td><td>How the menu-bar countdown rounds: <em>Like Claude Code</em> (floor, matches <code>/usage</code>) or <em>Honest</em> (two units, rounds up the finer one — <code>1d&nbsp;3h</code>, <code>1h&nbsp;50m</code> — never understates the time left). The usage panel always shows the exact time regardless. Defaults to <em>Like Claude Code</em>.</td></tr>
         </table>
         <p class="muted">All toggled straight from the menu — no system dialogs.</p>
       </section>
