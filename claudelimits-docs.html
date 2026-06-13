@@ -20,11 +20,14 @@
     :root:not([data-theme]) {
       --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73;
       --accent:#c7542e; --glass-border: var(--line);
+      /* darkened level colours for readability on white (≥4.5:1), matching the app */
+      --lv-low:#0A57CC; --lv-mid:#8C6600; --lv-high:#B35405; --lv-crit:#C91F18;
     }
   }
   :root[data-theme="light"] {
     --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73;
     --accent:#c7542e; --glass-border: var(--line);
+    --lv-low:#0A57CC; --lv-mid:#8C6600; --lv-high:#B35405; --lv-crit:#C91F18;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -780,6 +783,9 @@
         <p>It takes your OAuth token from the Keychain entry <code>Claude Code-credentials</code> and calls
            <code>https://api.anthropic.com/api/oauth/usage</code>. The result matches what
            <code>/usage</code> shows inside Claude Code, to the digit — no estimates, no guesswork.</p>
+        <p>ClaudeLimits is <strong>read-only</strong> toward the Keychain: it never writes or updates the
+           token there. If the token needs refreshing it does so in memory for its own request only —
+           Claude&nbsp;Code stays the single writer of the Keychain entry.</p>
         <p class="muted">Polled every <strong>10 minutes</strong>, because Anthropic rate-limits this
            endpoint — see <a href="#cadence">Refresh cadence &amp; rate limits</a> below.</p>
         <div class="note"><p>If the readout shows nothing, Claude Code probably isn't signed in on this Mac
@@ -979,11 +985,16 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
            <strong>Claude&nbsp;Code-credentials</strong>"</em> pops up — often at the start of almost
            every new Claude&nbsp;Code session — and clicking <strong>Always Allow</strong> doesn't make
            it stop. This is <strong>not</strong> ClaudeLimits: the requester is the
-           <code>security</code> command-line tool, which Claude&nbsp;Code uses to read its own token.
-           The prompt repeats because the Keychain entry has no <em>partition list</em> authorising
-           command-line tools, so every <code>security</code> read asks for a password afresh.</p>
+           <code>security</code> command-line tool, which Claude&nbsp;Code shells out to in order to read its
+           own token. The prompt repeats because the Keychain entry has no <em>partition list</em> authorising
+           command-line tools, so every <code>security</code> read asks for a password afresh.
+           Clicking <strong>Always Allow</strong> does <strong>not</strong> stop it — that only covers GUI apps,
+           not the <code>security</code> CLI; only fixing the partition list does. (And recent Claude&nbsp;Code
+           often stores more than one entry: the main <code>Claude&nbsp;Code-credentials</code> plus suffixed
+           <code>Claude&nbsp;Code-credentials-&lt;hash&gt;</code> duplicates — every one needs the fix.)</p>
 
-        <p><strong>ClaudeLimits can fix this for you.</strong> Four steps:</p>
+        <p><strong>ClaudeLimits can fix this for you</strong> — all of those entries at once, for a single
+           Keychain-password entry. Four steps:</p>
 
         <ol class="kc-steps">
           <li class="kc-step">
@@ -1074,10 +1085,14 @@ defaults write com.kolocim.claudelimits user_agent -string "claude-cli/1.0"</cod
         <details class="kc-fallback">
           <summary>Prefer to do it by hand?</summary>
           <p>Run this once in Terminal — it asks for your Keychain password a single time, then goes
-             quiet:</p>
+             quiet. The <code>teamid:XW3238595N</code> part authorises ClaudeLimits (signed with that Apple
+             Developer Team&nbsp;ID); <code>apple-tool:,apple:</code> keeps Claude&nbsp;Code's own access:</p>
           <pre><code>security set-generic-password-partition-list \
-  -S "apple-tool:,apple:" \
+  -S "apple-tool:,apple:,teamid:XW3238595N" \
   -s "Claude Code-credentials" -a "$USER"</code></pre>
+          <p>If you have suffixed duplicates, repeat the command for each, swapping the
+             <code>-s</code> service name (e.g. <code>"Claude Code-credentials-…"</code>). The menu button
+             handles all of them in one go.</p>
         </details>
       </section>
 
