@@ -172,7 +172,10 @@
   .ccbar .dots i { background: color-mix(in srgb, currentColor 28%, transparent); }
   .ccbar .title { margin: 0 auto; opacity: .85;
     font-family: var(--font-mono); font-size: 11px; }
-  .ccmain { position: relative; flex: 1; min-height: 224px; }
+  /* FIXED height (not min-height): the chat types lines in one-by-one, so a
+     growing box would reflow and make the whole page jump. Locked height +
+     bottom-anchored, overflow-clipped chat = a stable frame that never shifts. */
+  .ccmain { position: relative; flex: 1; height: 224px; }
   /* divider between the chat (main message) and the /usage stats block */
   .ccmain::after {
     content: ""; position: absolute; top: 14px; bottom: 14px; right: 242px;
@@ -180,7 +183,10 @@
   }
   :root[data-theme="light"] .ccmain::after { background: rgba(0,0,0,.12); }
   .chat {
-    padding: 14px 16px; height: 100%;
+    padding: 14px 16px; height: 224px; box-sizing: border-box;
+    /* bottom-anchored, clipped: newest line always visible, older lines scroll
+       out the top — the frame height stays constant, so the page never jumps */
+    display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden;
     font: 12.5px/1.55 var(--font-mono);
     color: rgba(255,255,255,.82);
   }
@@ -240,7 +246,9 @@
   }
   @media (max-width: 560px) {
     .usage { position: static; width: auto; margin: 0 14px 14px; }
-    .ccmain { min-height: 0; }
+    /* stacked layout: let the frame grow with the now-static usage block */
+    .ccmain { height: auto; min-height: 0; }
+    .chat { display: block; overflow: visible; }
     .ccmain::after { display: none; }
     .usage { border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
   }
