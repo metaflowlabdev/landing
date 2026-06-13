@@ -368,11 +368,12 @@
     52%     { color: var(--lv-mid); }
     66%,100%{ color: var(--lv-crit); }
   }
-  /* the 5-hour value crossfades 78% → 81% at the live-update beat */
-  .panel .p5val { position: relative; display: inline-block; }
-  .panel .p5val .vto { position: absolute; right: 0; top: 0; opacity: 0; }
-  .panel .p5val .vfrom { animation: v5from 6.5s ease infinite; }
-  .panel .p5val .vto   { animation: v5to 6.5s ease infinite; }
+  /* the 5-hour percent crossfades 78% → 81% at the live-update beat —
+     same element in the menu-bar readout and in the panel row */
+  .pnum { position: relative; display: inline-block; }
+  .pnum .vto { position: absolute; left: 0; top: 0; opacity: 0; }
+  .pnum .vfrom { animation: v5from 6.5s ease infinite; }
+  .pnum .vto   { animation: v5to 6.5s ease infinite; }
   @keyframes v5from { 0%,80% { opacity: 1; } 86%,100% { opacity: 0; } }
   @keyframes v5to   { 0%,80% { opacity: 0; } 86%,100% { opacity: 1; } }
   /* a faux macOS menu-bar strip above the panel: our status item gets clicked */
@@ -390,13 +391,15 @@
     width: 12px; height: 4px; border-radius: 3px;
     background: color-mix(in srgb, var(--muted) 32%, transparent);
   }
-  .clickbar .mb-claude {
-    display: inline-flex; align-items: center; gap: 4px;
-    font: 700 10px/1 var(--font-mono); color: var(--text);
+  /* our status item: two lines "% · time" (5h over weekly), like the real menu bar */
+  .clickbar .mb-readout {
+    display: grid; grid-auto-flow: row; gap: 1px;
+    font: 700 8.5px/1.15 var(--font-mono); color: var(--text);
+    text-align: right; letter-spacing: .2px;
     padding: 3px 6px; border-radius: 6px;
     animation: mb-highlight 6.5s ease-in-out infinite;
   }
-  .clickbar .mb-glyph { width: 11px; height: 11px; fill: var(--accent); }
+  .clickbar .mb-l2 { color: var(--muted); }
   .clickbar .mb-cursor {
     position: absolute; right: 14px; top: 6px; width: 15px; height: 15px;
     animation: mb-cursor 6.5s ease-in-out infinite;
@@ -441,10 +444,10 @@
     .panel .p1 .pval { animation: none; color: var(--lv-high); }
     .panel .p2 .pval { animation: none; color: var(--lv-low); }
     .panel .p3 .pval { animation: none; color: var(--lv-crit); }
-    .panel .p5val .vfrom { display: none; }
-    .panel .p5val .vto { position: static; opacity: 1; animation: none; }
+    .pnum .vfrom { display: none; }
+    .pnum .vto { position: static; opacity: 1; animation: none; }
     .clickbar .mb-cursor, .clickbar .mb-ring { animation: none; opacity: 0; }
-    .clickbar .mb-claude { animation: none; background: color-mix(in srgb, var(--accent) 12%, transparent); }
+    .clickbar .mb-readout { animation: none; background: color-mix(in srgb, var(--accent) 12%, transparent); }
   }
 
   /* ── Under the hood ── */
@@ -675,7 +678,10 @@
           <div class="clickbar" aria-hidden="true">
             <span class="mb-sys"></span>
             <span class="mb-sys"></span>
-            <span class="mb-claude"><svg class="mb-glyph" viewBox="0 0 24 24"><path d="M3 13h3v6H3z M10 8h3v11h-3z M17 4h3v15h-3z"/></svg>78%</span>
+            <span class="mb-readout">
+              <span class="mb-l1"><span class="pnum"><span class="vfrom">78%</span><span class="vto">81%</span></span> · 2h</span>
+              <span class="mb-l2">41% · 4d</span>
+            </span>
             <span class="mb-ring"></span>
             <span class="mb-cursor">
               <svg viewBox="0 0 24 24"><path d="M5 2l14 8-6 1.5L16 18l-3 1.5-3-6.5L5 16z"/></svg>
@@ -687,19 +693,16 @@
               <a class="parrow" href="#" aria-hidden="true" tabindex="-1">→</a>
             </div>
             <div class="prow p1">
-              <div class="ptop"><span class="plbl">5-hour limit</span><span class="pval p5val"><span class="vfrom">78%</span><span class="vto">81%</span></span></div>
+              <div class="ptop"><span class="plbl">5-hour limit</span><span class="pval p5val"><span class="pnum"><span class="vfrom">78%</span><span class="vto">81%</span></span> · resets 2h</span></div>
               <div class="ptrack"><div class="pfill"></div></div>
-              <div class="preset">Resets in 2h</div>
             </div>
             <div class="prow p2">
-              <div class="ptop"><span class="plbl">Weekly · all models</span><span class="pval">41%</span></div>
+              <div class="ptop"><span class="plbl">Weekly · all models</span><span class="pval">41% · resets 4d</span></div>
               <div class="ptrack"><div class="pfill"></div></div>
-              <div class="preset">Resets in 4d</div>
             </div>
             <div class="prow p3">
-              <div class="ptop"><span class="plbl">Sonnet only</span><span class="pval">93%</span></div>
+              <div class="ptop"><span class="plbl">Sonnet only</span><span class="pval">93% · resets 4d</span></div>
               <div class="ptrack"><div class="pfill"></div></div>
-              <div class="preset">Resets in 4d</div>
             </div>
           </div>
         </div>
