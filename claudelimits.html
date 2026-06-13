@@ -143,6 +143,7 @@
   .lv2 { color: var(--lv-high); } .lv3 { color: var(--lv-crit); }
   .readout .pct { transition: color .45s ease; }
   .readout .rst { opacity: .55; }
+  .readout .sep { opacity: .4; }
 
   /* ── Claude Code window on the "desktop": an active dev session, with the
         same limits as the menu bar shown as growing, recolouring bars in a
@@ -512,8 +513,8 @@
         <svg viewBox="0 0 24 24"><path d="M2 8h16v8H2zM20 10h2v4h-2z"/></svg>
       </span>
       <span class="readout">
-        <span class="row"><span class="pct lv1" id="mb5p">63%</span> <span class="rst" id="mb5t">2h</span></span>
-        <span class="row"><span class="pct lv0" id="mb7p">41%</span> <span class="rst" id="mb7t">4d</span></span>
+        <span class="row"><span class="pct lv1" id="mb5p">63%</span> <span class="sep">·</span> <span class="rst" id="mb5t">2h</span></span>
+        <span class="row"><span class="pct lv0" id="mb7p">41%</span> <span class="sep">·</span> <span class="rst" id="mb7t">4d</span></span>
       </span>
     </div>
     <div class="stage-body">
