@@ -370,7 +370,8 @@
 
         <h3>The panel at a glance</h3>
         <p>The panel lists your running apps. Each row shows the app, and — on Pro —
-          its CPU and memory use, plus controls to freeze, lock or quit it. A
+          its CPU and memory use, plus controls to freeze, lock or quit it. On Pro a
+          <strong>system-load footer</strong> sits just below the list, and a
           collapsible <strong>Settings</strong> section at the bottom holds list size,
           Launch at Login and (Pro) the shortcut.</p>
         <div class="media">
@@ -586,6 +587,15 @@
           <video src="img/demo-energy.mp4" poster="img/energy-monitor.png" autoplay loop muted playsinline
                  aria-label="Live per-app CPU usage updating, colour-coded by energy level"></video>
         </div>
+
+        <h3>The system-load footer</h3>
+        <p>Below the list, a slim footer mirrors macOS’s Activity Monitor. On the left, in
+          <strong>red</strong>, is your Mac’s <strong>system load</strong> — the kernel’s
+          own CPU share (the same figure Activity Monitor labels “System”), <em>not</em>
+          your apps’ usage. On the right it totals the live <strong>CPU</strong> of your
+          unfrozen apps and the <strong>memory</strong> used across the list. Everything
+          refreshes live, about once a second, so you can watch the load drop the moment
+          you freeze something.</p>
       </section>
 
       <!-- 5. Lock & safety -->
