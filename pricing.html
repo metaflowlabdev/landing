@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing — northox</title>
+<meta name="description" content="northox pricing. Clear, on-domain prices for every app: what each product is, what's included, and the exact price. Buy-once licenses, no subscriptions for Pro. Taxes are calculated at checkout.">
+<link rel="icon" type="image/png" href="img/northox-icon.png">
+<link rel="apple-touch-icon" href="img/northox-icon.png">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<style>
+  :root {
+    --bg: #000000; --card: #1d1d1f; --line: #2a2a2c;
+    --text: #f5f5f7; --muted: #a1a1a6; --accent: #2997ff; --accent2: #34c759;
+    --glass-border: color-mix(in srgb, #fff 14%, transparent);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+      --glass-border: var(--line);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f5f5f7; --card:#fff; --line:#d2d2d7; --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3;
+    --glass-border: var(--line);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 20px 80px;
+  }
+  .wrap { width: 100%; max-width: 720px; margin: 0 auto; }
+  .top { display: flex; align-items: center; gap: 12px; padding: 28px 0 8px; }
+  .top img { width: 40px; height: 40px; border-radius: 10px; }
+  .top a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .top a:hover { color: var(--text); }
+  h1 { font-size: 30px; letter-spacing: -0.02em; margin: 18px 0 4px; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  h2 {
+    font-size: 20px; margin: 36px 0 10px; padding-top: 22px;
+    border-top: 1px solid var(--line); letter-spacing: -0.01em;
+  }
+  h3 { font-size: 16px; margin: 22px 0 6px; }
+  p, li { color: var(--text); }
+  .muted, .muted * { color: var(--muted); }
+  a { color: var(--accent); }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  .tldr {
+    background: color-mix(in srgb, var(--accent2) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent2) 40%, transparent);
+    border-radius: 14px; padding: 16px 20px; margin: 8px 0 8px;
+  }
+  .tldr h2 { border: 0; padding: 0; margin: 0 0 8px; font-size: 17px; }
+  .tldr ul { margin: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  thead th { background: color-mix(in srgb, var(--text) 6%, transparent); }
+  footer { color: var(--muted); font-size: 13px; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); }
+  footer a { color: var(--muted); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+    background: color-mix(in srgb, var(--text) 8%, transparent); padding: 1px 5px; border-radius: 5px; }
+
+  /* pricing-specific */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0 8px; }
+  @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+  .plan { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px;
+    background: color-mix(in srgb, var(--card) 60%, transparent); display: flex; flex-direction: column; }
+  .plan .name { font-size: 18px; font-weight: 650; letter-spacing: -0.01em; margin: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px;
+    background: color-mix(in srgb, var(--accent2) 20%, transparent); color: var(--accent2);
+    border: 1px solid color-mix(in srgb, var(--accent2) 45%, transparent); }
+  .pill.paid { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .plan .price { font-size: 26px; font-weight: 680; letter-spacing: -0.02em; margin: 14px 0 2px; }
+  .plan .price .was { font-size: 16px; font-weight: 500; color: var(--muted); text-decoration: line-through; margin-right: 8px; }
+  .plan .price small { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .plan .sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  .plan ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; }
+  .plan .tier { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .plan .tier .lbl { font-weight: 600; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a href="index.html"><img src="img/northox-icon.png" alt="northox"></a>
+    <a href="index.html">← Back to northox</a>
+  </div>
+
+  <h1>Pricing</h1>
+  <p class="meta">northox · Effective 12 July 2026 · Last updated 12 July 2026</p>
+
+  <div class="tldr">
+    <h2>The short version</h2>
+    <ul>
+      <li><strong>Clear, on-domain pricing.</strong> Each app below shows its name, what's included, and the exact price. The price you see here is the price you pay at checkout.</li>
+      <li><strong>Buy once for Pro — no subscription.</strong> A Pro license is a one-time purchase, not a recurring charge.</li>
+      <li><strong>Taxes may apply and will be calculated at checkout</strong> based on your billing country.</li>
+    </ul>
+  </div>
+
+  <p>northox makes focused macOS utilities. Prices are listed in <strong>US dollars (USD)</strong>.
+  Free apps stay free; paid apps are a one-time purchase. Where a product has a free and a paid
+  edition, both are shown so you can pick what fits.</p>
+
+  <div class="cards">
+
+    <div class="plan">
+      <p class="name">ClaudeLimits <span class="pill">Free</span></p>
+      <div class="price">$0 <small>free &amp; open source</small></div>
+      <p class="sub">Track your Claude usage limits at a glance.</p>
+      <ul>
+        <li>Full app, free forever</li>
+        <li>Open source — no account, no tracking</li>
+        <li>No paid tier</li>
+      </ul>
+    </div>
+
+    <div class="plan">
+      <p class="name">AppFreeze <span class="pill">Free</span> <span class="pill paid">Pro</span></p>
+      <div class="price">$0 <small>Lite, on the Mac App Store</small></div>
+      <p class="sub">Pause and resume Mac apps to save battery and CPU.</p>
+      <ul>
+        <li>Lite: core pause / resume, free on the Mac App Store</li>
+        <li>No account, no tracking, runs entirely on your Mac</li>
+      </ul>
+      <div class="tier">
+        <span class="lbl">AppFreeze Pro</span>
+        <div class="price"><span class="was">$19.99</span>$9.99 <small>one-time · launch price</small></div>
+        <p class="sub">Introductory launch price. The regular price is <strong>$19.99</strong>.
+        Pro is a <strong>one-time purchase</strong> (not a subscription) — no recurring charge.</p>
+        <ul>
+          <li>Everything in Lite</li>
+          <li>Advanced automation, hotkeys, and rules</li>
+          <li>Lifetime license, sold directly</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>Taxes</h2>
+  <p><strong>Taxes may apply and will be calculated at checkout.</strong> Prices on this page are
+  shown before any applicable sales tax or VAT. The exact tax, if any, depends on your billing
+  country and is added by our reseller at the moment of purchase.</p>
+
+  <h2>How you pay</h2>
+  <p>The price shown on this page matches the price at checkout. Purchases are handled by:</p>
+  <ul>
+    <li><strong>Apple</strong> — for free Lite apps (and any in-app purchase) on the Mac App Store; and</li>
+    <li><strong>Lemon Squeezy</strong> or <strong>Paddle</strong>, our authorized resellers
+    (merchant of record), for direct Pro purchases.</li>
+  </ul>
+  <p>These resellers handle payment, invoicing, and applicable taxes under their own terms. See our
+  <a href="terms.html">Terms</a>, <a href="privacy.html">Privacy Policy</a>, and
+  <a href="refunds.html">Refund Policy</a> for the details.</p>
+
+  <h2>Changes to pricing</h2>
+  <p>If prices change, we will update this page and the “Last updated” date above. A published
+  launch or introductory price stays as shown until this page is updated.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about pricing or a purchase? Email
+  <a href="mailto:northox.app@proton.me">northox.app@proton.me</a>.</p>
+
+  <footer>
+    northox ·
+    <a href="index.html">Home</a> ·
+    <a href="terms.html">Terms</a> ·
+    <a href="privacy.html">Privacy</a> ·
+    <a href="refunds.html">Refunds</a> ·
+    <a href="mailto:northox.app@proton.me">Contact</a>
+  </footer>
+</div>
+<script src="theme.js?v=4"></script>
+</body>
+</html>

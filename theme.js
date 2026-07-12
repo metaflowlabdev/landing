@@ -164,6 +164,19 @@
     });
   }
 
+  /* ---- global Pricing link (every page) ------------------------------- */
+  // A site-wide "Pricing" link in the header, before the theme toggle, so the
+  // on-domain pricing page is reachable from the top nav on every page.
+  (function () {
+    var right = nav.querySelector(".right");
+    var here = location.pathname.split("/").pop() || "index.html";
+    var a = document.createElement("a");
+    a.className = "navlink" + (here === "pricing.html" ? " is-active" : "");
+    a.href = "pricing.html";
+    a.textContent = "Pricing";
+    right.appendChild(a);
+  })();
+
   nav.querySelector(".right").appendChild(btn);
   document.body.insertBefore(nav, document.body.firstChild);
 
