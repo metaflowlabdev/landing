@@ -99,6 +99,22 @@
   .btn:hover { opacity: .9; }
   .btn--setapp { background: var(--accent); }
   .btn--license { background: var(--accent2); }
+  /* Pricing clarity panel (mirrors the on-domain pricing page) */
+  .pay-note {
+    background: color-mix(in srgb, var(--card) 55%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    backdrop-filter: blur(22px) saturate(1.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px; padding: 22px 24px; margin: 18px 0 0;
+  }
+  .pay-note h3 { font-size: 15px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .pay-note ul { margin: 0; padding-left: 20px; }
+  .pay-note li { color: var(--muted); font-size: 14px; margin: 7px 0; }
+  .pay-note li strong { color: var(--text); font-weight: 600; }
+  .pay-note .legal { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted); }
+  .pay-note .legal a { color: var(--accent); text-decoration: none; }
+  .pay-note .legal a:hover { text-decoration: underline; }
   footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 48px; }
   footer a { color: var(--muted); }
 
@@ -290,6 +306,24 @@
         Buy lifetime license
       </a>
     </div>
+  </div>
+
+  <!-- Pricing clarity — same info as the on-domain pricing page (northox/pricing.html) -->
+  <div class="pay-note">
+    <h3>Pricing &amp; how you pay</h3>
+    <ul>
+      <li><strong>Pro is a one-time purchase</strong> — <span class="js-price">$9.99</span>,
+      paid once, not a subscription. No recurring charge.</li>
+      <li><strong>Taxes may apply and are calculated at checkout</strong> based on your billing
+      country. The price above is shown before any applicable sales tax or VAT.</li>
+      <li><strong>How you pay:</strong> the Lite app is free on the <strong>Mac App Store</strong>
+      (via Apple); the direct Pro license is handled by <strong>Lemon Squeezy</strong> or
+      <strong>Paddle</strong>, our authorized resellers (merchant of record), who process payment,
+      invoicing, and applicable taxes.</li>
+    </ul>
+    <p class="legal">See the full <a href="pricing.html">Pricing</a> page, or our
+    <a href="terms.html">Terms</a>, <a href="privacy.html">Privacy Policy</a> and
+    <a href="refunds.html">Refund Policy</a>.</p>
   </div>
 
   <section class="compare">
