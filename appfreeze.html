@@ -65,6 +65,9 @@
   }
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+  .cards--three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:820px){.cards--three{grid-template-columns:1fr}}
+  .card--primary{border-color:var(--accent)}
   .card {
     position: relative;
     /* Liquid Glass: translucent fill + backdrop blur */
@@ -192,7 +195,7 @@
   table.cmp td a { color: var(--accent); text-decoration: none;
     display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
   table.cmp td a:hover { text-decoration: underline; text-underline-offset: 2px; }
-  /* Inline monochrome store / checkout icons (Apple / Setapp / secure-lock) */
+  /* Inline monochrome store / checkout icons (Apple / Setapp / Lemon Squeezy / secure-lock) */
   .store-ico { width: 1em; height: 1em; fill: currentColor; flex: none; }
   .card h2 .store-ico { vertical-align: -0.1em; margin-right: 7px; opacity: .85; }
   /* highlight the Pro columns */
@@ -292,31 +295,36 @@
     <p>Unlock automatic freezing — pick a subscription or a one-time license.</p>
   </div>
 
-  <div class="cards">
+  <div class="cards cards--three">
     <!-- Card 1: subscription via Setapp — not in the catalog yet, shown as "coming soon". -->
     <div class="card is-soon">
       <div class="tag">Subscription · coming soon</div>
-      <h2><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.0949 8.1332a.619.619 0 0 1 0-.874l2.7712-2.7733a.619.619 0 0 1 .877 0l2.7703 2.7722a.619.619 0 0 1 0 .8751l-2.7703 2.7722a.619.619 0 0 1-.877 0zm-1.5331-1.5331L8.7906 3.8299a.618.618 0 0 1 0-.877L11.5618.1815a.619.619 0 0 1 .876 0l2.7732 2.7712a.619.619 0 0 1 0 .877L12.4378 6.6a.619.619 0 0 1-.876 0zm0 2.1902a.619.619 0 0 1 .876 0l2.7732 2.7712a.619.619 0 0 1 0 .877l-2.7732 2.7712a.619.619 0 0 1-.876 0l-2.7712-2.7692a.618.618 0 0 1 0-.877zm-4.3044 2.1151L4.4862 8.1332a.619.619 0 0 1 0-.876l2.7712-2.7713a.619.619 0 0 1 .8761 0l2.7722 2.7712a.621.621 0 0 1 0 .8761l-2.7732 2.7722a.619.619 0 0 1-.876 0zm9.4847 2.1902 2.7723 2.7712a.618.618 0 0 1 0 .875l-2.7703 2.7723a.619.619 0 0 1-.876 0l-2.7732-2.7722a.621.621 0 0 1 0-.8751l2.7732-2.7722a.619.619 0 0 1 .875 0zm-4.3043 4.3033 2.7722 2.7722a.618.618 0 0 1 0 .876l-2.7722 2.7713a.619.619 0 0 1-.876 0l-2.7712-2.7712a.619.619 0 0 1 0-.877l2.7712-2.7713a.619.619 0 0 1 .876 0zm-1.532-1.5321a.619.619 0 0 1 0 .875l-2.7723 2.7733a.621.621 0 0 1-.876 0l-2.7723-2.7722a.619.619 0 0 1 0-.8751l2.7722-2.7722a.619.619 0 0 1 .8761 0z"/></svg>Coming to Setapp</h2>
-      <p>We're bringing AppFreeze Pro to Setapp so subscribers get it as part of
-         their plan. Not available there yet — grab a lifetime license today.</p>
+      <h2><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.0949 8.1332a.619.619 0 0 1 0-.874l2.7712-2.7733a.619.619 0 0 1 .877 0l2.7703 2.7722a.619.619 0 0 1 0 .8751l-2.7703 2.7722a.619.619 0 0 1-.877 0zm-1.5331-1.5331L8.7906 3.8299a.618.618 0 0 1 0-.877L11.5618.1815a.619.619 0 0 1 .876 0l2.7732 2.7712a.619.619 0 0 1 0 .877L12.4378 6.6a.619.619 0 0 1-.876 0zm0 2.1902a.619.619 0 0 1 .876 0l2.7732 2.7712a.619.619 0 0 1 0 .877l-2.7732 2.7712a.619.619 0 0 1-.876 0l-2.7712-2.7692a.618.618 0 0 1 0-.877zm-4.3044 2.1151L4.4862 8.1332a.619.619 0 0 1 0-.876l2.7712-2.7713a.619.619 0 0 1 .8761 0l2.7722 2.7712a.621.621 0 0 1 0 .8761l-2.7732 2.7722a.619.619 0 0 1-.876 0zm9.4847 2.1902 2.7723 2.7712a.618.618 0 0 1 0 .875l-2.7703 2.7723a.619.619 0 0 1-.876 0l-2.7732-2.7722a.621.621 0 0 1 0-.8751l2.7732-2.7722a.619.619 0 0 1 .875 0zm-4.3043 4.3033 2.7722 2.7722a.618.618 0 0 1 0 .876l-2.7722 2.7713a.619.619 0 0 1-.876 0l-2.7712-2.7712a.619.619 0 0 1 0-.877l2.7712-2.7713a.619.619 0 0 1 .876 0zm-1.532-1.5321a.619.619 0 0 1 0 .875l-2.7723 2.7733a.621.621 0 0 1-.876 0l-2.7723-2.7722a.619.619 0 0 1 0-.8751l2.7722-2.7722a.619.619 0 0 1 .8761 0z"/></svg>Setapp</h2>
+      <p>AppFreeze Pro is coming to Setapp, so subscribers get it as part of their plan. Not available there yet.</p>
       <span class="btn btn--soon" aria-disabled="true">Coming soon</span>
     </div>
 
-    <!-- Card 2: one-time lifetime license — Paddle checkout (Lemon Squeezy coming soon) -->
-    <div class="card">
-      <div class="tag">One-time</div>
-      <h2><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>Lifetime license</h2>
+    <!-- Card 2: direct one-time sale via Lemon Squeezy — payment provider not wired yet. -->
+    <div class="card is-soon">
+      <div class="tag">One-time · coming soon</div>
+      <h2><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M6 7V6a6 6 0 0 1 12 0v1h3l-1.2 13.2A2 2 0 0 1 17.8 22H6.2a2 2 0 0 1-1.99-1.8L3 7h3zm2 0h8V6a4 4 0 0 0-8 0v1z"/></svg>Lemon Squeezy</h2>
+      <p>Buy a lifetime license direct through Lemon Squeezy — instant delivery by email. Coming soon as a payment option.</p>
+      <span class="btn btn--soon" aria-disabled="true">Coming soon</span>
+    </div>
+
+    <!-- Card 3: direct one-time sale via Paddle (our merchant of record) — the PRIMARY gateway.
+         Checkout is "coming soon" until Paddle approves the northox.app domain + account KYB/KYC
+         (otherwise Paddle returns "Something went wrong"). TO GO LIVE after domain approval:
+         replace the <span class="btn btn--soon"> line below with exactly:
+           <a class="btn btn--license" data-paddle-checkout data-price-id="pri_01kxcnvh43hgprb0ansezvmft5">Buy lifetime license</a>
+         Paddle.js + Paddle.Initialize are already loaded near the bottom of this file; the click
+         handler binds on [data-paddle-checkout]. See docs/PADDLE.md. -->
+    <div class="card is-soon card--primary">
+      <div class="tag">One-time · coming soon</div>
+      <h2><svg class="store-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>Buy on northox</h2>
       <p class="price"><span class="js-price">$9.99</span> <small>once</small></p>
-      <p>Own it forever. Secure checkout, instant license and receipt by email.</p>
-      <!-- Paddle overlay checkout — TEMPORARILY DISABLED until Paddle domain approval +
-           account KYB/KYC pass (otherwise Paddle returns "Something went wrong"). Click falls
-           through to pricing.html. To RE-ENABLE: rename data-paddle-checkout-pending back to
-           data-paddle-checkout (the JS handler binds on [data-paddle-checkout]). See docs/PADDLE.md. -->
-      <a class="btn btn--license" href="pricing.html"
-         data-paddle-checkout-pending data-price-id="pri_01kxcnvh43hgprb0ansezvmft5">
-        Buy lifetime license
-      </a>
-      <p class="store-soon" style="margin-top:14px">Secure checkout by <strong>Paddle</strong>. <span class="store-soon">Lemon Squeezy coming soon.</span></p>
+      <p>Own it forever. Secure checkout by Paddle — instant license and receipt by email.</p>
+      <span class="btn btn--soon" aria-disabled="true">Coming soon</span>
     </div>
   </div>
 
@@ -329,9 +337,10 @@
       <li><strong>Taxes may apply and are calculated at checkout</strong> based on your billing
       country. The price above is shown before any applicable sales tax or VAT.</li>
       <li><strong>How you pay:</strong> the Lite app is free on the <strong>Mac App Store</strong>
-      (via Apple); the direct Pro license is handled by <strong>Paddle</strong>, our authorized
-      reseller (merchant of record), who processes payment, invoicing, and applicable taxes.
-      <strong>Lemon Squeezy</strong> is coming soon as a second option.</li>
+      (via Apple). The direct Pro license will be sold through <strong>Paddle</strong>, our
+      authorized reseller (merchant of record), who handles payment, invoicing, and applicable
+      taxes — direct checkout opens soon. <strong>Lemon Squeezy</strong> and <strong>Setapp</strong>
+      are planned as additional options.</li>
     </ul>
     <p class="legal">See the full <a href="pricing.html">Pricing</a> page, or our
     <a href="terms.html">Terms</a>, <a href="privacy.html">Privacy Policy</a> and
